@@ -1,0 +1,8 @@
+name: TowerClans
+version: '1.0'
+main: phrase.towerClans.Plugin
+api-version: '1.18'
+depend:
+  - Vault
+commands:
+  clan: {}

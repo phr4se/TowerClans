@@ -1,0 +1,131 @@
+message:
+  prefix: "&#ff0000[>>] Клан: "
+  a_player_without_a_clan:
+  - "&#008000/clan create - &#ffff00создать клан"
+  a_player_with_a_clan:
+  - "&#008000/clan menu - &#ffff00открыть меню клана"
+  - "&#008000/clan invite <игрок> - &#ffff00добавить игрока в клан"
+  - "&#008000/clan kick <игрок> - &#ffff00исключить игрока из клана"
+  - "&#008000/clan invest <сумма> - &#ffff00пополнить баланс клана"
+  - "&#008000/clan withdraw <сумма> - &#ffff00снять с баланса клана"
+  - "&#008000/clan leave - &#ffff00покинуть клан"
+  - "&#008000/clan chat <сообщение> - &#ffff00написать сообщение в чат клана"
+  - "&#008000/clan pvp - &#ffff00включить/выключить PVP-режим"
+  notification_of_a_level_increase: "&#ffff00Уровень клана повышен"
+  the_format_of_the_chat_message: "&#ff0000[%clan_name%] &f%format%"
+
+  command:
+    chat:
+      message_format: "&#008000%rank% &#ffff00%player%: &f%message%"
+      you're_not_in_the_clan: "&#808080Вы не в клане"
+    create:
+      usage_command: "&#808080Использование: /clan create <имя клана>"
+      you_are_in_a_clan: "&#808080Вы в клане"
+      a_clan_with_that_name_already_exists: "&#808080Клан с таким именем уже существует"
+      you_don't_have_enough: "&#808080Вам не хватает %amount%"
+      you_have_created_a_clan: "&#808080Вы создали клан"
+    menu:
+      you're_not_in_the_clan: "&#808080Вы не в клане"
+      you_have_opened_the_clan_menu: "&#808080Вы открыли меню"
+    invite:
+      usage_command: "&#808080Использование: /clan invite <игрок>"
+      you're_not_in_the_clan: "&#808080Вы не в клане"
+      you_don't_have_permission: "&#808080У вас нет прав"
+      the_player_was_not_found: "&#808080Игрок не найден"
+      you_have_sent_a_request_to_join_the_clan: "&#808080Вы отправили запрос на вступление в клан"
+      you_have_received_a_request_to_join_the_clan: "&#808080Вы получили запрос на вступление в клан"
+      notification_of_the_invitation: "&#808080%player% вступил в клан"
+      accept:
+        has_anyone_sent_you_a_request_to_join_clan: "&#808080Вам никто не отправлял запрос на вступление в клан"
+        you_are_in_a_clan: "&#808080Вы в клане"
+        have_you_accepted_the_request_to_join_the_clan: "&#808080Вы приняли запрос на вступление в клан"
+        the_player_accepted_the_request_to_join_the_clan: "&#808080Игрок принял запрос на вступление в клан"
+      cancel:
+        has_anyone_sent_you_a_request_to_join_clan: "&#808080Вам никто не отправлял запрос на вступление в клан"
+        you_rejected_the_request_to_join_the_clan: "&#808080Вы отклонили запрос на вступление в клан"
+        the_player_rejected_the_request_to_join_the_clan: "&#808080Игрок отклонил запрос на вступление в клан"
+    kick:
+      usage_command: "&#808080Использование: /clan kick <игрок>"
+      the_player_was_not_found: "&#808080Игрок не найден"
+      you_don't_have_permission: "&#808080У вас нет прав"
+      you're_not_in_the_clan: "&#808080Вы не в клане"
+      the_player_is_not_in_the_clan: "&#808080Игрок не в клане"
+      you_kicked_a_player_from_the_clan: "&#808080Вы кикнули с клана игрока"
+      you_were_kicked_out_of_the_clan: "&#808080Вас кикнули с клана"
+      you_cannot_leave_the_clan: "&#808080Вы не можете покинуть клан"
+      notification_of_exclusion: "&#808080%player% кикнут с клана"
+    invest:
+      usage_command: "&#808080Использование: /clan invest <сумма>"
+      you're_not_in_the_clan: "&#808080Вы не в клане"
+      you_put_it_in_the_clan: "&#808080Вы положили в клан валюту"
+      you_don't_have_enough: "&#808080У вас нет валюты или в клане нет места для валюты"
+      notification_of_investment: "&#808080%player% положил в клан %amount% валюты"
+    withdraw:
+      usage_command: "&#808080Использование: /clan withdraw <сумма>"
+      you're_not_in_the_clan: "&#808080Вы не в клане"
+      you_don't_have_permission: "&#808080У вас нет прав"
+      you_have_withdrawn_from_the_clan: "&#808080Вы сняли с клана валюту"
+      not_in_the_clan: "&#808080В клане нет столько валюты"
+      notification_of_withdrawal: "&#808080%player% снял с клана %amount% валюты"
+    leave:
+      you're_not_in_the_clan: "&#808080Вы не в клане"
+      you_cannot_leave_the_clan: "&#808080Вы не можете покинуть клан"
+      you_have_left_the_clan: "&#808080Вы покинули клан"
+      notification_of_exclusion: "&#808080%player% ушел с клана"
+    pvp:
+      you're_not_in_the_clan: "&#808080Вы не в клане"
+      you_don't_have_permission: "&#808080У вас нет прав"
+      you_have_enabled_pvp_in_the_clan: "&#808080Вы включили пвп в клане"
+      you_have_disabled_pvp_in_the_clan: "&#808080Вы выключили пвп в клане"
+    rank:
+      usage_command: "&#808080Использование: /clan rank <игрок> <ранг>"
+      you're_not_in_the_clan: "&#808080Вы не в клане"
+      you_don't_have_permission: "&#808080У вас нет прав"
+      the_player_is_offline: "&#808080Игрок не в сети"
+      you_have_set_the_player's_rank: "&#808080Вы установили %player% ранг %rank%"
+      you_have_been_set_a_rank: "&#808080%player% вам установил ранг %rank%"
+      notification_of_rank: "&#808080%player% повышен до %rank%"
+
+settings:
+  the_cost_of_creating_a_clan: 10000
+  menu:
+      menu_clan:
+        items:
+          information:
+            title: "&#ff0000Информация"
+            lore:
+              - "&#008000Клан %name%"
+              - "&#008000Участников &#ffff00%members%&#008000/&#ffff0020"
+              - "&#008000Уровень &#ffff00%level% &#008000(&#ffff00%xp%&#008000)"
+              - "&#008000Баланс &#ffff00%balance%"
+              - "&#008000PVP-Режим &#ffff00%pvp%"
+              - "&#008000Лимит баланса &#ffff00%maximum_balance%"
+          members_clan:
+            title: "&#ff0000Участники клана"
+            lore:
+              - "&#808080Нажмите, чтобы посмотреть участников клана"
+          level_clan:
+             title: "&#ff0000Уровень клана"
+             lore:
+               - "&#808080Нажмите, чтобы посмотреть список уровней клана"
+          exit:
+            title: "&#ff0000Выйти"
+      menu_clan_members:
+        player:
+            lore:
+              - "&#008000Ранг &#ffff00%rank%"
+      menu_level_clan:
+        level:
+          received:
+            title: "&#ff0000Уровень %level%"
+            lore:
+              - "&#ff0000Получен"
+              - "&#008000Доступно:"
+              - "&#ffff00Лимит баланса %maximum_balance%"
+          not_received:
+            title: "&#ff0000Уровень %level%"
+            lore:
+              - "&#ff0000Не получен"
+              - "&#008000При получении будет доступно:"
+              - "&#ffff00Лимит баланса %maximum_balance%"
+
