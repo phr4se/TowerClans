@@ -15,12 +15,12 @@ public class PluginPlaceholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
-        return "фраза";
+        return "phrase";
     }
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0";
+        return "BETA-0.2";
     }
 
     @Override

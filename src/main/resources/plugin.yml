@@ -1,8 +1,11 @@
 name: TowerClans
-version: '1.0'
+version: 'BETA-0.2'
 main: phrase.towerClans.Plugin
 api-version: '1.18'
 depend:
   - Vault
+soft-depend:
+  - PlaceholderAPI
 commands:
+  towerclans: {}
   clan: {}

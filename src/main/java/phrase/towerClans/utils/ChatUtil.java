@@ -1,23 +1,26 @@
 package phrase.towerClans.utils;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
 
 public class ChatUtil {
 
-    private static final String prefix = Plugin.instance.getConfig().getString("message.prefix");
+    private final String prefix;
 
-    private ChatUtil() {
+    public ChatUtil() {
+        ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message");
+        prefix = configSection.getString("prefix");
     }
 
-    public static void sendMessage(CommandSender commandSender, String message) {
+    public void sendMessage(CommandSender commandSender, String message) {
         commandSender.sendMessage(HexUtil.color(prefix + message));
     }
 
-    public static void sendMessage(Player player, String message) {
+    public void sendMessage(Player player, String message) {
         if(player == null) return;
-        player.sendMessage( HexUtil.color(prefix + message));
+        player.sendMessage(HexUtil.color(prefix + message));
 
     }
 

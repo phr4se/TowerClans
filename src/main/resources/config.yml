@@ -1,5 +1,6 @@
 message:
   prefix: "&#ff0000[>>] Клан: "
+  you_don't_have_permission: "&#808080У вас нет прав"
   a_player_without_a_clan:
   - "&#008000/clan create - &#ffff00создать клан"
   a_player_with_a_clan:
@@ -11,6 +12,8 @@ message:
   - "&#008000/clan leave - &#ffff00покинуть клан"
   - "&#008000/clan chat <сообщение> - &#ffff00написать сообщение в чат клана"
   - "&#008000/clan pvp - &#ffff00включить/выключить PVP-режим"
+  - "&#008000/clan disband - &#ffff00удалить клан"
+  - "&#008000/clan rank <игрок> <2 - заместитель, 3 - участник> - &#ffff00назначить ранг игроку"
   notification_of_a_level_increase: "&#ffff00Уровень клана повышен"
   the_format_of_the_chat_message: "&#ff0000[%clan_name%] &f%format%"
 
@@ -85,35 +88,44 @@ message:
       you_have_set_the_player's_rank: "&#808080Вы установили %player% ранг %rank%"
       you_have_been_set_a_rank: "&#808080%player% вам установил ранг %rank%"
       notification_of_rank: "&#808080%player% повышен до %rank%"
-
+    disband:
+      you're_not_in_the_clan: "&#808080Вы не в клане"
+      you_deleted_the_clan: "&#808080Вы удалили клан"
+      you_are_not_a_leader: "&#808080Вы не лидер"
+      notification_of_disband: "&#808080Клан удален"
+    reload:
+      you_don't_have_permission: "&#808080У вас нет прав"
+      you_have_reloaded_the_config: "&#808080Вы перезагрузили конфиг"
 settings:
   the_cost_of_creating_a_clan: 10000
   menu:
       menu_clan:
-        items:
-          information:
-            title: "&#ff0000Информация"
-            lore:
-              - "&#008000Клан %name%"
-              - "&#008000Участников &#ffff00%members%&#008000/&#ffff0020"
-              - "&#008000Уровень &#ffff00%level% &#008000(&#ffff00%xp%&#008000)"
-              - "&#008000Баланс &#ffff00%balance%"
-              - "&#008000PVP-Режим &#ffff00%pvp%"
-              - "&#008000Лимит баланса &#ffff00%maximum_balance%"
-          members_clan:
-            title: "&#ff0000Участники клана"
-            lore:
-              - "&#808080Нажмите, чтобы посмотреть участников клана"
-          level_clan:
-             title: "&#ff0000Уровень клана"
-             lore:
-               - "&#808080Нажмите, чтобы посмотреть список уровней клана"
-          exit:
-            title: "&#ff0000Выйти"
+            items:
+              information:
+                title: "&#ff0000Информация"
+                lore:
+                - "&#008000Клан: &#ffff00%name%"
+                - "&#008000Участников: &#ffff00%members%&#008000/&#ffff0020"
+                - "&#008000Уровень: &#ffff00%level% &#008000(&#ffff00%xp% XP&#008000)"
+                - "&#008000Баланс: &#ffff00%balance%"
+                - "&#008000PVP-Режим: &#ffff00%pvp%"
+                - "&#008000Лимит баланса: &#ffff00%maximum_balance%"
+              members_clan:
+                title: "&#ff0000Участники"
+                lore:
+                  - "&#808080Нажмите, чтобы посмотреть участников клана"
+              level_clan:
+                title: "&#ff0000Уровень клана"
+                lore:
+                  - "&#808080Нажмите, чтобы посмотреть уровень клана"
+              exit:
+                title: "&#ff0000Выйти"
       menu_clan_members:
         player:
             lore:
               - "&#008000Ранг &#ffff00%rank%"
+        in_menu:
+            title: "&#ff0000В меню"
       menu_level_clan:
         level:
           received:
@@ -128,4 +140,6 @@ settings:
               - "&#ff0000Не получен"
               - "&#008000При получении будет доступно:"
               - "&#ffff00Лимит баланса %maximum_balance%"
+          in_menu:
+            title: "&#ff0000В меню"
 

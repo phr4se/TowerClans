@@ -8,5 +8,6 @@ public interface Clan {
     boolean withdraw(ModifiedPlayer modifiedPlayer, int amount);
     boolean leave(ModifiedPlayer modifiedPlayer);
     boolean rank(ModifiedPlayer modifiedPlayer, int id);
+    boolean disband(ModifiedPlayer modifiedPlayer, Clan clan);
 
 }

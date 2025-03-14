@@ -8,14 +8,14 @@ import phrase.towerClans.Plugin;
 
 public abstract class AbstractCommand implements CommandExecutor {
 
+
     public AbstractCommand(String command) {
-        if(Plugin.instance.getCommand(command) == null) {
-            Plugin.instance.getLogger().severe("Команда " + command + " не найдена");
+        if(Plugin.getInstance().getCommand(command) == null) {
+            Plugin.getInstance().getLogger().severe("Команда " + command + " не найдена");
             return;
         }
 
-        Plugin.instance.getCommand(command).setExecutor(this);
-
+        Plugin.getInstance().getCommand(command).setExecutor(this);
     }
 
     public abstract void execute(CommandSender commandSender, Command command, String label, String[] args);
@@ -25,4 +25,5 @@ public abstract class AbstractCommand implements CommandExecutor {
         execute(commandSender, command, s, strings);
         return true;
     }
+
 }

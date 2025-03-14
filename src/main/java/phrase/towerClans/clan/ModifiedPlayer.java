@@ -37,7 +37,7 @@ public class ModifiedPlayer {
     public static ModifiedPlayer get(Player player) {
 
 
-            for(Map.Entry<String, ClanImpl> clan : ClanImpl.clans.entrySet()) {
+            for(Map.Entry<String, ClanImpl> clan : ClanImpl.getClans().entrySet()) {
 
                 for(Map.Entry<ModifiedPlayer, String> entry : clan.getValue().getMembers().entrySet()) {
 
