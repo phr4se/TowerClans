@@ -15,7 +15,7 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.AbstractClan;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.impls.ClanImpl;
-import phrase.towerClans.commands.impls.ClanCommand;
+import phrase.towerClans.commands.impls.invite.ClanInviteCommand;
 import phrase.towerClans.utils.ChatUtil;
 import phrase.towerClans.utils.HexUtil;
 
@@ -171,9 +171,9 @@ public class EventListener implements Listener {
     @EventHandler
     public void onExit(PlayerQuitEvent event) {
         UUID player = event.getPlayer().getUniqueId();
-        if(!player.equals(ClanCommand.getPlayers().get(event.getPlayer().getUniqueId()))) return;
+        if(!player.equals(ClanInviteCommand.PLAYERS.get(event.getPlayer().getUniqueId()))) return;
 
-        ClanCommand.getPlayers().remove(player);
+        ClanInviteCommand.PLAYERS.remove(player);
     }
 
 }

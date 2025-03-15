@@ -7,12 +7,13 @@ import phrase.towerClans.Plugin;
 
 public class ChatUtil {
 
-    private final String prefix;
+    private static final String prefix = Plugin.getInstance().getConfig().getString("message.prefix");
+    private static final ChatUtil chatUtil;
 
-    public ChatUtil() {
-        ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message");
-        prefix = configSection.getString("prefix");
+    static {
+        chatUtil = new ChatUtil();
     }
+
 
     public void sendMessage(CommandSender commandSender, String message) {
         commandSender.sendMessage(HexUtil.color(prefix + message));
@@ -24,4 +25,7 @@ public class ChatUtil {
 
     }
 
+    public static ChatUtil getChatUtil() {
+        return chatUtil;
+    }
 }

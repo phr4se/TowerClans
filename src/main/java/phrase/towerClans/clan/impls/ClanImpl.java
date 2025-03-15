@@ -14,6 +14,7 @@ import phrase.towerClans.clan.Clan;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.utils.ChatUtil;
 import phrase.towerClans.utils.HexUtil;
+import phrase.towerClans.utils.ItemBuilder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -143,13 +144,13 @@ public class ClanImpl extends AbstractClan implements Listener {
         Inventory menu;
         ItemStack redStainedGlassPane = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         int[] indices = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44};
-        ItemStack spectralArrow = new ItemStack(Material.SPECTRAL_ARROW);
-        ItemMeta spectralArrowMeta = spectralArrow.getItemMeta();
+        ItemStack back;
         int maximumBalance;
         List<String> list;
         List<String> replacedList;
         int slot;
         ConfigurationSection configSection;
+
 
         switch(id) {
             case 1:
@@ -163,9 +164,6 @@ public class ClanImpl extends AbstractClan implements Listener {
 
                 maximumBalance = LevelType.getLevelMaximumBalance(getLevel());
 
-                ItemStack knowledgeBook = new ItemStack(Material.KNOWLEDGE_BOOK);
-                ItemMeta knowledgeBookMeta = knowledgeBook.getItemMeta();
-                knowledgeBookMeta.setDisplayName(HexUtil.color(configSection.getString("information.title")));
                 list = configSection.getStringList("information.lore");
                 final int finalMaximumBalance = maximumBalance;
                 replacedList = list.stream().map(string -> {
@@ -181,13 +179,11 @@ public class ClanImpl extends AbstractClan implements Listener {
                     return HexUtil.color(replacedString);
                 }).collect(Collectors.toList());
 
-                knowledgeBookMeta.setLore(replacedList);
+                ItemStack information = new ItemBuilder(Material.KNOWLEDGE_BOOK)
+                        .setName(HexUtil.color(configSection.getString("information.title")))
+                        .setLore(replacedList)
+                        .build();
 
-                knowledgeBook.setItemMeta(knowledgeBookMeta);
-
-                ItemStack totemOfUndying = new ItemStack(Material.TOTEM_OF_UNDYING);
-                ItemMeta totemOfUndyingItemMeta = totemOfUndying.getItemMeta();
-                totemOfUndyingItemMeta.setDisplayName(HexUtil.color(configSection.getString("members_clan.title")));
                 list = configSection.getStringList("members_clan.lore");
                 final int finalMaximumBalance1 = maximumBalance;
                 replacedList = list.stream().map(string -> {
@@ -202,14 +198,12 @@ public class ClanImpl extends AbstractClan implements Listener {
 
                     return HexUtil.color(replacedString);
                 }).collect(Collectors.toList());
-                totemOfUndyingItemMeta.setLore(replacedList);
 
-                totemOfUndying.setItemMeta(totemOfUndyingItemMeta);
+                ItemStack members = new ItemBuilder(Material.TOTEM_OF_UNDYING)
+                        .setName(HexUtil.color(configSection.getString("members_clan.title")))
+                        .setLore(replacedList)
+                        .build();
 
-                ItemStack diamond = new ItemStack(Material.DIAMOND);
-                ItemMeta diamondMeta = diamond.getItemMeta();
-
-                diamondMeta.setDisplayName(HexUtil.color(configSection.getString("level_clan.title")));
                 list = configSection.getStringList("level_clan.lore");
                 final int finalMaximumBalance4 = maximumBalance;
                 replacedList = list.stream().map(string -> {
@@ -224,16 +218,20 @@ public class ClanImpl extends AbstractClan implements Listener {
 
                     return HexUtil.color(replacedString);
                 }).collect(Collectors.toList());
-                diamondMeta.setLore(replacedList);
 
-                diamond.setItemMeta(diamondMeta);
-                spectralArrowMeta.setDisplayName(HexUtil.color(configSection.getString("exit.title")));
-                spectralArrow.setItemMeta(spectralArrowMeta);
+                ItemStack level = new ItemBuilder(Material.DIAMOND)
+                        .setName(HexUtil.color(configSection.getString("level_clan.title")))
+                        .setLore(replacedList)
+                        .build();
 
-                menu.setItem(34, spectralArrow);
-                menu.setItem(10, knowledgeBook);
-                menu.setItem(11, totemOfUndying);
-                menu.setItem(12, diamond);
+                back = new ItemBuilder(Material.SPECTRAL_ARROW)
+                        .setName(HexUtil.color(configSection.getString("exit.title")))
+                        .build();
+
+                menu.setItem(34, back);
+                menu.setItem(10, information);
+                menu.setItem(11, members);
+                menu.setItem(12, level);
 
                 modifiedPlayer.getPlayer().openInventory(menu);
                 break;
@@ -248,11 +246,11 @@ public class ClanImpl extends AbstractClan implements Listener {
 
                 configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan_members");
 
-                spectralArrow = new ItemStack(Material.SPECTRAL_ARROW);
-                spectralArrowMeta = spectralArrow.getItemMeta();
-                spectralArrowMeta.setDisplayName(HexUtil.color(configSection.getString("in_menu.title")));
-                spectralArrow.setItemMeta(spectralArrowMeta);
-                menu.setItem(34, spectralArrow);
+                back = new ItemBuilder(Material.SPECTRAL_ARROW)
+                        .setName(HexUtil.color(configSection.getString("in_menu.title")))
+                        .build();
+
+                menu.setItem(34, back);
 
                 slot = 10;
                 for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
@@ -291,9 +289,11 @@ public class ClanImpl extends AbstractClan implements Listener {
 
                 configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_level_clan.level");
 
-                spectralArrowMeta.setDisplayName(HexUtil.color(configSection.getString("in_menu.title")));
-                spectralArrow.setItemMeta(spectralArrowMeta);
-                menu.setItem(34, spectralArrow);
+                back = new ItemBuilder(Material.SPECTRAL_ARROW)
+                        .setName(HexUtil.color(configSection.getString("in_menu.title")))
+                        .build();
+
+                menu.setItem(34, back);
 
                 slot = 10;
                 for (int i = 1; i <= LevelType.countLevel; i++) {

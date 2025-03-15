@@ -16,6 +16,11 @@ message:
   - "&#008000/clan rank <игрок> <2 - заместитель, 3 - участник> - &#ffff00назначить ранг игроку"
   notification_of_a_level_increase: "&#ffff00Уровень клана повышен"
   the_format_of_the_chat_message: "&#ff0000[%clan_name%] &f%format%"
+  you_are_not_a_player: "&#ff0000Вы не являетесь игроком!"
+
+  uknown_command: "&#808080Команда не найдена"
+  no_permission: "&#808080У вас нет прав"
+  error: "&#808080Не найден обработчик для команды"
 
   command:
     chat:
