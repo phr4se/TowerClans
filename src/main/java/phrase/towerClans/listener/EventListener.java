@@ -1,4 +1,4 @@
-package phrase.towerClans.listeners;
+package phrase.towerClans.listener;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -11,6 +11,8 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.AbstractClan;
 import phrase.towerClans.clan.ModifiedPlayer;
@@ -19,7 +21,9 @@ import phrase.towerClans.commands.impls.invite.ClanInviteCommand;
 import phrase.towerClans.utils.ChatUtil;
 import phrase.towerClans.utils.HexUtil;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class EventListener implements Listener {
@@ -38,12 +42,14 @@ public class EventListener implements Listener {
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
         if (modifiedPlayer.getClan() == null) return;
 
-
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if (event.getView().getTitle().startsWith("Клан")) {
+        if (ClanImpl.MenuType.MENU_CLAN.compare(ClanImpl.MenuType.getMenu(clan, 1), event.getInventory()) > 0) {
 
-            if(event.getCurrentItem() == null) return;
+            if(event.getCurrentItem() == null) {
+                event.setCancelled(true);
+                return;
+            }
 
             ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.members_clan");
 
@@ -75,8 +81,12 @@ public class EventListener implements Listener {
 
         }
 
-        if (event.getView().getTitle().equals("Участники клана")) {
+        if (ClanImpl.MenuType.MENU_CLAN_MEMBERS.compare(ClanImpl.MenuType.getMenu(clan, 2), event.getInventory()) > 0) {
 
+            if(event.getCurrentItem() == null) {
+                event.setCancelled(true);
+                return;
+            }
             if (event.getCurrentItem().getItemMeta().getDisplayName().startsWith("Участник")) {
                 event.setCancelled(true);
                 return;
@@ -96,7 +106,13 @@ public class EventListener implements Listener {
 
         ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_level_clan.level.in_menu");
 
-        if (event.getView().getTitle().equals("Уровень клана")) {
+        if (ClanImpl.MenuType.MENU_LEVEL_CLAN.compare(ClanImpl.MenuType.getMenu(clan, 3), event.getInventory()) > 0) {
+
+            if(event.getCurrentItem() == null) {
+                event.setCancelled(true);
+                return;
+            }
+
             if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configSection.getString("title")))) {
                 event.setCancelled(true);
                 clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN.getId());
@@ -106,6 +122,7 @@ public class EventListener implements Listener {
             event.setCancelled(true);
         }
     }
+
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();

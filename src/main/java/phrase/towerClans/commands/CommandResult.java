@@ -6,7 +6,6 @@ public class CommandResult {
 
         SUCCESS,
         UNKNOWN_COMMAND,
-        MISSING_ARGUMENTS,
         INCORRECT_ARGUMENTS,
         NO_PERMISSION,
         ERROR

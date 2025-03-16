@@ -80,7 +80,7 @@ public abstract class AbstractClan implements Clan {
         }
 
         public static int getLevelMaximumBalance(int level) {
-            int maximumBalance = switch (level) {
+            return switch (level) {
                 case 1 -> LevelType.ONE.getMaximumBalance();
                 case 2 -> LevelType.TWO.getMaximumBalance();
                 case 3 -> LevelType.THREE.getMaximumBalance();
@@ -88,8 +88,6 @@ public abstract class AbstractClan implements Clan {
                 case 5 -> LevelType.FIVE.getMaximumBalance();
                 default -> 0;
             };
-
-            return maximumBalance;
         }
 
         public int getMaximumMembers() {

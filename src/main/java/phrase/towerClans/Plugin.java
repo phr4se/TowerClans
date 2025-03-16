@@ -14,8 +14,8 @@ import phrase.towerClans.commands.CommandLogger;
 import phrase.towerClans.commands.CommandMapper;
 import phrase.towerClans.commands.CommandResult;
 import phrase.towerClans.config.ConfigManager;
-import phrase.towerClans.listeners.EventListener;
-import phrase.towerClans.placeholders.PluginPlaceholder;
+import phrase.towerClans.listener.EventListener;
+import phrase.towerClans.placeholder.PluginPlaceholder;
 import phrase.towerClans.utils.ChatUtil;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package phrase.towerClans.placeholders;
+package phrase.towerClans.placeholder;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -20,7 +20,7 @@ public class PluginPlaceholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "BETA-0.3";
+        return "BETA-0.3A";
     }
 
     @Override
