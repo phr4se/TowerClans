@@ -44,7 +44,7 @@ public class EventListener implements Listener {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if (ClanImpl.MenuType.MENU_CLAN.compare(ClanImpl.MenuType.getMenu(clan, 1), event.getInventory()) > 0) {
+        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 1), event.getInventory())) {
 
             if(event.getCurrentItem() == null) {
                 event.setCancelled(true);
@@ -81,7 +81,7 @@ public class EventListener implements Listener {
 
         }
 
-        if (ClanImpl.MenuType.MENU_CLAN_MEMBERS.compare(ClanImpl.MenuType.getMenu(clan, 2), event.getInventory()) > 0) {
+        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 2), event.getInventory())) {
 
             if(event.getCurrentItem() == null) {
                 event.setCancelled(true);
@@ -106,7 +106,7 @@ public class EventListener implements Listener {
 
         ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_level_clan.level.in_menu");
 
-        if (ClanImpl.MenuType.MENU_LEVEL_CLAN.compare(ClanImpl.MenuType.getMenu(clan, 3), event.getInventory()) > 0) {
+        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 3), event.getInventory())) {
 
             if(event.getCurrentItem() == null) {
                 event.setCancelled(true);

@@ -163,7 +163,7 @@ public class ClanImpl extends AbstractClan implements Listener {
         modifiedPlayer.getPlayer().openInventory(menu);
     }
 
-    public enum MenuType implements Comparator {
+    public enum MenuType {
 
         MENU_CLAN(1),
         MENU_CLAN_MEMBERS(2),
@@ -379,14 +379,12 @@ public class ClanImpl extends AbstractClan implements Listener {
         }
 
 
-        @Override
-        public int compare(Object o1, Object o2) {
-            if(!(o1 instanceof Inventory) || !(o2 instanceof Inventory)) return 0;
+        public static boolean identical(Inventory o1, Inventory o2) {
 
-            ItemStack[] items1 = ((Inventory) o1).getContents();
-            ItemStack[] items2 = ((Inventory) o2).getContents();
+            ItemStack[] items1 = o1.getContents();
+            ItemStack[] items2 = o2.getContents();
 
-            if(items1.length != items2.length) return 0;
+            if(items1.length != items2.length) return false;
 
             for(int i = 0; i < items1.length; i++) {
                 ItemStack item1 = items1[i];
@@ -394,13 +392,13 @@ public class ClanImpl extends AbstractClan implements Listener {
 
                 if(item1 == null && item2 == null) continue;
 
-                if(item1 == null || item2 == null) return 0;
+                if(item1 == null || item2 == null) return false;
 
-                if(!item1.isSimilar(item2)) return 0;
+                if(!item1.isSimilar(item2)) return false;
 
             }
 
-            return 1;
+            return true;
         }
 
     }
