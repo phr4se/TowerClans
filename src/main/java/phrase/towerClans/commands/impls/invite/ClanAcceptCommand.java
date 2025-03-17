@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.impls.ClanImpl;
 import phrase.towerClans.commands.CommandHandler;
@@ -36,14 +37,16 @@ public class ClanAcceptCommand implements CommandHandler {
         ClanImpl clan = (ClanImpl) senderModifiedPlayer.getClan();
 
         modifiedPlayer.setClan(clan);
-        boolean success = clan.invite(modifiedPlayer);
+        ClanResponse clanResponse = clan.invite(modifiedPlayer);
 
-        if (success) {
+        if (clanResponse.isSuccess()) {
             ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("have_you_accepted_the_request_to_join_the_clan"));
             ChatUtil.getChatUtil().sendMessage(Bukkit.getPlayer(senderPlayer), configurationSection.getString("the_player_accepted_the_request_to_join_the_clan"));
             return true;
         } else {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("message.command.invite.accept.you_are_in_a_clan"));
+            if (clanResponse.getMessage() != null) {
+                ChatUtil.getChatUtil().sendMessage(Bukkit.getPlayer(senderPlayer), clanResponse.getMessage());
+            }
         }
 
         return true;

@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.impls.ClanImpl;
 import phrase.towerClans.commands.CommandHandler;
@@ -30,13 +31,15 @@ public class ClanLeaveCommand implements CommandHandler {
             return true;
         }
 
-        boolean b = clan.leave(modifiedPlayer);
+        ClanResponse clanResponse = clan.leave(modifiedPlayer);
 
-        if (b) {
+        if (clanResponse.isSuccess()) {
             ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_have_left_the_clan"));
             return true;
         } else {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you're_not_in_the_clan"));
+            if(clanResponse.getMessage() != null) {
+                ChatUtil.getChatUtil().sendMessage(player, clanResponse.getMessage());
+            }
         }
 
         return true;

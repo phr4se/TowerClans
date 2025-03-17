@@ -3,6 +3,7 @@ package phrase.towerClans.commands.impls.invest;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.impls.ClanImpl;
 import phrase.towerClans.commands.CommandHandler;
@@ -37,12 +38,14 @@ public class ClanInvestCommand implements CommandHandler {
             return false;
         }
 
-        boolean success = clan.invest(modifiedPlayer, amount);
-        if (success) {
+        ClanResponse clanResponse = clan.invest(modifiedPlayer, amount);
+        if (clanResponse.isSuccess()) {
             ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_put_it_in_the_clan"));
             return true;
         } else {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_don't_have_enough"));
+            if(clanResponse.getMessage() != null) {
+                ChatUtil.getChatUtil().sendMessage(player, clanResponse.getMessage());
+            }
         }
 
         return true;

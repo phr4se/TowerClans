@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.AbstractClan;
+import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.impls.ClanImpl;
 import phrase.towerClans.commands.CommandHandler;
@@ -51,14 +52,17 @@ public class ClanKickCommand implements CommandHandler {
             return true;
         }
 
-        boolean success = clan.kick(targetModifiedPlayer);
+        ClanResponse clanResponse = clan.kick(targetModifiedPlayer);
 
-        if (success) {
+        if (clanResponse.isSuccess()) {
             ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_kicked_a_player_from_the_clan"));
             ChatUtil.getChatUtil().sendMessage(targetPlayer, configurationSection.getString("you_were_kicked_out_of_the_clan"));
             return true;
         } else {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("the_player_is_not_in_the_clan"));
+            if(clanResponse.getMessage() != null) {
+                ChatUtil.getChatUtil().sendMessage(player, clanResponse.getMessage());
+            }
+
         }
 
         return true;

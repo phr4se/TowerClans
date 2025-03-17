@@ -48,7 +48,7 @@ public class ClanInviteCommand implements CommandHandler {
         Player targetPlayer = Bukkit.getPlayer(name);
 
         if (targetPlayer == null) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("message.command.invite.the_player_was_not_found"));
+            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("the_player_was_not_found"));
             return true;
         }
 

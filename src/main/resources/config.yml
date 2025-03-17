@@ -66,7 +66,8 @@ message:
       usage_command: "&#808080Использование: /clan invest <сумма>"
       you're_not_in_the_clan: "&#808080Вы не в клане"
       you_put_it_in_the_clan: "&#808080Вы положили в клан валюту"
-      you_don't_have_enough: "&#808080У вас нет валюты или в клане нет места для валюты"
+      you_don't_have_enough: "&#808080У вас нет валюты"
+      there_is_no_place_in_the_clan: "&#808080В клане нет места для валюты"
       notification_of_investment: "&#808080%player% положил в клан %amount% валюты"
     withdraw:
       usage_command: "&#808080Использование: /clan withdraw <сумма>"
@@ -93,6 +94,8 @@ message:
       you_have_set_the_player's_rank: "&#808080Вы установили %player% ранг %rank%"
       you_have_been_set_a_rank: "&#808080%player% вам установил ранг %rank%"
       notification_of_rank: "&#808080%player% повышен до %rank%"
+      you_can't_give_out_a_leader_rank: "&#808080Нельзя выдать ранг лидера"
+      this_rank_does_not_exist: "&#808080Не существует данного ранга"
     disband:
       you're_not_in_the_clan: "&#808080Вы не в клане"
       you_deleted_the_clan: "&#808080Вы удалили клан"

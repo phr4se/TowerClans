@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.AbstractClan;
+import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.impls.ClanImpl;
 import phrase.towerClans.commands.CommandHandler;
@@ -44,12 +45,14 @@ public class ClanWithdrawCommand implements CommandHandler {
             return false;
         }
 
-        boolean b = clan.withdraw(modifiedPlayer, amount);
-        if (b) {
+        ClanResponse clanResponse = clan.withdraw(modifiedPlayer, amount);
+        if (clanResponse.isSuccess()) {
             ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_have_withdrawn_from_the_clan"));
             return true;
         } else {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("not_in_the_clan"));
+            if(clanResponse.getMessage() != null) {
+                ChatUtil.getChatUtil().sendMessage(player, clanResponse.getMessage());
+            }
         }
 
         return true;

@@ -3,26 +3,24 @@ package phrase.towerClans.clan.impls;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.jetbrains.annotations.NotNull;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.AbstractClan;
 import phrase.towerClans.clan.Clan;
+import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.utils.ChatUtil;
 import phrase.towerClans.utils.HexUtil;
 import phrase.towerClans.utils.ItemBuilder;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ClanImpl extends AbstractClan implements Listener {
+public class ClanImpl extends AbstractClan {
 
     private static final Map<String, ClanImpl> CLANS = new HashMap<>();
     private ChatUtil chatUtil = new ChatUtil();
@@ -36,88 +34,90 @@ public class ClanImpl extends AbstractClan implements Listener {
     }
 
     @Override
-    public boolean invite(ModifiedPlayer modifiedPlayer) {
-        if (getMembers().containsKey(modifiedPlayer)) return false;
-        ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.invite");
+    public ClanResponse invite(ModifiedPlayer modifiedPlayer) {
+        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.accept");
+        if (getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("accept.you_are_in_a_clan"), ClanResponse.ResponseType.FAILURE);
+        configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.invite");
         getMembers().put(modifiedPlayer, RankType.MEMBER.getName());
 
         for (Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
-            String string = configSection.getString("notification_of_the_invitation").replace("%player%", modifiedPlayer.getPlayer().getName());
+            String string = configurationSection.getString("notification_of_the_invitation").replace("%player%", modifiedPlayer.getPlayer().getName());
             chatUtil.sendMessage(entry.getKey().getPlayer(), string);
         }
 
-        return true;
+        return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
     @Override
-    public boolean kick(ModifiedPlayer modifiedPlayer) {
-        if (!getMembers().containsKey(modifiedPlayer)) return false;
-        ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.kick");
+    public ClanResponse kick(ModifiedPlayer modifiedPlayer) {
+        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.kick");
+        if (!getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("the_player_is_not_in_the_clan"), ClanResponse.ResponseType.FAILURE);
         getMembers().remove(modifiedPlayer);
 
         for (Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
-            String string = configSection.getString("notification_of_exclusion").replace("%player%", modifiedPlayer.getPlayer().getName());
+            String string = configurationSection.getString("notification_of_exclusion").replace("%player%", modifiedPlayer.getPlayer().getName());
             chatUtil.sendMessage(entry.getKey().getPlayer(), string);
         }
 
-        return true;
+        return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
     @Override
-    public boolean invest(ModifiedPlayer modifiedPlayer, int amount) {
-        if (Plugin.getInstance().economy.getBalance(modifiedPlayer.getPlayer()) < amount) return false;
+    public ClanResponse invest(ModifiedPlayer modifiedPlayer, int amount) {
+        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.invest");
+        if (Plugin.getInstance().economy.getBalance(modifiedPlayer.getPlayer()) < amount) new ClanResponse(configurationSection.getString("you_don't_have_enough"), ClanResponse.ResponseType.FAILURE);
         int maximumBalance = LevelType.getLevelMaximumBalance(getLevel());
-        if ((getBalance() + amount) > maximumBalance) return false;
-        ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.invest");
+        if ((getBalance() + amount) > maximumBalance) new ClanResponse(configurationSection.getString("there_is_no_place_in_the_clan"), ClanResponse.ResponseType.FAILURE);
         Plugin.getInstance().economy.withdrawPlayer(modifiedPlayer.getPlayer(), amount);
         setBalance(getBalance() + amount);
 
         for (Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
-            String string = configSection.getString("notification_of_investment").replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
+            String string = configurationSection.getString("notification_of_investment").replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
             chatUtil.sendMessage(entry.getKey().getPlayer(), string);
         }
 
-        return true;
+        return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
     @Override
-    public boolean withdraw(ModifiedPlayer modifiedPlayer, int amount) {
-        if (getBalance() < amount) return false;
-        ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.withdraw");
+    public ClanResponse withdraw(ModifiedPlayer modifiedPlayer, int amount) {
+        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.withdraw");
+        if (getBalance() < amount) return new ClanResponse(configurationSection.getString("not_in_the_clan"), ClanResponse.ResponseType.FAILURE);
 
         Plugin.getInstance().economy.depositPlayer(modifiedPlayer.getPlayer(), amount);
         setBalance(getBalance() - amount);
 
         for (Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
-            String string = configSection.getString("notification_of_withdrawal").replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
+            String string = configurationSection.getString("notification_of_withdrawal").replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
             chatUtil.sendMessage(entry.getKey().getPlayer(), string);
         }
 
-        return true;
+        return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
     @Override
-    public boolean leave(ModifiedPlayer modifiedPlayer) {
-        if (!getMembers().containsKey(modifiedPlayer)) return false;
-        ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.leave");
+    public ClanResponse leave(ModifiedPlayer modifiedPlayer) {
+        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.leave");
+        if (!getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("you're_not_in_the_clan)"), ClanResponse.ResponseType.FAILURE);
         getMembers().remove(modifiedPlayer);
 
         for (Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
-            String string = configSection.getString("notification_of_exclusion").replace("%player%", modifiedPlayer.getPlayer().getName());
+            String string = configurationSection.getString("notification_of_exclusion").replace("%player%", modifiedPlayer.getPlayer().getName());
             chatUtil.sendMessage(entry.getKey().getPlayer(), string);
         }
 
-        return true;
+        return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
     @Override
-    public boolean rank(ModifiedPlayer modifiedPlayer, int id) {
-        if (id == 1) return false;
+    public ClanResponse rank(ModifiedPlayer modifiedPlayer, int id) {
+        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.rank");
+        if (id == 1) return new ClanResponse(configurationSection.getString("you_can't_give_out_a_leader_rank"), ClanResponse.ResponseType.FAILURE);
 
         if (id == 2) getMembers().replace(modifiedPlayer, getMembers().get(modifiedPlayer), RankType.DEPUTY.getName());
         else if (id == 3)
             getMembers().replace(modifiedPlayer, getMembers().get(modifiedPlayer), RankType.MEMBER.getName());
-        else return false;
+        else return new ClanResponse(configurationSection.getString("this_rank_does_not_exist"), ClanResponse.ResponseType.FAILURE);
         ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.rank");
 
         for (Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
@@ -125,22 +125,22 @@ public class ClanImpl extends AbstractClan implements Listener {
             chatUtil.sendMessage(entry.getKey().getPlayer(), string);
         }
 
-        return true;
+        return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
     @Override
-    public boolean disband(ModifiedPlayer modifiedPlayer, Clan clan) {
-        if (!getMembers().get(modifiedPlayer).equals("Лидер")) return false;
-        ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.disband");
+    public ClanResponse disband(ModifiedPlayer modifiedPlayer, Clan clan) {
+        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.disband");
+        if (!getMembers().get(modifiedPlayer).equals("Лидер")) return new ClanResponse(configurationSection.getString("you_are_not_a_leader"), ClanResponse.ResponseType.FAILURE);
 
         for (Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
             entry.getKey().setClan(null);
 
-            chatUtil.sendMessage(entry.getKey().getPlayer(), configSection.getString("notification_of_disband"));
+            chatUtil.sendMessage(entry.getKey().getPlayer(), configurationSection.getString("notification_of_disband"));
         }
 
         CLANS.remove(((ClanImpl) clan).getName());
-        return true;
+        return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
     @Override

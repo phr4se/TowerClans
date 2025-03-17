@@ -6,6 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.AbstractClan;
+import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.impls.ClanImpl;
 import phrase.towerClans.commands.CommandHandler;
@@ -56,16 +57,18 @@ public class ClanRankCommand implements CommandHandler {
             ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("usage_command"));
         }
 
-        boolean success = clan.rank(targetModifierPlayer, id);
+        ClanResponse clanResponse = clan.rank(targetModifierPlayer, id);
 
-        if (success) {
+        if (clanResponse.isSuccess()) {
             String string = configurationSection.getString("you_have_set_the_player's_rank").replace("%player%", targetPlayer.getName()).replace("%rank%", (id == 2) ? AbstractClan.RankType.DEPUTY.getName() : AbstractClan.RankType.MEMBER.getName());
             ChatUtil.getChatUtil().sendMessage(player, string);
             string = configurationSection.getString("you_have_been_set_a_rank").replace("%player%", player.getName()).replace("%rank%", (id == 2) ? AbstractClan.RankType.DEPUTY.getName() : AbstractClan.RankType.MEMBER.getName());
             ChatUtil.getChatUtil().sendMessage(player, string);
             return true;
         } else {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("usage_command"));
+            if(clanResponse.getMessage() != null) {
+                ChatUtil.getChatUtil().sendMessage(player, clanResponse.getMessage());
+            }
         }
 
         return false;

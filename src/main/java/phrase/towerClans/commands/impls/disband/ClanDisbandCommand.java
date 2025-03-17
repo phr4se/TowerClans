@@ -4,6 +4,7 @@ package phrase.towerClans.commands.impls.disband;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.impls.ClanImpl;
 import phrase.towerClans.commands.CommandHandler;
@@ -26,13 +27,15 @@ public class ClanDisbandCommand implements CommandHandler {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        boolean success = clan.disband(modifiedPlayer, clan);
+        ClanResponse clanResponse = clan.disband(modifiedPlayer, clan);
 
-        if (success) {
+        if (clanResponse.isSuccess()) {
             ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_deleted_the_clan"));
             return true;
         } else {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_are_not_a_leader"));
+            if(clanResponse.getMessage() != null) {
+                ChatUtil.getChatUtil().sendMessage(player, clanResponse.getMessage());
+            }
         }
 
         return true;
