@@ -8,6 +8,6 @@ public interface Clan {
     ClanResponse withdraw(ModifiedPlayer modifiedPlayer, int amount);
     ClanResponse leave(ModifiedPlayer modifiedPlayer);
     ClanResponse rank(ModifiedPlayer modifiedPlayer, int id);
-    ClanResponse disband(ModifiedPlayer modifiedPlayer, Clan clan);
+    ClanResponse disband(ModifiedPlayer modifiedPlayer);
 
 }

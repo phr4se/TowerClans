@@ -41,6 +41,8 @@ public class ConfigManager {
             int xp = config.getInt(name + ".xp");
             int balance = config.getInt(name + ".balance");
             boolean pvp = config.getBoolean(name + ".pvp");
+            int kills = config.getInt(name + ".kills");
+            int deaths = config.getInt(name + ".deaths");
             List<String> list = config.getStringList(name + ".members");
             Map<ModifiedPlayer, String> members = new HashMap<>();
 
@@ -50,6 +52,8 @@ public class ConfigManager {
             clan.setXp(xp);
             clan.setBalance(balance);
             clan.setPvp(pvp);
+            clan.setKills(kills);
+            clan.setDeaths(deaths);
 
 
             for(String string : list) {
@@ -85,6 +89,8 @@ public class ConfigManager {
             config.set(name + ".xp", clan.getXp());
             config.set(name + ".balance", clan.getBalance());
             config.set(name + ".pvp", clan.isPvp());
+            config.set(name + ".kills", clan.getKills());
+            config.set(name + ".deaths", clan.getDeaths());
             for (Map.Entry<ModifiedPlayer, String> entry2 : clan.getMembers().entrySet()) {
 
                 String player = entry2.getKey().getPlayer().getName();

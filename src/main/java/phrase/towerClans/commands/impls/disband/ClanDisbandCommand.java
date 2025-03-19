@@ -27,7 +27,7 @@ public class ClanDisbandCommand implements CommandHandler {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        ClanResponse clanResponse = clan.disband(modifiedPlayer, clan);
+        ClanResponse clanResponse = clan.disband(modifiedPlayer);
 
         if (clanResponse.isSuccess()) {
             ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_deleted_the_clan"));

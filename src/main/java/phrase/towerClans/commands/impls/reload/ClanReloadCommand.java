@@ -12,7 +12,8 @@ public class ClanReloadCommand implements CommandHandler {
     public boolean handler(Player player, String[] args) {
         ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.reload");
         Plugin.getInstance().reloadConfig();
-        ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("message.command.reload.you_have_reloaded_the_config"));
+        ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_have_reloaded_the_config"));
+
         return true;
     }
 

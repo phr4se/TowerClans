@@ -40,7 +40,7 @@ public class ClanCreateCommand implements CommandHandler {
         }
 
         if (Plugin.getInstance().economy.getBalance(player) < amount) {
-            String string = configurationSection.getString("you_don't_have_enough").replace("%amount%", String.valueOf(amount - Plugin.getInstance().economy.getBalance(player)));
+            String string = configurationSection.getString("you_don't_have_enough").replace("%amount%", String.valueOf(amount - (int)Plugin.getInstance().economy.getBalance(player)));
             ChatUtil.getChatUtil().sendMessage(player, string);
             return true;
         }

@@ -116,6 +116,8 @@ settings:
                 - "&#008000Участников: &#ffff00%members%&#008000/&#ffff0020"
                 - "&#008000Уровень: &#ffff00%level% &#008000(&#ffff00%xp% XP&#008000)"
                 - "&#008000Баланс: &#ffff00%balance%"
+                - "&#008000Убийств: &#ffff00%kills%"
+                - "&#008000Смерти: &#ffff00%deaths%"
                 - "&#008000PVP-Режим: &#ffff00%pvp%"
                 - "&#008000Лимит баланса: &#ffff00%maximum_balance%"
               members_clan:

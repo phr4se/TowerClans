@@ -8,11 +8,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.AbstractClan;
 import phrase.towerClans.clan.ModifiedPlayer;
@@ -21,9 +21,7 @@ import phrase.towerClans.commands.impls.invite.ClanInviteCommand;
 import phrase.towerClans.utils.ChatUtil;
 import phrase.towerClans.utils.HexUtil;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public class EventListener implements Listener {
@@ -153,6 +151,7 @@ public class EventListener implements Listener {
 
         ClanImpl attackerClan = (ClanImpl) attackerModifiedPlayer.getClan();
         ClanImpl defenderClan = (ClanImpl) defenderModifiedPlayer.getClan();
+        if(attackerClan == null || defenderClan == null) return;
 
         if(!attackerClan.getName().equals(defenderClan.getName())) return;
 
@@ -160,37 +159,78 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onKill(EntityDeathEvent event) {
+    public void onEntityDeath(EntityDeathEvent event) {
 
-        if(event.getEntity() instanceof LivingEntity && event.getEntity().getKiller() instanceof Player) {
+        Player player = event.getEntity().getKiller();
+        if(player == null) return;
 
-            Player player = event.getEntity().getKiller();
-            ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
-            if(modifiedPlayer.getClan() == null) return;
+        if(event.getEntity() instanceof Player) return;
 
-            ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-            clan.setXp(clan.getXp() + 2);
-            int level = clan.getLevel();
-            int xp = AbstractClan.LevelType.getXpLevel(level);
-            if(clan.getXp() >= xp) {
-                for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-                    ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message");
-                    String string = configSection.getString("notification_of_a_level_increase");
-                    chatUtil.sendMessage(entry.getKey().getPlayer(), string);
-                }
-                clan.setLevel(++level);
+        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
+        if(modifiedPlayer.getClan() == null) return;
+        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+
+        clan.setXp(clan.getXp() + 2);
+        int level = clan.getLevel();
+        int xp = AbstractClan.LevelType.getXpLevel(level);
+        if(clan.getXp() >= xp) {
+            for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
+                ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message");
+                String string = configSection.getString("notification_of_a_level_increase");
+                chatUtil.sendMessage(entry.getKey().getPlayer(), string);
             }
-
+            clan.setLevel(++level);
         }
 
     }
 
     @EventHandler
-    public void onExit(PlayerQuitEvent event) {
-        UUID player = event.getPlayer().getUniqueId();
-        if(!player.equals(ClanInviteCommand.PLAYERS.get(event.getPlayer().getUniqueId()))) return;
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity().getKiller();
+        Player targetPlayer = event.getEntity();
 
-        ClanInviteCommand.PLAYERS.remove(player);
+        ModifiedPlayer targetModifiedPlayer = ModifiedPlayer.get(targetPlayer);
+        ClanImpl targetClan = (ClanImpl) targetModifiedPlayer.getClan();
+        if(player == null) {
+            if(targetClan == null) return;
+            targetClan.setDeaths(targetClan.getDeaths() + 1);
+            return;
+        }
+
+        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
+
+        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+        if(clan == null) {
+            if(targetClan == null) return;
+            targetClan.setDeaths(targetClan.getDeaths() + 1);
+            return;
+        }
+        if(targetClan == null) {
+            clan.setKills(clan.getKills() + 1);
+            return;
+        }
+        if(clan.getName().equals(targetClan.getName())) return;
+
+        clan.setKills(clan.getKills() + 1);
+        targetClan.setDeaths(targetClan.getDeaths() + 1);
+    }
+
+    @EventHandler
+    public void onExit(PlayerQuitEvent event) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                UUID player = event.getPlayer().getUniqueId();
+                for (Map.Entry<UUID, UUID> entry : ClanInviteCommand.PLAYERS.entrySet()) {
+
+                    if(!entry.getKey().equals(player) && !entry.getValue().equals(player)) continue;
+
+                    ClanInviteCommand.PLAYERS.remove(entry.getKey());
+
+                }
+                cancel();
+            }
+        }.runTaskAsynchronously(Plugin.getInstance());
     }
 
 }
