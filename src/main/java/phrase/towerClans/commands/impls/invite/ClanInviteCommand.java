@@ -54,7 +54,7 @@ public class ClanInviteCommand implements CommandHandler {
 
         PLAYERS.put(targetPlayer.getUniqueId(), player.getUniqueId());
         ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_have_sent_a_request_to_join_the_clan"));
-        ChatUtil.getChatUtil().sendMessage(targetPlayer, configurationSection.getString("you_have_received_a_request_to_join_the_clan"));
+        ChatUtil.getChatUtil().sendMessage(targetPlayer, configurationSection.getString("you_have_received_a_request_to_join_the_clan").replace("%clan_name%", ((ClanImpl)modifiedPlayer.getClan()).getName()));
 
         return true;
     }

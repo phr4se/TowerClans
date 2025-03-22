@@ -12,6 +12,7 @@ import phrase.towerClans.commands.impls.menu.ClanMenuCommand;
 import phrase.towerClans.commands.impls.pvp.ClanPvpCommand;
 import phrase.towerClans.commands.impls.rank.ClanRankCommand;
 import phrase.towerClans.commands.impls.reload.ClanReloadCommand;
+import phrase.towerClans.commands.impls.stats.ClanStatsCommand;
 import phrase.towerClans.commands.impls.withdraw.ClanWithdrawCommand;
 
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class CommandLogger {
         COMMANDS.put("menu", new CommandDescription("towerclans.menu", new ClanMenuCommand()));
         COMMANDS.put("pvp", new CommandDescription("towerclans.pvp", new ClanPvpCommand()));
         COMMANDS.put("rank", new CommandDescription("towerclans.rank", new ClanRankCommand()));
+        COMMANDS.put("stats", new CommandDescription("towerclans.stats", new ClanStatsCommand()));
     }
 
 }

@@ -41,7 +41,7 @@ message:
       you_don't_have_permission: "&#808080У вас нет прав"
       the_player_was_not_found: "&#808080Игрок не найден"
       you_have_sent_a_request_to_join_the_clan: "&#808080Вы отправили запрос на вступление в клан"
-      you_have_received_a_request_to_join_the_clan: "&#808080Вы получили запрос на вступление в клан"
+      you_have_received_a_request_to_join_the_clan: "&#808080Вы получили запрос на вступление в клан %clan_name%"
       notification_of_the_invitation: "&#808080%player% вступил в клан"
       accept:
         has_anyone_sent_you_a_request_to_join_clan: "&#808080Вам никто не отправлял запрос на вступление в клан"
@@ -104,6 +104,15 @@ message:
     reload:
       you_don't_have_permission: "&#808080У вас нет прав"
       you_have_reloaded_the_config: "&#808080Вы перезагрузили конфиг"
+    stats:
+      usage_command: "&#808080Использование: /clan stats <игрок>"
+      the_player_is_offline: "&#808080Игрок не в сети"
+      you're_not_in_the_clan: "&#808080Вы не в клане"
+      the_player_is_not_in_your_clan: "&#808080Игрок не в вашем клане"
+      player_statistics:
+        - "&#808080Статистика игрока %player%"
+        - "&#808080Убийств: %kills%"
+        - "&#808080Смертей: %deaths%"
 settings:
   the_cost_of_creating_a_clan: 10000
   menu:

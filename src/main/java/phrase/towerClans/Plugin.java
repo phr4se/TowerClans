@@ -44,7 +44,8 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
             return;
         }
 
-        configManager.loadData();
+        configManager.loadClans();
+        configManager.savePlayers();
 
         getCommand("clan").setExecutor(this);
 
@@ -67,7 +68,8 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onDisable() {
-        configManager.saveData();
+        configManager.saveClans();
+        configManager.savePlayers();
     }
 
 
