@@ -1,6 +1,7 @@
 package phrase.towerClans.clan;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,6 +31,38 @@ public class PlayerStats {
 
     public int getDeaths() {
         return deaths;
+    }
+
+    public static int getKillsMembers(Map<ModifiedPlayer, String> members) {
+
+        int kills = 0;
+
+        for(Map.Entry<ModifiedPlayer, String> entry : members.entrySet()) {
+
+           PlayerStats playerStats = PLAYERS.get(entry.getKey().getPlayer().getUniqueId());
+           kills += playerStats.getKills();
+
+
+        }
+
+        return kills;
+
+    }
+
+    public static int getDeathMembers(Map<ModifiedPlayer, String> members) {
+
+        int deaths = 0;
+
+        for(Map.Entry<ModifiedPlayer, String> entry : members.entrySet()) {
+
+            PlayerStats playerStats = PLAYERS.get(entry.getKey().getPlayer().getUniqueId());
+            deaths += playerStats.getDeaths();
+
+
+        }
+
+        return deaths;
+
     }
 
 

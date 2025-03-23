@@ -11,6 +11,7 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.AbstractClan;
 import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.ModifiedPlayer;
+import phrase.towerClans.clan.PlayerStats;
 import phrase.towerClans.utils.ChatUtil;
 import phrase.towerClans.utils.HexUtil;
 import phrase.towerClans.utils.ItemBuilder;
@@ -154,15 +155,32 @@ public class ClanImpl extends AbstractClan {
 
         switch (id) {
             case 1:
-                menu = MenuType.MENU_CLAN.getMenu((ClanImpl) modifiedPlayer.getClan(), 1);
+                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 1);
                 modifiedPlayer.getPlayer().openInventory(menu);
                 break;
             case 2:
-                menu = MenuType.MENU_CLAN_MEMBERS.getMenu((ClanImpl) modifiedPlayer.getClan(), 2);
+                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 2);
                 modifiedPlayer.getPlayer().openInventory(menu);
                 break;
             case 3:
-                menu = MenuType.MENU_LEVEL_CLAN.getMenu((ClanImpl) modifiedPlayer.getClan(), 3);
+                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 3);
+                modifiedPlayer.getPlayer().openInventory(menu);
+                break;
+            case 4:
+                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 4);
+                modifiedPlayer.getPlayer().openInventory(menu);
+                break;
+            case 5:
+                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 5);
+                modifiedPlayer.getPlayer().openInventory(menu);
+                break;
+            case 6:
+                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 6);
+                modifiedPlayer.getPlayer().openInventory(menu);
+                break;
+            case 7:
+                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 7);
+                modifiedPlayer.getPlayer().openInventory(menu);
         }
 
         modifiedPlayer.getPlayer().openInventory(menu);
@@ -172,7 +190,11 @@ public class ClanImpl extends AbstractClan {
 
         MENU_CLAN(1),
         MENU_CLAN_MEMBERS(2),
-        MENU_LEVEL_CLAN(3);
+        MENU_LEVEL_CLAN(3),
+        MENU_TOP_CLAN(4),
+        MENU_TOP_LEVEL_CLAN(5),
+        MENU_TOP_DEATHS_CLAN(6),
+        MENU_TOP_KILLS_CLAN(7);
 
         private final int id;
 
@@ -189,8 +211,12 @@ public class ClanImpl extends AbstractClan {
             List<String> list;
             List<String> replacedList;
             int slot;
-            ConfigurationSection configSection;
+            ConfigurationSection configurationSection;
+            ItemStack top;
+            List<ClanImpl> clanList;
 
+            maximumBalance = LevelType.getLevelMaximumBalance(clan.getLevel());
+            final int finalMaximumBalance = maximumBalance;
             switch (id) {
                 case 1:
 
@@ -200,12 +226,9 @@ public class ClanImpl extends AbstractClan {
                         menu.setItem(index, redStainedGlassPane);
                     }
 
-                    configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items");
+                    configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items");
 
-                    maximumBalance = LevelType.getLevelMaximumBalance(clan.getLevel());
-
-                    list = configSection.getStringList("information.lore");
-                    final int finalMaximumBalance = maximumBalance;
+                    list = configurationSection.getStringList("information.lore");
                     replacedList = list.stream().map(string -> {
                         String replacedString = string
                                 .replace("%name%", clan.getName())
@@ -215,19 +238,18 @@ public class ClanImpl extends AbstractClan {
                                 .replace("%balance%", String.valueOf(clan.getBalance()))
                                 .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
                                 .replace("%maximum_balance%", String.valueOf(finalMaximumBalance))
-                                .replace("%kills%", String.valueOf(clan.getKills()))
-                                .replace("%deaths%", String.valueOf(clan.getDeaths()));
+                                .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
+                                .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
 
                         return HexUtil.color(replacedString);
                     }).collect(Collectors.toList());
 
                     ItemStack information = new ItemBuilder(Material.KNOWLEDGE_BOOK)
-                            .setName(HexUtil.color(configSection.getString("information.title")))
+                            .setName(HexUtil.color(configurationSection.getString("information.title")))
                             .setLore(replacedList)
                             .build();
 
-                    list = configSection.getStringList("members_clan.lore");
-                    final int finalMaximumBalance1 = maximumBalance;
+                    list = configurationSection.getStringList("members_clan.lore");
                     replacedList = list.stream().map(string -> {
                         String replacedString = string
                                 .replace("%name%", clan.getName())
@@ -236,20 +258,19 @@ public class ClanImpl extends AbstractClan {
                                 .replace("%xp%", String.valueOf(clan.getXp()))
                                 .replace("%balance%", String.valueOf(clan.getBalance()))
                                 .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
-                                .replace("%maximum_balance%", String.valueOf(finalMaximumBalance1))
-                                .replace("%kills%", String.valueOf(clan.getKills()))
-                                .replace("%deaths%", String.valueOf(clan.getDeaths()));
+                                .replace("%maximum_balance%", String.valueOf(finalMaximumBalance))
+                                .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
+                                .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
 
                         return HexUtil.color(replacedString);
                     }).collect(Collectors.toList());
 
                     ItemStack members = new ItemBuilder(Material.TOTEM_OF_UNDYING)
-                            .setName(HexUtil.color(configSection.getString("members_clan.title")))
+                            .setName(HexUtil.color(configurationSection.getString("members_clan.title")))
                             .setLore(replacedList)
                             .build();
 
-                    list = configSection.getStringList("level_clan.lore");
-                    final int finalMaximumBalance4 = maximumBalance;
+                    list = configurationSection.getStringList("level_clan.lore");
                     replacedList = list.stream().map(string -> {
                         String replacedString = string
                                 .replace("%name%", clan.getName())
@@ -258,39 +279,54 @@ public class ClanImpl extends AbstractClan {
                                 .replace("%xp%", String.valueOf(clan.getXp()))
                                 .replace("%balance%", String.valueOf(clan.getBalance()))
                                 .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
-                                .replace("%maximum_balance%", String.valueOf(finalMaximumBalance4))
-                                .replace("%kills%", String.valueOf(clan.getKills()))
-                                .replace("%deaths%", String.valueOf(clan.getDeaths()));
+                                .replace("%maximum_balance%", String.valueOf(finalMaximumBalance))
+                                .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
+                                .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
 
                         return HexUtil.color(replacedString);
                     }).collect(Collectors.toList());
 
                     ItemStack level = new ItemBuilder(Material.DIAMOND)
-                            .setName(HexUtil.color(configSection.getString("level_clan.title")))
+                            .setName(HexUtil.color(configurationSection.getString("level_clan.title")))
                             .setLore(replacedList)
                             .build();
 
                     back = new ItemBuilder(Material.SPECTRAL_ARROW)
-                            .setName(HexUtil.color(configSection.getString("exit.title")))
+                            .setName(HexUtil.color(configurationSection.getString("exit.title")))
+                            .build();
+
+                    list = new ArrayList<>();
+
+                    clanList = getClans().values().stream().sorted((o, o1) -> Integer.compare(o1.getXp(), o.getXp())).limit(10).collect(Collectors.toList());
+                    int place = 1;
+                    String format = configurationSection.getString("top_clan.format");
+                    for(ClanImpl o : clanList) {
+                        list.add(HexUtil.color(format.replace("%place%", String.valueOf(place)).replace("%clan_name%", o.getName()).replace("%xp%", String.valueOf(o.getXp()))));
+                        place++;
+                    }
+
+                    top = new ItemBuilder(Material.GOLDEN_APPLE)
+                            .setName(HexUtil.color(configurationSection.getString("top_clan.title")))
+                            .setLore(list)
                             .build();
 
                     menu.setItem(34, back);
                     menu.setItem(10, information);
                     menu.setItem(11, members);
                     menu.setItem(12, level);
+                    menu.setItem(13, top);
                     return menu;
                 case 2:
                     menu = Bukkit.createInventory(null, 45, "Участники клана");
-
 
                     for (int index : indices) {
                         menu.setItem(index, redStainedGlassPane);
                     }
 
-                    configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan_members");
+                    configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan_members");
 
                     back = new ItemBuilder(Material.SPECTRAL_ARROW)
-                            .setName(HexUtil.color(configSection.getString("in_menu.title")))
+                            .setName(HexUtil.color(configurationSection.getString("in_menu.title")))
                             .build();
 
                     menu.setItem(34, back);
@@ -304,10 +340,12 @@ public class ClanImpl extends AbstractClan {
                             if (Bukkit.getPlayer(entry.getKey().getPlayer().getName()) == null)
                                 skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(entry.getKey().getPlayer().getName()));
                             else skullMeta.setOwningPlayer(Bukkit.getPlayer(entry.getKey().getPlayer().getName()));
-                            list = configSection.getStringList("player.lore");
+                            list = configurationSection.getStringList("player.lore");
                             replacedList = list.stream().map(string -> {
                                 String replacedString = string
-                                        .replace("%rank%", clan.getMembers().get(entry.getKey()));
+                                        .replace("%rank%", clan.getMembers().get(entry.getKey()))
+                                        .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
+                                        .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
                                 return HexUtil.color(replacedString);
                             }).collect(Collectors.toList());
                             skullMeta.setLore(replacedList);
@@ -328,32 +366,31 @@ public class ClanImpl extends AbstractClan {
                         menu.setItem(index, redStainedGlassPane);
                     }
 
-                    configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_level_clan.level");
+                    configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_level_clan.level");
 
                     back = new ItemBuilder(Material.SPECTRAL_ARROW)
-                            .setName(HexUtil.color(configSection.getString("in_menu.title")))
+                            .setName(HexUtil.color(configurationSection.getString("in_menu.title")))
                             .build();
 
                     menu.setItem(34, back);
 
                     slot = 10;
+                    ItemStack furnaceMinecart = new ItemStack(Material.FURNACE_MINECART);
+                    ItemMeta furnaceMinecartMeta = furnaceMinecart.getItemMeta();
                     for (int i = 1; i <= LevelType.countLevel; i++) {
-                        maximumBalance = LevelType.getLevelMaximumBalance(i);
                         if (clan.getLevel() < i) {
-                            ItemStack furnaceMinecart = new ItemStack(Material.FURNACE_MINECART);
-                            ItemMeta furnaceMinecartMeta = furnaceMinecart.getItemMeta();
-                            furnaceMinecartMeta.setDisplayName(HexUtil.color(configSection.getString("not_received.title").replace("%level%", String.valueOf(i))));
-                            list = configSection.getStringList("not_received.lore");
-                            final int finalMaximumBalance2 = maximumBalance;
+                            furnaceMinecartMeta.setDisplayName(HexUtil.color(configurationSection.getString("not_received.title").replace("%level%", String.valueOf(i))));
+                            list = configurationSection.getStringList("not_received.lore");
                             replacedList = list.stream().map(string -> {
                                 String replacedString = string
                                         .replace("%name%", clan.getName())
                                         .replace("%members%", String.valueOf(clan.getMembers().size()))
                                         .replace("%level%", String.valueOf(clan.getLevel()))
                                         .replace("%xp%", String.valueOf(clan.getXp()))
-                                        .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет").replace("%maximum_balance%", String.valueOf(finalMaximumBalance2))
-                                        .replace("%kills%", String.valueOf(clan.getKills()))
-                                        .replace("%deaths%", String.valueOf(clan.getDeaths()));
+                                        .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
+                                        .replace("%maximum_balance%", String.valueOf(finalMaximumBalance))
+                                        .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
+                                        .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
                                 return HexUtil.color(replacedString);
                             }).collect(Collectors.toList());
                             furnaceMinecartMeta.setLore(replacedList);
@@ -365,18 +402,18 @@ public class ClanImpl extends AbstractClan {
 
                         ItemStack chestMinecart = new ItemStack(Material.CHEST_MINECART);
                         ItemMeta chestMinecartMeta = chestMinecart.getItemMeta();
-                        chestMinecartMeta.setDisplayName(HexUtil.color(configSection.getString("received.title").replace("%level%", String.valueOf(i))));
-                        list = configSection.getStringList("received.lore");
-                        final int finalMaximumBalance3 = maximumBalance;
+                        chestMinecartMeta.setDisplayName(HexUtil.color(configurationSection.getString("received.title").replace("%level%", String.valueOf(i))));
+                        list = configurationSection.getStringList("received.lore");
                         replacedList = list.stream().map(string -> {
                             String replacedString = string
                                     .replace("%name%", clan.getName())
                                     .replace("%members%", String.valueOf(clan.getMembers().size()))
                                     .replace("%level%", String.valueOf(clan.getLevel()))
                                     .replace("%xp%", String.valueOf(clan.getXp()))
-                                    .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет").replace("%maximum_balance%", String.valueOf(finalMaximumBalance3))
-                                    .replace("%kills%", String.valueOf(clan.getKills()))
-                                    .replace("%deaths%", String.valueOf(clan.getDeaths()));
+                                    .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
+                                    .replace("%maximum_balance%", String.valueOf(finalMaximumBalance))
+                                    .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
+                                    .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
                             return HexUtil.color(replacedString);
                         }).collect(Collectors.toList());
                         chestMinecartMeta.setLore(replacedList);
@@ -385,13 +422,18 @@ public class ClanImpl extends AbstractClan {
                         slot++;
 
                     }
+
+                    return menu;
             }
+
             return menu;
+
         }
 
         public int getId() {
             return id;
         }
+
 
 
         public static boolean identical(Inventory o1, Inventory o2) {

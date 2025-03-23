@@ -3,6 +3,7 @@ message:
   you_don't_have_permission: "&#808080У вас нет прав"
   a_player_without_a_clan:
   - "&#008000/clan create - &#ffff00создать клан"
+  - "&#008000/clan top - &#ffff00посмотреть топ кланов"
   a_player_with_a_clan:
   - "&#008000/clan menu - &#ffff00открыть меню клана"
   - "&#008000/clan invite <игрок> - &#ffff00добавить игрока в клан"
@@ -14,6 +15,8 @@ message:
   - "&#008000/clan pvp - &#ffff00включить/выключить PVP-режим"
   - "&#008000/clan disband - &#ffff00удалить клан"
   - "&#008000/clan rank <игрок> <2 - заместитель, 3 - участник> - &#ffff00назначить ранг игроку"
+  - "&#008000/clan top - &#ffff00посмотреть топ кланов"
+  - "&#008000/clan info <клан> - &#ffff00посмотреть информаю о клане"
   notification_of_a_level_increase: "&#ffff00Уровень клана повышен"
   the_format_of_the_chat_message: "&#ff0000[%clan_name%] &f%format%"
   you_are_not_a_player: "&#ff0000Вы не являетесь игроком!"
@@ -108,11 +111,25 @@ message:
       usage_command: "&#808080Использование: /clan stats <игрок>"
       the_player_is_offline: "&#808080Игрок не в сети"
       you're_not_in_the_clan: "&#808080Вы не в клане"
+      the_player_is_not_in_the_clan: "&#808080Игрок не в клане"
       the_player_is_not_in_your_clan: "&#808080Игрок не в вашем клане"
       player_statistics:
         - "&#808080Статистика игрока %player%"
         - "&#808080Убийств: %kills%"
         - "&#808080Смертей: %deaths%"
+    info:
+      usage_command: "&#808080Использование: /clan info <клаг>"
+      there_is_no_such_clan: "&#808080Такого клана не существует"
+      information_about_the_clan:
+        - "&#008000Клан: &#ffff00%name%"
+        - "&#008000Участников: &#ffff00%members%&#008000/&#ffff0020"
+        - "&#008000Уровень: &#ffff00%level% &#008000(&#ffff00%xp% XP&#008000)"
+        - "&#008000Баланс: &#ffff00%balance%"
+        - "&#008000Убийств: &#ffff00%kills%"
+        - "&#008000Смерти: &#ffff00%deaths%"
+
+
+
 settings:
   the_cost_of_creating_a_clan: 10000
   menu:
@@ -137,12 +154,17 @@ settings:
                 title: "&#ff0000Уровень клана"
                 lore:
                   - "&#808080Нажмите, чтобы посмотреть уровень клана"
+              top_clan:
+                title: "&#ff0000Топ кланов"
+                format: "&#808080%place%. &#008000%clan_name%&#808080: %xp% &#ffff00XP"
               exit:
                 title: "&#ff0000Выйти"
       menu_clan_members:
         player:
             lore:
               - "&#008000Ранг &#ffff00%rank%"
+              - "&#008000Убийств &#ffff00%kills%"
+              - "&#008000Смертей &#ffff00%deaths%"
         in_menu:
             title: "&#ff0000В меню"
       menu_level_clan:

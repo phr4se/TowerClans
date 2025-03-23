@@ -3,6 +3,7 @@ package phrase.towerClans.commands;
 import phrase.towerClans.commands.impls.chat.ClanChatCommand;
 import phrase.towerClans.commands.impls.create.ClanCreateCommand;
 import phrase.towerClans.commands.impls.disband.ClanDisbandCommand;
+import phrase.towerClans.commands.impls.info.ClanInfoCommand;
 import phrase.towerClans.commands.impls.invite.ClanAcceptCommand;
 import phrase.towerClans.commands.impls.invite.ClanCancelCommand;
 import phrase.towerClans.commands.impls.invest.ClanInvestCommand;
@@ -13,6 +14,7 @@ import phrase.towerClans.commands.impls.pvp.ClanPvpCommand;
 import phrase.towerClans.commands.impls.rank.ClanRankCommand;
 import phrase.towerClans.commands.impls.reload.ClanReloadCommand;
 import phrase.towerClans.commands.impls.stats.ClanStatsCommand;
+import phrase.towerClans.commands.impls.top.ClanTopCommand;
 import phrase.towerClans.commands.impls.withdraw.ClanWithdrawCommand;
 
 import java.util.HashMap;
@@ -46,6 +48,8 @@ public class CommandLogger {
         COMMANDS.put("pvp", new CommandDescription("towerclans.pvp", new ClanPvpCommand()));
         COMMANDS.put("rank", new CommandDescription("towerclans.rank", new ClanRankCommand()));
         COMMANDS.put("stats", new CommandDescription("towerclans.stats", new ClanStatsCommand()));
+        COMMANDS.put("info", new CommandDescription("towerclans.info", new ClanInfoCommand()));
+        COMMANDS.put("top", new CommandDescription("towerclans.top", new ClanTopCommand()));
     }
 
 }

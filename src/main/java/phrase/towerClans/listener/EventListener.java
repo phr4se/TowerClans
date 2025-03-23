@@ -2,7 +2,6 @@ package phrase.towerClans.listener;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -44,6 +43,8 @@ public class EventListener implements Listener {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
+        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.members_clan");
+
         if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 1), event.getInventory())) {
 
             if(event.getCurrentItem() == null) {
@@ -51,29 +52,36 @@ public class EventListener implements Listener {
                 return;
             }
 
-            ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.members_clan");
 
             if (event.getCurrentItem().getType() == Material.TOTEM_OF_UNDYING && event.getCurrentItem().getItemMeta().getDisplayName().
-                    equalsIgnoreCase(HexUtil.color(configSection.getString("title")))) {
+                    equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
                 event.setCancelled(true);
                 clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN_MEMBERS.getId());
                 return;
             }
 
-            configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.level_clan");
+            configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.level_clan");
 
             if (event.getCurrentItem().getType() == Material.DIAMOND && event.getCurrentItem().getItemMeta().getDisplayName().
-                    equalsIgnoreCase(HexUtil.color(configSection.getString("title")))) {
+                    equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
                 event.setCancelled(true);
                 clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_LEVEL_CLAN.getId());
                 return;
             }
 
-            configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.exit");
+            configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.exit");
 
-            if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configSection.getString("title")))) {
+            if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
                 event.setCancelled(true);
                 player.closeInventory();
+                return;
+            }
+
+            configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.top_clan");
+
+            if(event.getCurrentItem().getType() == Material.PAPER && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
+                event.setCancelled(true);
+                clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_TOP_CLAN.getId());
                 return;
             }
 
@@ -92,9 +100,9 @@ public class EventListener implements Listener {
                 return;
             }
 
-            ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan_members.in_menu");
+            configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan_members.in_menu");
 
-            if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configSection.getString("title")))) {
+            if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
                 event.setCancelled(true);
                 clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN.getId());
                 return;
@@ -104,7 +112,7 @@ public class EventListener implements Listener {
 
         }
 
-        ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_level_clan.level.in_menu");
+        configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_level_clan.level.in_menu");
 
         if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 3), event.getInventory())) {
 
@@ -113,7 +121,7 @@ public class EventListener implements Listener {
                 return;
             }
 
-            if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configSection.getString("title")))) {
+            if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
                 event.setCancelled(true);
                 clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN.getId());
                 return;
@@ -121,6 +129,7 @@ public class EventListener implements Listener {
 
             event.setCancelled(true);
         }
+
     }
 
     @EventHandler
@@ -248,47 +257,15 @@ public class EventListener implements Listener {
                 Player player = event.getEntity().getKiller();
                 Player targetPlayer = event.getEntity();
 
-                PlayerStats playerStats = PlayerStats.PLAYERS.get(player.getUniqueId());
                 PlayerStats targetPlayerStats = PlayerStats.PLAYERS.get(targetPlayer.getUniqueId());
-
-                ModifiedPlayer targetModifiedPlayer = ModifiedPlayer.get(targetPlayer);
-                ClanImpl targetClan = (ClanImpl) targetModifiedPlayer.getClan();
                 if(player == null) {
-                    if(targetClan == null) {
-                        cancel();
-                        return;
-                    }
-                    targetClan.setDeaths(targetClan.getDeaths() + 1);
                     targetPlayerStats.setDeaths(targetPlayerStats.getDeaths() + 1);
                     cancel();
                     return;
                 }
-
-                ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
-
-                ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-                if(clan == null) {
-                    if(targetClan == null) cancel();
-                    targetClan.setDeaths(targetClan.getDeaths() + 1);
-                    targetPlayerStats.setDeaths(targetPlayerStats.getDeaths() + 1);
-                    cancel();
-                    return;
-                }
-                if(targetClan == null) {
-                    clan.setKills(clan.getKills() + 1);
-                    playerStats.setKills(playerStats.getKills() + 1);
-                    cancel();
-                    return;
-                }
-                if(clan.getName().equals(targetClan.getName())) {
-                    cancel();
-                    return;
-                }
-
-                clan.setKills(clan.getKills() + 1);
-                targetClan.setDeaths(targetClan.getDeaths() + 1);
-                playerStats.setKills(playerStats.getKills() + 1);
+                PlayerStats playerStats = PlayerStats.PLAYERS.get(player.getUniqueId());
                 targetPlayerStats.setDeaths(targetPlayerStats.getDeaths() + 1);
+                playerStats.setKills(playerStats.getKills() + 1);
                 cancel();
 
             }

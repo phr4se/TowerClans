@@ -9,8 +9,6 @@ public abstract class AbstractClan implements Clan {
     private int level;
     private int xp;
     private int balance;
-    private int kills;
-    private int deaths;
     private boolean pvp;
 
     public AbstractClan() {}
@@ -22,8 +20,6 @@ public abstract class AbstractClan implements Clan {
         level = LevelType.ONE.getId();
         xp = LevelType.ONE.getXp();
         balance = 0;
-        kills = 0;
-        deaths = 0;
         pvp = false;
     }
 
@@ -161,19 +157,4 @@ public abstract class AbstractClan implements Clan {
         this.pvp = pvp;
     }
 
-    public int getKills() {
-        return kills;
-    }
-
-    public int getDeaths() {
-        return deaths;
-    }
-
-    public void setKills(int kills) {
-        this.kills = kills;
-    }
-
-    public void setDeaths(int deaths) {
-        this.deaths = deaths;
-    }
 }
