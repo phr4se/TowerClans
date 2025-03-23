@@ -166,21 +166,6 @@ public class ClanImpl extends AbstractClan {
                 menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 3);
                 modifiedPlayer.getPlayer().openInventory(menu);
                 break;
-            case 4:
-                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 4);
-                modifiedPlayer.getPlayer().openInventory(menu);
-                break;
-            case 5:
-                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 5);
-                modifiedPlayer.getPlayer().openInventory(menu);
-                break;
-            case 6:
-                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 6);
-                modifiedPlayer.getPlayer().openInventory(menu);
-                break;
-            case 7:
-                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 7);
-                modifiedPlayer.getPlayer().openInventory(menu);
         }
 
         modifiedPlayer.getPlayer().openInventory(menu);
@@ -190,11 +175,7 @@ public class ClanImpl extends AbstractClan {
 
         MENU_CLAN(1),
         MENU_CLAN_MEMBERS(2),
-        MENU_LEVEL_CLAN(3),
-        MENU_TOP_CLAN(4),
-        MENU_TOP_LEVEL_CLAN(5),
-        MENU_TOP_DEATHS_CLAN(6),
-        MENU_TOP_KILLS_CLAN(7);
+        MENU_LEVEL_CLAN(3);
 
         private final int id;
 
