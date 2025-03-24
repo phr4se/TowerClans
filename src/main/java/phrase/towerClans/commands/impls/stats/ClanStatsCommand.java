@@ -13,22 +13,28 @@ import phrase.towerClans.utils.ChatUtil;
 import java.util.List;
 
 public class ClanStatsCommand implements CommandHandler {
+    private final Plugin plugin;
+    private final ChatUtil chatUtil;
 
+    public ClanStatsCommand(Plugin plugin) {
+        this.plugin = plugin;
+        chatUtil = new ChatUtil(plugin);
+    }
 
     @Override
     public boolean handler(Player player, String[] args) {
 
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.stats");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.stats");
 
         if(clan == null) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you're_not_in_the_clan"));
+            chatUtil.sendMessage(player, configurationSection.getString("you're_not_in_the_clan"));
             return true;
         }
 
         if (args.length < 2) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("usage_command"));
+            chatUtil.sendMessage(player, configurationSection.getString("usage_command"));
             return false;
         }
 
@@ -38,12 +44,12 @@ public class ClanStatsCommand implements CommandHandler {
         ClanImpl targetClan = (ClanImpl) targetModifiedPlayer.getClan();
 
         if (targetClan == null) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("the_player_is_not_in_the_clan"));
+            chatUtil.sendMessage(player, configurationSection.getString("the_player_is_not_in_the_clan"));
             return true;
         }
 
         if (!clan.getName().equals(targetClan.getName())) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("the_player_is_not_in_your_clan"));
+            chatUtil.sendMessage(player, configurationSection.getString("the_player_is_not_in_your_clan"));
             return true;
         }
 
@@ -54,7 +60,7 @@ public class ClanStatsCommand implements CommandHandler {
         List<String> list = configurationSection.getStringList("player_statistics");
 
         for (String string : list) {
-            ChatUtil.getChatUtil().sendMessage(player, string.replace("%kills%", String.valueOf(kills)).replace("%deaths%", String.valueOf(deaths)).replace("%player%", targetPlayer.getName()));
+            chatUtil.sendMessage(player, string.replace("%kills%", String.valueOf(kills)).replace("%deaths%", String.valueOf(deaths)).replace("%player%", targetPlayer.getName()));
         }
 
         return true;

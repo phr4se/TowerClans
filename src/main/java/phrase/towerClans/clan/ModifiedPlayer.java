@@ -10,28 +10,16 @@ import java.util.UUID;
 
 public class ModifiedPlayer {
 
-    private UUID player;
+    private UUID playerUUID;
     private Clan clan;
 
-    public ModifiedPlayer(UUID player, Clan clan) {
-        this.player = player;
+    public ModifiedPlayer(UUID playerUUID, Clan clan) {
+        this.playerUUID = playerUUID;
         this.clan = clan;
     }
 
     public Player getPlayer() {
-        return Bukkit.getPlayer(player);
-    }
-
-    public void setPlayer(UUID player) {
-        this.player = player;
-    }
-
-    public Clan getClan() {
-        return clan;
-    }
-
-    public void setClan(Clan clan) {
-        this.clan = clan;
+        return Bukkit.getPlayer(playerUUID);
     }
 
     public static ModifiedPlayer get(Player player) {
@@ -54,16 +42,32 @@ public class ModifiedPlayer {
 
     }
 
+    public Clan getClan() {
+        return clan;
+    }
+
+    public void setClan(Clan clan) {
+        this.clan = clan;
+    }
+
+    public UUID getPlayerUUID() {
+        return playerUUID;
+    }
+
+    public void setPlayerUUID(UUID playerUUID) {
+        this.playerUUID = playerUUID;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ModifiedPlayer that = (ModifiedPlayer) o;
-        return Objects.equals(player, that.player) && Objects.equals(clan, that.clan);
+        return Objects.equals(playerUUID, that.playerUUID) && Objects.equals(clan, that.clan);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(player, clan);
+        return Objects.hash(playerUUID, clan);
     }
 }

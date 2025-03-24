@@ -1,7 +1,6 @@
 package phrase.towerClans.commands.impls.rank;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
@@ -16,26 +15,34 @@ import java.util.Objects;
 
 public class ClanRankCommand implements CommandHandler {
 
+    private final Plugin plugin;
+    private final ChatUtil chatUtil;
+
+    public ClanRankCommand(Plugin plugin) {
+        this.plugin = plugin;
+        chatUtil = new ChatUtil(plugin);
+    }
+
     @Override
     public boolean handler(Player player, String[] args) {
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.rank");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.rank");
 
         if (args.length < 3) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("usage_command"));
+            chatUtil.sendMessage(player, configurationSection.getString("usage_command"));
             return false;
         }
 
         if (modifiedPlayer.getClan() == null) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("message.command.rank.you're_not_in_the_clan"));
+            chatUtil.sendMessage(player, configurationSection.getString("message.command.rank.you're_not_in_the_clan"));
             return true;
         }
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
         if (!clan.getMembers().get(modifiedPlayer).equals(AbstractClan.RankType.LEADER.getName())) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_don't_have_permission"));
+            chatUtil.sendMessage(player, configurationSection.getString("you_don't_have_permission"));
             return true;
         }
 
@@ -44,7 +51,7 @@ public class ClanRankCommand implements CommandHandler {
         try {
             targetPlayer = Objects.requireNonNull(Bukkit.getPlayer(name));
         } catch (NullPointerException e) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("the_player_is_offline"));
+            chatUtil.sendMessage(player, configurationSection.getString("the_player_is_offline"));
             return false;
         }
 
@@ -54,20 +61,20 @@ public class ClanRankCommand implements CommandHandler {
         try {
             id = Integer.parseInt(args[2]);
         } catch (NumberFormatException e) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("usage_command"));
+            chatUtil.sendMessage(player, configurationSection.getString("usage_command"));
         }
 
         ClanResponse clanResponse = clan.rank(targetModifierPlayer, id);
 
         if (clanResponse.isSuccess()) {
             String string = configurationSection.getString("you_have_set_the_player's_rank").replace("%player%", targetPlayer.getName()).replace("%rank%", (id == 2) ? AbstractClan.RankType.DEPUTY.getName() : AbstractClan.RankType.MEMBER.getName());
-            ChatUtil.getChatUtil().sendMessage(player, string);
+            chatUtil.sendMessage(player, string);
             string = configurationSection.getString("you_have_been_set_a_rank").replace("%player%", player.getName()).replace("%rank%", (id == 2) ? AbstractClan.RankType.DEPUTY.getName() : AbstractClan.RankType.MEMBER.getName());
-            ChatUtil.getChatUtil().sendMessage(player, string);
+            chatUtil.sendMessage(player, string);
             return true;
         } else {
             if(clanResponse.getMessage() != null) {
-                ChatUtil.getChatUtil().sendMessage(player, clanResponse.getMessage());
+                chatUtil.sendMessage(player, clanResponse.getMessage());
             }
         }
 

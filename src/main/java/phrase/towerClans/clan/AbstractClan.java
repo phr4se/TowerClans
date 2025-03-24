@@ -11,8 +11,6 @@ public abstract class AbstractClan implements Clan {
     private int balance;
     private boolean pvp;
 
-    public AbstractClan() {}
-
     public AbstractClan(String name) {
         this.name = name;
 
@@ -105,8 +103,6 @@ public abstract class AbstractClan implements Clan {
         public int getId() {
             return id;
         }
-
-
     }
 
     public String getName() {
@@ -156,5 +152,4 @@ public abstract class AbstractClan implements Clan {
     public void setPvp(boolean pvp) {
         this.pvp = pvp;
     }
-
 }

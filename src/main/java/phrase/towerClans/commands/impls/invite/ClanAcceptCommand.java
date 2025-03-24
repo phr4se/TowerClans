@@ -14,22 +14,30 @@ import java.util.UUID;
 
 public class ClanAcceptCommand implements CommandHandler {
 
+    private final Plugin plugin;
+    private final ChatUtil chatUtil;
+
+    public ClanAcceptCommand(Plugin plugin) {
+        this.plugin = plugin;
+        chatUtil = new ChatUtil(plugin);
+    }
+
     @Override
     public boolean handler(Player player, String[] args) {
 
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.invite.accept");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.invite.accept");
 
         UUID senderPlayer = ClanInviteCommand.PLAYERS.remove(player.getUniqueId());
 
         if (senderPlayer == null) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("has_anyone_sent_you_a_request_to_join_clan"));
+            chatUtil.sendMessage(player, configurationSection.getString("has_anyone_sent_you_a_request_to_join_clan"));
             return true;
         }
 
         if (modifiedPlayer.getClan() != null) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_are_in_a_clan"));
+            chatUtil.sendMessage(player, configurationSection.getString("you_are_in_a_clan"));
             return true;
         }
 
@@ -40,12 +48,12 @@ public class ClanAcceptCommand implements CommandHandler {
         ClanResponse clanResponse = clan.invite(modifiedPlayer);
 
         if (clanResponse.isSuccess()) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("have_you_accepted_the_request_to_join_the_clan"));
-            ChatUtil.getChatUtil().sendMessage(Bukkit.getPlayer(senderPlayer), configurationSection.getString("the_player_accepted_the_request_to_join_the_clan"));
+            chatUtil.sendMessage(player, configurationSection.getString("have_you_accepted_the_request_to_join_the_clan"));
+            chatUtil.sendMessage(Bukkit.getPlayer(senderPlayer), configurationSection.getString("the_player_accepted_the_request_to_join_the_clan"));
             return true;
         } else {
             if (clanResponse.getMessage() != null) {
-                ChatUtil.getChatUtil().sendMessage(Bukkit.getPlayer(senderPlayer), clanResponse.getMessage());
+                chatUtil.sendMessage(Bukkit.getPlayer(senderPlayer), clanResponse.getMessage());
             }
         }
 

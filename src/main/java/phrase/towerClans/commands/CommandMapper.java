@@ -6,10 +6,16 @@ import phrase.towerClans.Plugin;
 
 public class CommandMapper {
 
+    private final Plugin plugin;
+
+    public CommandMapper(Plugin plugin) {
+        this.plugin = plugin;
+    }
+
     public CommandResult mapCommand(Player player, String label, String[] args) {
 
         CommandDescription commandDescription = CommandLogger.getCommands().get(label.toLowerCase());
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message");
         if(commandDescription == null) return new CommandResult(configurationSection.getString("uknown_command"), CommandResult.ResultStatus.UNKNOWN_COMMAND);
 
         if(!player.hasPermission(commandDescription.getPermission())) return new CommandResult(configurationSection.getString("no_permission"),CommandResult.ResultStatus.NO_PERMISSION);

@@ -11,50 +11,58 @@ import phrase.towerClans.utils.ChatUtil;
 
 public class ClanCreateCommand implements CommandHandler {
 
+    private final Plugin plugin;
+    private final ChatUtil chatUtil;
+
+    public ClanCreateCommand(Plugin plugin) {
+        this.plugin = plugin;
+        chatUtil = new ChatUtil(plugin);
+    }
+
     @Override
     public boolean handler(Player player, String[] args) {
 
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.create");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.create");
 
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 
         if (args.length < 2) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("usage_command"));
+            chatUtil.sendMessage(player, configurationSection.getString("usage_command"));
             return false;
         }
 
         if (modifiedPlayer.getClan() != null) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_are_in_a_clan"));
+            chatUtil.sendMessage(player, configurationSection.getString("you_are_in_a_clan"));
             return true;
         }
 
-        configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings");
+        configurationSection = plugin.getConfig().getConfigurationSection("settings");
 
         int amount = configurationSection.getInt("the_cost_of_creating_a_clan");
 
-        configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.create");
+        configurationSection = plugin.getConfig().getConfigurationSection("message.command.create");
 
         if (ClanImpl.getClans().containsKey(args[1])) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("a_clan_with_that_name_already_exists"));
+            chatUtil.sendMessage(player, configurationSection.getString("a_clan_with_that_name_already_exists"));
             return true;
         }
 
-        if (Plugin.getInstance().economy.getBalance(player) < amount) {
-            String string = configurationSection.getString("you_don't_have_enough").replace("%amount%", String.valueOf(amount - (int)Plugin.getInstance().economy.getBalance(player)));
-            ChatUtil.getChatUtil().sendMessage(player, string);
+        if (plugin.economy.getBalance(player) < amount) {
+            String string = configurationSection.getString("you_don't_have_enough").replace("%amount%", String.valueOf(amount - (int)plugin.economy.getBalance(player)));
+            chatUtil.sendMessage(player, string);
             return true;
         }
 
 
-        Plugin.getInstance().economy.withdrawPlayer(player, amount);
+        plugin.economy.withdrawPlayer(player, amount);
         String name = args[1];
 
-        ClanImpl clan = new ClanImpl(name);
+        ClanImpl clan = new ClanImpl(name, plugin);
         modifiedPlayer.setClan(clan);
         clan.getMembers().put(modifiedPlayer, AbstractClan.RankType.LEADER.getName());
         ClanImpl.getClans().put(args[1], clan);
 
-        ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_have_created_a_clan"));
+        chatUtil.sendMessage(player, configurationSection.getString("you_have_created_a_clan"));
 
         return true;
     }

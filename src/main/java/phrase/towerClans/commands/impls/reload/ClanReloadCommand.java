@@ -8,11 +8,19 @@ import phrase.towerClans.utils.ChatUtil;
 
 public class ClanReloadCommand implements CommandHandler {
 
+    private final Plugin plugin;
+    private final ChatUtil chatUtil;
+
+    public ClanReloadCommand(Plugin plugin) {
+        this.plugin = plugin;
+        chatUtil = new ChatUtil(plugin);
+    }
+
     @Override
     public boolean handler(Player player, String[] args) {
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.reload");
-        Plugin.getInstance().reloadConfig();
-        ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_have_reloaded_the_config"));
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.reload");
+        plugin.reloadConfig();
+        chatUtil.sendMessage(player, configurationSection.getString("you_have_reloaded_the_config"));
 
         return true;
     }

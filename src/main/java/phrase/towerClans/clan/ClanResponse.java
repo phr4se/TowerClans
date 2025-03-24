@@ -1,5 +1,6 @@
 package phrase.towerClans.clan;
 
+
 public class ClanResponse {
 
     public enum ResponseType {

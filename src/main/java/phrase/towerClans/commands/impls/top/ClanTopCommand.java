@@ -14,10 +14,18 @@ import java.util.stream.Collectors;
 
 public class ClanTopCommand implements CommandHandler {
 
+    private final Plugin plugin;
+    private final ChatUtil chatUtil;
+
+    public ClanTopCommand(Plugin plugin) {
+        this.plugin = plugin;
+        chatUtil = new ChatUtil(plugin);
+    }
+
     @Override
     public boolean handler(Player player, String[] args) {
 
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan.items");
 
         List<ClanImpl> clanList = ClanImpl.getClans().values().stream().sorted((o, o1) -> Integer.compare(o1.getXp(), o.getXp())).limit(10).collect(Collectors.toList());
         int place = 1;
@@ -29,7 +37,7 @@ public class ClanTopCommand implements CommandHandler {
         }
 
         for(String string : list) {
-            ChatUtil.getChatUtil().sendMessage(player, string);
+            chatUtil.sendMessage(player, string);
         }
 
         return true;

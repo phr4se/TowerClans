@@ -1,7 +1,6 @@
 package phrase.towerClans.clan;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,22 +16,6 @@ public class PlayerStats {
         this.deaths = deaths;
     }
 
-    public void setKills(int kills) {
-        this.kills = kills;
-    }
-
-    public void setDeaths(int deaths) {
-        this.deaths = deaths;
-    }
-
-    public int getKills() {
-        return kills;
-    }
-
-    public int getDeaths() {
-        return deaths;
-    }
-
     public static int getKillsMembers(Map<ModifiedPlayer, String> members) {
 
         int kills = 0;
@@ -41,7 +24,6 @@ public class PlayerStats {
 
            PlayerStats playerStats = PLAYERS.get(entry.getKey().getPlayer().getUniqueId());
            kills += playerStats.getKills();
-
 
         }
 
@@ -65,5 +47,19 @@ public class PlayerStats {
 
     }
 
+    public int getDeaths() {
+        return deaths;
+    }
 
+    public void setDeaths(int deaths) {
+        this.deaths = deaths;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public void setKills(int kills) {
+        this.kills = kills;
+    }
 }

@@ -1,5 +1,6 @@
 package phrase.towerClans.commands;
 
+import phrase.towerClans.Plugin;
 import phrase.towerClans.commands.impls.chat.ClanChatCommand;
 import phrase.towerClans.commands.impls.create.ClanCreateCommand;
 import phrase.towerClans.commands.impls.disband.ClanDisbandCommand;
@@ -24,7 +25,10 @@ public class CommandLogger {
 
     private static final Map<String, CommandDescription> COMMANDS = new HashMap<>();
 
-    public CommandLogger() {
+    private final Plugin plugin;
+
+    public CommandLogger(Plugin plugin) {
+        this.plugin = plugin;
         intialize();
     }
 
@@ -33,23 +37,23 @@ public class CommandLogger {
     }
 
     private void intialize() {
-        COMMANDS.put("create", new CommandDescription("towerclans.create", new ClanCreateCommand()));
-        COMMANDS.put("disband", new CommandDescription("towerclans.disband", new ClanDisbandCommand()));
-        COMMANDS.put("invest", new CommandDescription("towerclans.invest", new ClanInvestCommand()));
-        COMMANDS.put("withdraw", new CommandDescription("towerclans.withdraw", new ClanWithdrawCommand()));
-        COMMANDS.put("invite", new CommandDescription("towerclans.invite", new ClanInviteCommand()));
-        COMMANDS.put("kick", new CommandDescription("towerclans.kick", new ClanKickCommand()));
-        COMMANDS.put("accept", new CommandDescription("towerclans.accept", new ClanAcceptCommand()));
-        COMMANDS.put("cancel", new CommandDescription("towerclans.cancel", new ClanCancelCommand()));
-        COMMANDS.put("reload", new CommandDescription("towerclans.reload", new ClanReloadCommand()));
-        COMMANDS.put("leave", new CommandDescription("towerclans.leave", new ClanPvpCommand()));
-        COMMANDS.put("chat", new CommandDescription("towerclans.disband", new ClanChatCommand()));
-        COMMANDS.put("menu", new CommandDescription("towerclans.menu", new ClanMenuCommand()));
-        COMMANDS.put("pvp", new CommandDescription("towerclans.pvp", new ClanPvpCommand()));
-        COMMANDS.put("rank", new CommandDescription("towerclans.rank", new ClanRankCommand()));
-        COMMANDS.put("stats", new CommandDescription("towerclans.stats", new ClanStatsCommand()));
-        COMMANDS.put("info", new CommandDescription("towerclans.info", new ClanInfoCommand()));
-        COMMANDS.put("top", new CommandDescription("towerclans.top", new ClanTopCommand()));
+        COMMANDS.put("create", new CommandDescription("towerclans.create", new ClanCreateCommand(plugin)));
+        COMMANDS.put("disband", new CommandDescription("towerclans.disband", new ClanDisbandCommand(plugin)));
+        COMMANDS.put("invest", new CommandDescription("towerclans.invest", new ClanInvestCommand(plugin)));
+        COMMANDS.put("withdraw", new CommandDescription("towerclans.withdraw", new ClanWithdrawCommand(plugin)));
+        COMMANDS.put("invite", new CommandDescription("towerclans.invite", new ClanInviteCommand(plugin)));
+        COMMANDS.put("kick", new CommandDescription("towerclans.kick", new ClanKickCommand(plugin)));
+        COMMANDS.put("accept", new CommandDescription("towerclans.accept", new ClanAcceptCommand(plugin)));
+        COMMANDS.put("cancel", new CommandDescription("towerclans.cancel", new ClanCancelCommand(plugin)));
+        COMMANDS.put("reload", new CommandDescription("towerclans.reload", new ClanReloadCommand(plugin)));
+        COMMANDS.put("leave", new CommandDescription("towerclans.leave", new ClanPvpCommand(plugin)));
+        COMMANDS.put("chat", new CommandDescription("towerclans.disband", new ClanChatCommand(plugin)));
+        COMMANDS.put("menu", new CommandDescription("towerclans.menu", new ClanMenuCommand(plugin)));
+        COMMANDS.put("pvp", new CommandDescription("towerclans.pvp", new ClanPvpCommand(plugin)));
+        COMMANDS.put("rank", new CommandDescription("towerclans.rank", new ClanRankCommand(plugin)));
+        COMMANDS.put("stats", new CommandDescription("towerclans.stats", new ClanStatsCommand(plugin)));
+        COMMANDS.put("info", new CommandDescription("towerclans.info", new ClanInfoCommand(plugin)));
+        COMMANDS.put("top", new CommandDescription("towerclans.top", new ClanTopCommand(plugin)));
     }
 
 }

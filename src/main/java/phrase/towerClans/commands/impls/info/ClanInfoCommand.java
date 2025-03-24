@@ -14,13 +14,21 @@ import java.util.stream.Collectors;
 
 public class ClanInfoCommand implements CommandHandler {
 
+    private final Plugin plugin;
+    private final ChatUtil chatUtil;
+
+    public ClanInfoCommand(Plugin plugin) {
+        this.plugin = plugin;
+        chatUtil = new ChatUtil(plugin);
+    }
+
     @Override
     public boolean handler(Player player, String[] args) {
 
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.info");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.info");
 
         if(args.length < 2) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("usage_command"));
+            chatUtil.sendMessage(player, configurationSection.getString("usage_command"));
             return false;
         }
 
@@ -28,7 +36,7 @@ public class ClanInfoCommand implements CommandHandler {
 
         ClanImpl clan = ClanImpl.getClans().get(name);
         if(clan == null) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("there_is_no_such_clan"));
+            chatUtil.sendMessage(player, configurationSection.getString("there_is_no_such_clan"));
             return true;
         }
 
@@ -47,7 +55,7 @@ public class ClanInfoCommand implements CommandHandler {
         }).collect(Collectors.toList());
 
         for(String string : replacedList) {
-            ChatUtil.getChatUtil().sendMessage(player, string);
+            chatUtil.sendMessage(player, string);
         }
 
         return true;

@@ -12,16 +12,23 @@ import phrase.towerClans.utils.ChatUtil;
 
 public class ClanDisbandCommand implements CommandHandler {
 
+    private final Plugin plugin;
+    private final ChatUtil chatUtil;
+
+    public ClanDisbandCommand(Plugin plugin) {
+        this.plugin = plugin;
+        chatUtil = new ChatUtil(plugin);
+    }
 
     @Override
     public boolean handler(Player player, String[] args) {
 
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.disband");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.disband");
 
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 
         if (modifiedPlayer.getClan() == null) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you're_not_in_the_clan"));
+            chatUtil.sendMessage(player, configurationSection.getString("you're_not_in_the_clan"));
             return true;
         }
 
@@ -30,11 +37,11 @@ public class ClanDisbandCommand implements CommandHandler {
         ClanResponse clanResponse = clan.disband(modifiedPlayer);
 
         if (clanResponse.isSuccess()) {
-            ChatUtil.getChatUtil().sendMessage(player, configurationSection.getString("you_deleted_the_clan"));
+            chatUtil.sendMessage(player, configurationSection.getString("you_deleted_the_clan"));
             return true;
         } else {
             if(clanResponse.getMessage() != null) {
-                ChatUtil.getChatUtil().sendMessage(player, clanResponse.getMessage());
+                chatUtil.sendMessage(player, clanResponse.getMessage());
             }
         }
 

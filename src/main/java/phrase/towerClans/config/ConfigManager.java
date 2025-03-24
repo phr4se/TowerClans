@@ -19,11 +19,13 @@ public class ConfigManager {
     private static YamlConfiguration configClans;
     private static File filePlayers;
     private static YamlConfiguration configPlayers;
+    private final Plugin plugin;
 
-    public ConfigManager() {
-        fileClans = new File(Plugin.getInstance().getDataFolder(), "clans.yml");
+    public ConfigManager(Plugin plugin) {
+        this.plugin = plugin;
+        fileClans = new File(plugin.getDataFolder(), "clans.yml");
         configClans = YamlConfiguration.loadConfiguration(fileClans);
-        filePlayers = new File(Plugin.getInstance().getDataFolder(), "players.yml");
+        filePlayers = new File(plugin.getDataFolder(), "players.yml");
         configPlayers = YamlConfiguration.loadConfiguration(filePlayers);
     }
 
@@ -33,7 +35,7 @@ public class ConfigManager {
             try {
                 fileClans.createNewFile();
             } catch (IOException e) {
-                Plugin.getInstance().getLogger().severe("Ошибка при создании фалйа clans.yml");
+                plugin.getLogger().severe("Ошибка при создании фалйа clans.yml");
                 return;
             }
         }
@@ -48,8 +50,7 @@ public class ConfigManager {
             List<String> list = configClans.getStringList(name + ".members");
             Map<ModifiedPlayer, String> members = new HashMap<>();
 
-            ClanImpl clan = new ClanImpl();
-            clan.setName(key);
+            ClanImpl clan = new ClanImpl(key, plugin);
             clan.setLevel(level);
             clan.setXp(xp);
             clan.setBalance(balance);
@@ -79,7 +80,7 @@ public class ConfigManager {
             try {
                 filePlayers.createNewFile();
             } catch (IOException e) {
-                Plugin.getInstance().getLogger().severe("Ошибка при создании фалйа clans.yml");
+                plugin.getLogger().severe("Ошибка при создании фалйа clans.yml");
                 return;
             }
         }
@@ -87,8 +88,8 @@ public class ConfigManager {
         for(String key : configPlayers.getKeys(false)) {
 
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(key);
-            int kills = configPlayers.getInt(offlinePlayer.getName() + ".kills");
-            int deaths = configPlayers.getInt(offlinePlayer.getName() + ".deaths");
+            int kills = configPlayers.getInt(key + ".kills");
+            int deaths = configPlayers.getInt(key + ".deaths");
 
             PlayerStats.PLAYERS.put(offlinePlayer.getUniqueId(), new PlayerStats(kills, deaths));
 
@@ -129,7 +130,7 @@ public class ConfigManager {
             try {
                 configClans.save(fileClans);
             } catch (IOException e) {
-                Plugin.getInstance().getLogger().severe("Не удалось сохранить файл");
+                plugin.getLogger().severe("Не удалось сохранить файл");
             }
 
         }
@@ -152,7 +153,7 @@ public class ConfigManager {
                 try {
                     configPlayers.save(filePlayers);
                 } catch (IOException e) {
-                    Plugin.getInstance().getLogger().severe("Не удалось сохранить файл");
+                    plugin.getLogger().severe("Не удалось сохранить файл");
                 }
 
                 return;
@@ -165,7 +166,7 @@ public class ConfigManager {
             try {
                 configPlayers.save(filePlayers);
             } catch (IOException e) {
-                Plugin.getInstance().getLogger().severe("Не удалось сохранить файл");
+                plugin.getLogger().severe("Не удалось сохранить файл");
             }
 
         }

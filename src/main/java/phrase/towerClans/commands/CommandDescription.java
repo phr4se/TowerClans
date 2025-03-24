@@ -1,5 +1,6 @@
 package phrase.towerClans.commands;
 
+
 public class CommandDescription {
 
     private final String permission;

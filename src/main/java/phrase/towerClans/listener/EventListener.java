@@ -27,9 +27,12 @@ import java.util.UUID;
 
 public class EventListener implements Listener {
 
-    private final ChatUtil chatUtil = new ChatUtil();
+    private final Plugin plugin;
+    private final ChatUtil chatUtil;
 
-    public EventListener() {
+    public EventListener(Plugin plugin) {
+        this.plugin = plugin;
+        chatUtil = new ChatUtil(plugin);
     }
 
     @EventHandler
@@ -43,9 +46,9 @@ public class EventListener implements Listener {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.members_clan");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan.items.members_clan");
 
-        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 1), event.getInventory())) {
+        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 1, plugin), event.getInventory())) {
 
             if(event.getCurrentItem() == null) {
                 event.setCancelled(true);
@@ -60,7 +63,7 @@ public class EventListener implements Listener {
                 return;
             }
 
-            configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.level_clan");
+            configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan.items.level_clan");
 
             if (event.getCurrentItem().getType() == Material.DIAMOND && event.getCurrentItem().getItemMeta().getDisplayName().
                     equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
@@ -69,7 +72,7 @@ public class EventListener implements Listener {
                 return;
             }
 
-            configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.exit");
+            configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan.items.exit");
 
             if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
                 event.setCancelled(true);
@@ -77,19 +80,11 @@ public class EventListener implements Listener {
                 return;
             }
 
-            configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items.top_clan");
-
-            if(event.getCurrentItem().getType() == Material.PAPER && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
-                event.setCancelled(true);
-                clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_TOP_CLAN.getId());
-                return;
-            }
-
             event.setCancelled(true);
 
         }
 
-        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 2), event.getInventory())) {
+        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 2, plugin), event.getInventory())) {
 
             if(event.getCurrentItem() == null) {
                 event.setCancelled(true);
@@ -100,7 +95,7 @@ public class EventListener implements Listener {
                 return;
             }
 
-            configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan_members.in_menu");
+            configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members.in_menu");
 
             if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
                 event.setCancelled(true);
@@ -112,9 +107,9 @@ public class EventListener implements Listener {
 
         }
 
-        configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_level_clan.level.in_menu");
+        configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_level_clan.level.in_menu");
 
-        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 3), event.getInventory())) {
+        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 3, plugin), event.getInventory())) {
 
             if(event.getCurrentItem() == null) {
                 event.setCancelled(true);
@@ -138,12 +133,12 @@ public class EventListener implements Listener {
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 
         if(modifiedPlayer.getClan() == null) {
-            event.setFormat(HexUtil.color(Plugin.getInstance().getConfig().getString("message.the_format_of_the_chat_message").replace("%clan_name%", "Нет").replace("%format%", event.getFormat())));
+            event.setFormat(HexUtil.color(plugin.getConfig().getString("message.the_format_of_the_chat_message").replace("%clan_name%", "Нет").replace("%format%", event.getFormat())));
             return;
         }
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        event.setFormat(HexUtil.color(Plugin.getInstance().getConfig().getString("message.the_format_of_the_chat_message").replace("%clan_name%", clan.getName()).replace("%format%", event.getFormat())));
+        event.setFormat(HexUtil.color(plugin.getConfig().getString("message.the_format_of_the_chat_message").replace("%clan_name%", clan.getName()).replace("%format%", event.getFormat())));
     }
 
     @EventHandler
@@ -190,13 +185,13 @@ public class EventListener implements Listener {
                             event.setCancelled(true);
                             cancel();
                         }
-                    }.runTask(Plugin.getInstance());
+                    }.runTask(plugin);
                 }
 
                 cancel();
 
             }
-        }.runTaskAsynchronously(Plugin.getInstance());
+        }.runTaskAsynchronously(plugin);
     }
 
     @EventHandler
@@ -233,18 +228,18 @@ public class EventListener implements Listener {
                         @Override
                         public void run() {
                             for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-                                ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message");
+                                ConfigurationSection configSection = plugin.getConfig().getConfigurationSection("message");
                                 String string = configSection.getString("notification_of_a_level_increase");
                                 chatUtil.sendMessage(entry.getKey().getPlayer(), string);
                             }
                             cancel();
                         }
-                    }.runTask(Plugin.getInstance());
+                    }.runTask(plugin);
                     clan.setLevel(++level);
                 }
 
             }
-        }.runTaskAsynchronously(Plugin.getInstance());
+        }.runTaskAsynchronously(plugin);
 
     }
 
@@ -270,7 +265,7 @@ public class EventListener implements Listener {
 
             }
 
-        }.runTaskAsynchronously(Plugin.getInstance());
+        }.runTaskAsynchronously(plugin);
     }
 
     @EventHandler
@@ -288,7 +283,7 @@ public class EventListener implements Listener {
                 }
                 cancel();
             }
-        }.runTaskAsynchronously(Plugin.getInstance());
+        }.runTaskAsynchronously(plugin);
     }
 
     @EventHandler
@@ -300,12 +295,15 @@ public class EventListener implements Listener {
 
                 UUID player = event.getPlayer().getUniqueId();
 
-                if(!PlayerStats.PLAYERS.containsKey(player)) cancel();
+                if(PlayerStats.PLAYERS.containsKey(player)) {
+                    cancel();
+                    return;
+                }
 
                 PlayerStats.PLAYERS.put(player, new PlayerStats(0, 0));
                 cancel();
             }
-        }.runTaskAsynchronously(Plugin.getInstance());
+        }.runTaskAsynchronously(plugin);
 
     }
 

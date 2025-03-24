@@ -24,19 +24,18 @@ import java.util.List;
 public final class Plugin extends JavaPlugin implements CommandExecutor {
 
     private ConfigManager configManager;
-    private static Plugin instance;
     public Economy economy;
     private static CommandMapper commandMapper;
-    private static CommandLogger commandLogger;
+    private static ChatUtil chatUtil;
 
     @Override
     public void onEnable() {
-        instance = this;
-        saveDefaultConfig();
-        configManager = new ConfigManager();
 
-        commandMapper = new CommandMapper();
-        commandLogger = new CommandLogger();
+        saveDefaultConfig();
+        chatUtil = new ChatUtil(this);
+        configManager = new ConfigManager(this);
+        commandMapper = new CommandMapper(this);
+        new CommandLogger(this);
 
         if (!setupEconomy()) {
             getLogger().severe("Vault не найден. Плагин будет выключен");
@@ -45,13 +44,13 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         }
 
         configManager.loadClans();
-        configManager.savePlayers();
+        configManager.loadPlayers();
 
         getCommand("clan").setExecutor(this);
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) new PluginPlaceholder().register();
 
-        getServer().getPluginManager().registerEvents(new EventListener(), this);
+        getServer().getPluginManager().registerEvents(new EventListener(this), this);
 
     }
 
@@ -73,15 +72,11 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
     }
 
 
-    public static Plugin getInstance() {
-        return instance;
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message");
+        ConfigurationSection configurationSection = this.getConfig().getConfigurationSection("message");
         if(!(sender instanceof Player)) {
-            ChatUtil.getChatUtil().sendMessage(sender, configurationSection.getString("you_are_not_a_player"));
+            chatUtil.sendMessage(sender, configurationSection.getString("you_are_not_a_player"));
             return true;
         }
         Player player = (Player) sender;
@@ -92,14 +87,14 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
             if (modifiedPlayer.getClan() == null) {
                 List<String> list = configurationSection.getStringList("a_player_without_a_clan");
                 for (String string : list) {
-                    ChatUtil.getChatUtil().sendMessage(player, string);
+                    chatUtil.sendMessage(player, string);
                 }
                 return true;
             }
 
             List<String> list = configurationSection.getStringList("a_player_with_a_clan");
             for (String string : list) {
-                ChatUtil.getChatUtil().sendMessage(player, string);
+                chatUtil.sendMessage(player, string);
             }
 
             return true;
@@ -110,7 +105,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         if (!(commandResult.getResultStatus().equals(CommandResult.ResultStatus.SUCCESS))) {
             if (commandResult.getMessage() != null) {
-                ChatUtil.getChatUtil().sendMessage(sender, commandResult.getMessage());
+                chatUtil.sendMessage(sender, commandResult.getMessage());
             }
             return true;
         }

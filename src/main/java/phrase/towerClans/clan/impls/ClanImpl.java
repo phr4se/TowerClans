@@ -23,22 +23,21 @@ import java.util.stream.Collectors;
 public class ClanImpl extends AbstractClan {
 
     private static final Map<String, ClanImpl> CLANS = new HashMap<>();
-    private ChatUtil chatUtil = new ChatUtil();
+    private final Plugin plugin;
+    private final ChatUtil chatUtil;
 
-    public ClanImpl() {
-    }
-
-
-    public ClanImpl(String name) {
+    public ClanImpl(String name, Plugin plugin) {
         super(name);
+        this.plugin = plugin;
+        chatUtil = new ChatUtil(plugin);
     }
 
     @Override
     public ClanResponse invite(ModifiedPlayer modifiedPlayer) {
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.accept");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.accept");
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         if (clan.getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("accept.you_are_in_a_clan"), ClanResponse.ResponseType.FAILURE);
-        configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.invite");
+        configurationSection = plugin.getConfig().getConfigurationSection("message.command.invite");
         clan.getMembers().put(modifiedPlayer, RankType.MEMBER.getName());
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
@@ -51,7 +50,7 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse kick(ModifiedPlayer modifiedPlayer) {
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.kick");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.kick");
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         if (!clan.getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("the_player_is_not_in_the_clan"), ClanResponse.ResponseType.FAILURE);
         clan.getMembers().remove(modifiedPlayer);
@@ -66,12 +65,12 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse invest(ModifiedPlayer modifiedPlayer, int amount) {
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.invest");
-        if (Plugin.getInstance().economy.getBalance(modifiedPlayer.getPlayer()) < amount) new ClanResponse(configurationSection.getString("you_don't_have_enough"), ClanResponse.ResponseType.FAILURE);
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.invest");
+        if (plugin.economy.getBalance(modifiedPlayer.getPlayer()) < amount) new ClanResponse(configurationSection.getString("you_don't_have_enough"), ClanResponse.ResponseType.FAILURE);
         int maximumBalance = LevelType.getLevelMaximumBalance(getLevel());
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         if ((clan.getBalance() + amount) > maximumBalance) new ClanResponse(configurationSection.getString("there_is_no_place_in_the_clan"), ClanResponse.ResponseType.FAILURE);
-        Plugin.getInstance().economy.withdrawPlayer(modifiedPlayer.getPlayer(), amount);
+        plugin.economy.withdrawPlayer(modifiedPlayer.getPlayer(), amount);
         clan.setBalance(clan.getBalance() + amount);
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
@@ -84,11 +83,11 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse withdraw(ModifiedPlayer modifiedPlayer, int amount) {
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.withdraw");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.withdraw");
         if (getBalance() < amount) return new ClanResponse(configurationSection.getString("not_in_the_clan"), ClanResponse.ResponseType.FAILURE);
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        Plugin.getInstance().economy.depositPlayer(modifiedPlayer.getPlayer(), amount);
+        plugin.economy.depositPlayer(modifiedPlayer.getPlayer(), amount);
         clan.setBalance(clan.getBalance() - amount);
 
         for (Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
@@ -101,7 +100,7 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse leave(ModifiedPlayer modifiedPlayer) {
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.leave");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.leave");
         if (!getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("you're_not_in_the_clan)"), ClanResponse.ResponseType.FAILURE);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         clan.getMembers().remove(modifiedPlayer);
@@ -116,14 +115,14 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse rank(ModifiedPlayer modifiedPlayer, int id) {
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.rank");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.rank");
         if (id == 1) return new ClanResponse(configurationSection.getString("you_can't_give_out_a_leader_rank"), ClanResponse.ResponseType.FAILURE);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         if (id == 2) clan.getMembers().replace(modifiedPlayer, getMembers().get(modifiedPlayer), RankType.DEPUTY.getName());
         else if (id == 3)
             clan.getMembers().replace(modifiedPlayer, getMembers().get(modifiedPlayer), RankType.MEMBER.getName());
         else return new ClanResponse(configurationSection.getString("this_rank_does_not_exist"), ClanResponse.ResponseType.FAILURE);
-        ConfigurationSection configSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.rank");
+        ConfigurationSection configSection = plugin.getConfig().getConfigurationSection("message.command.rank");
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             String string = configSection.getString("notification_of_rank").replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", (id == 2) ? RankType.DEPUTY.getName() : RankType.MEMBER.getName());
@@ -135,7 +134,7 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse disband(ModifiedPlayer modifiedPlayer) {
-        ConfigurationSection configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("message.command.disband");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.disband");
         if (!getMembers().get(modifiedPlayer).equals("Лидер")) return new ClanResponse(configurationSection.getString("you_are_not_a_leader"), ClanResponse.ResponseType.FAILURE);
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
@@ -155,15 +154,15 @@ public class ClanImpl extends AbstractClan {
 
         switch (id) {
             case 1:
-                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 1);
+                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 1, plugin);
                 modifiedPlayer.getPlayer().openInventory(menu);
                 break;
             case 2:
-                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 2);
+                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 2, plugin);
                 modifiedPlayer.getPlayer().openInventory(menu);
                 break;
             case 3:
-                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 3);
+                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 3, plugin);
                 modifiedPlayer.getPlayer().openInventory(menu);
                 break;
         }
@@ -183,7 +182,7 @@ public class ClanImpl extends AbstractClan {
             this.id = id;
         }
 
-        public static Inventory getMenu(ClanImpl clan, int id) {
+        public static Inventory getMenu(ClanImpl clan, int id, Plugin plugin) {
             Inventory menu = null;
             ItemStack redStainedGlassPane = new ItemStack(Material.RED_STAINED_GLASS_PANE);
             int[] indices = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44};
@@ -207,7 +206,7 @@ public class ClanImpl extends AbstractClan {
                         menu.setItem(index, redStainedGlassPane);
                     }
 
-                    configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan.items");
+                    configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan.items");
 
                     list = configurationSection.getStringList("information.lore");
                     replacedList = list.stream().map(string -> {
@@ -304,7 +303,7 @@ public class ClanImpl extends AbstractClan {
                         menu.setItem(index, redStainedGlassPane);
                     }
 
-                    configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_clan_members");
+                    configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members");
 
                     back = new ItemBuilder(Material.SPECTRAL_ARROW)
                             .setName(HexUtil.color(configurationSection.getString("in_menu.title")))
@@ -347,7 +346,7 @@ public class ClanImpl extends AbstractClan {
                         menu.setItem(index, redStainedGlassPane);
                     }
 
-                    configurationSection = Plugin.getInstance().getConfig().getConfigurationSection("settings.menu.menu_level_clan.level");
+                    configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_level_clan.level");
 
                     back = new ItemBuilder(Material.SPECTRAL_ARROW)
                             .setName(HexUtil.color(configurationSection.getString("in_menu.title")))
