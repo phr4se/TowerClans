@@ -1,10 +1,12 @@
 package phrase.towerClans.utils;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ItemBuilder {
@@ -31,17 +33,10 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder addLore(String loreLine) {
+    public <T, Z> ItemBuilder setPersistentDataContainer(NamespacedKey key, PersistentDataType<T, Z> type, Z value) {
         if (itemMeta != null) {
-            List<String> lore = itemMeta.getLore() != null ? itemMeta.getLore() : new ArrayList<>();
-            lore.add(loreLine);
-            itemMeta.setLore(lore);
+            itemMeta.getPersistentDataContainer().set(key, type, value);
         }
-        return this;
-    }
-
-    public ItemBuilder setAmount(int amount) {
-        itemStack.setAmount(amount);
         return this;
     }
 

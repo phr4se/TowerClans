@@ -30,7 +30,7 @@ public class ClanMenuCommand implements CommandHandler {
         }
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN.getId());
+        clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN_MAIN.getId());
         chatUtil.sendMessage(player, configurationSection.getString("you_have_opened_the_clan_menu"));
 
         return true;

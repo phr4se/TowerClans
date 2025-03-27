@@ -2,16 +2,13 @@ package phrase.towerClans.clan.impls;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataType;
 import phrase.towerClans.Plugin;
-import phrase.towerClans.clan.AbstractClan;
-import phrase.towerClans.clan.ClanResponse;
-import phrase.towerClans.clan.ModifiedPlayer;
-import phrase.towerClans.clan.PlayerStats;
+import phrase.towerClans.clan.*;
 import phrase.towerClans.utils.ChatUtil;
 import phrase.towerClans.utils.HexUtil;
 import phrase.towerClans.utils.ItemBuilder;
@@ -36,7 +33,9 @@ public class ClanImpl extends AbstractClan {
     public ClanResponse invite(ModifiedPlayer modifiedPlayer) {
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.accept");
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if (clan.getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("accept.you_are_in_a_clan"), ClanResponse.ResponseType.FAILURE);
+        if (clan.getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("you_are_in_a_clan"), ClanResponse.ResponseType.FAILURE);
+        int maximumMembers = Level.getLevelMaximumMembers(clan.getLevel());
+        if ((clan.getMembers().size() + 1) > maximumMembers) return new ClanResponse(configurationSection.getString("there_is_no_place_in_the_clan"), ClanResponse.ResponseType.FAILURE);
         configurationSection = plugin.getConfig().getConfigurationSection("message.command.invite");
         clan.getMembers().put(modifiedPlayer, RankType.MEMBER.getName());
 
@@ -66,10 +65,10 @@ public class ClanImpl extends AbstractClan {
     @Override
     public ClanResponse invest(ModifiedPlayer modifiedPlayer, int amount) {
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.invest");
-        if (plugin.economy.getBalance(modifiedPlayer.getPlayer()) < amount) new ClanResponse(configurationSection.getString("you_don't_have_enough"), ClanResponse.ResponseType.FAILURE);
-        int maximumBalance = LevelType.getLevelMaximumBalance(getLevel());
+        if (plugin.economy.getBalance(modifiedPlayer.getPlayer()) < amount) return new ClanResponse(configurationSection.getString("you_don't_have_enough"), ClanResponse.ResponseType.FAILURE);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if ((clan.getBalance() + amount) > maximumBalance) new ClanResponse(configurationSection.getString("there_is_no_place_in_the_clan"), ClanResponse.ResponseType.FAILURE);
+        int maximumBalance = Level.getLevelMaximumBalance(clan.getLevel());
+        if ((clan.getBalance() + amount) > maximumBalance) return new ClanResponse(configurationSection.getString("there_is_no_place_in_the_clan"), ClanResponse.ResponseType.FAILURE);
         plugin.economy.withdrawPlayer(modifiedPlayer.getPlayer(), amount);
         clan.setBalance(clan.getBalance() + amount);
 
@@ -150,10 +149,10 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public void showMenu(ModifiedPlayer modifiedPlayer, int id) {
-        Inventory menu = null;
+        Inventory menu;
 
         switch (id) {
-            case 1:
+            case 1, 4:
                 menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 1, plugin);
                 modifiedPlayer.getPlayer().openInventory(menu);
                 break;
@@ -165,16 +164,20 @@ public class ClanImpl extends AbstractClan {
                 menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 3, plugin);
                 modifiedPlayer.getPlayer().openInventory(menu);
                 break;
+            case 5:
+                modifiedPlayer.getPlayer().closeInventory();
+                break;
         }
 
-        modifiedPlayer.getPlayer().openInventory(menu);
     }
 
     public enum MenuType {
 
-        MENU_CLAN(1),
+        MENU_CLAN_MAIN(1),
         MENU_CLAN_MEMBERS(2),
-        MENU_LEVEL_CLAN(3);
+        MENU_CLAN_LEVEL(3),
+        MENU_CLAN_BACK(4),
+        MENU_CLAN_EXIT(5);
 
         private final int id;
 
@@ -183,230 +186,243 @@ public class ClanImpl extends AbstractClan {
         }
 
         public static Inventory getMenu(ClanImpl clan, int id, Plugin plugin) {
+
             Inventory menu = null;
-            ItemStack redStainedGlassPane = new ItemStack(Material.RED_STAINED_GLASS_PANE);
-            int[] indices = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44};
-            ItemStack back;
-            int maximumBalance;
-            List<String> list;
-            List<String> replacedList;
-            int slot;
-            ConfigurationSection configurationSection;
-            ItemStack top;
-            List<ClanImpl> clanList;
 
-            maximumBalance = LevelType.getLevelMaximumBalance(clan.getLevel());
-            final int finalMaximumBalance = maximumBalance;
-            switch (id) {
-                case 1:
+            if(id == 1) {
 
-                    menu = Bukkit.createInventory(null, 45, "Клан " + clan.getName());
+                ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_main");
 
-                    for (int index : indices) {
-                        menu.setItem(index, redStainedGlassPane);
-                    }
+                int size = configurationSection.getInt("size");
+                String titleMenu = configurationSection.getString("title").replace("%clan_name%", clan.getName());
+                menu = Bukkit.createInventory(null, size, HexUtil.color(titleMenu));
 
-                    configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan.items");
+                configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_main.items");
 
-                    list = configurationSection.getStringList("information.lore");
-                    replacedList = list.stream().map(string -> {
-                        String replacedString = string
-                                .replace("%name%", clan.getName())
-                                .replace("%members%", String.valueOf(clan.getMembers().size()))
-                                .replace("%level%", String.valueOf(clan.getLevel()))
-                                .replace("%xp%", String.valueOf(clan.getXp()))
-                                .replace("%balance%", String.valueOf(clan.getBalance()))
-                                .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
-                                .replace("%maximum_balance%", String.valueOf(finalMaximumBalance))
-                                .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
-                                .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
+                Material material;
+                int slot;
+                String titleItem;
+                List<String> lore;
 
-                        return HexUtil.color(replacedString);
-                    }).collect(Collectors.toList());
+                for(String key : configurationSection.getKeys(false)) {
 
-                    ItemStack information = new ItemBuilder(Material.KNOWLEDGE_BOOK)
-                            .setName(HexUtil.color(configurationSection.getString("information.title")))
-                            .setLore(replacedList)
-                            .build();
-
-                    list = configurationSection.getStringList("members_clan.lore");
-                    replacedList = list.stream().map(string -> {
-                        String replacedString = string
-                                .replace("%name%", clan.getName())
-                                .replace("%members%", String.valueOf(clan.getMembers().size()))
-                                .replace("%level%", String.valueOf(clan.getLevel()))
-                                .replace("%xp%", String.valueOf(clan.getXp()))
-                                .replace("%balance%", String.valueOf(clan.getBalance()))
-                                .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
-                                .replace("%maximum_balance%", String.valueOf(finalMaximumBalance))
-                                .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
-                                .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
-
-                        return HexUtil.color(replacedString);
-                    }).collect(Collectors.toList());
-
-                    ItemStack members = new ItemBuilder(Material.TOTEM_OF_UNDYING)
-                            .setName(HexUtil.color(configurationSection.getString("members_clan.title")))
-                            .setLore(replacedList)
-                            .build();
-
-                    list = configurationSection.getStringList("level_clan.lore");
-                    replacedList = list.stream().map(string -> {
-                        String replacedString = string
-                                .replace("%name%", clan.getName())
-                                .replace("%members%", String.valueOf(clan.getMembers().size()))
-                                .replace("%level%", String.valueOf(clan.getLevel()))
-                                .replace("%xp%", String.valueOf(clan.getXp()))
-                                .replace("%balance%", String.valueOf(clan.getBalance()))
-                                .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
-                                .replace("%maximum_balance%", String.valueOf(finalMaximumBalance))
-                                .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
-                                .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
-
-                        return HexUtil.color(replacedString);
-                    }).collect(Collectors.toList());
-
-                    ItemStack level = new ItemBuilder(Material.DIAMOND)
-                            .setName(HexUtil.color(configurationSection.getString("level_clan.title")))
-                            .setLore(replacedList)
-                            .build();
-
-                    back = new ItemBuilder(Material.SPECTRAL_ARROW)
-                            .setName(HexUtil.color(configurationSection.getString("exit.title")))
-                            .build();
-
-                    list = new ArrayList<>();
-
-                    clanList = getClans().values().stream().sorted((o, o1) -> Integer.compare(o1.getXp(), o.getXp())).limit(10).collect(Collectors.toList());
-                    int place = 1;
-                    String format = configurationSection.getString("top_clan.format");
-                    for(ClanImpl o : clanList) {
-                        list.add(HexUtil.color(format.replace("%place%", String.valueOf(place)).replace("%clan_name%", o.getName()).replace("%xp%", String.valueOf(o.getXp()))));
-                        place++;
-                    }
-
-                    top = new ItemBuilder(Material.GOLDEN_APPLE)
-                            .setName(HexUtil.color(configurationSection.getString("top_clan.title")))
-                            .setLore(list)
-                            .build();
-
-                    menu.setItem(34, back);
-                    menu.setItem(10, information);
-                    menu.setItem(11, members);
-                    menu.setItem(12, level);
-                    menu.setItem(13, top);
-                    return menu;
-                case 2:
-                    menu = Bukkit.createInventory(null, 45, "Участники клана");
-
-                    for (int index : indices) {
-                        menu.setItem(index, redStainedGlassPane);
-                    }
-
-                    configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members");
-
-                    back = new ItemBuilder(Material.SPECTRAL_ARROW)
-                            .setName(HexUtil.color(configurationSection.getString("in_menu.title")))
-                            .build();
-
-                    menu.setItem(34, back);
-
-                    slot = 10;
-                    for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-
-                        if (menu.getItem(slot) == null) {
-                            ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
-                            SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-                            if (Bukkit.getPlayer(entry.getKey().getPlayer().getName()) == null)
-                                skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(entry.getKey().getPlayer().getName()));
-                            else skullMeta.setOwningPlayer(Bukkit.getPlayer(entry.getKey().getPlayer().getName()));
-                            list = configurationSection.getStringList("player.lore");
-                            replacedList = list.stream().map(string -> {
-                                String replacedString = string
-                                        .replace("%rank%", clan.getMembers().get(entry.getKey()))
-                                        .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
-                                        .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
-                                return HexUtil.color(replacedString);
-                            }).collect(Collectors.toList());
-                            skullMeta.setLore(replacedList);
-                            skullMeta.setDisplayName(HexUtil.color("&fИгрок " + entry.getKey().getPlayer().getName()));
-                            skull.setItemMeta(skullMeta);
-                            menu.setItem(slot, skull);
-                            slot++;
-                        } else {
-                            slot++;
-                        }
-
-                    }
-                    return menu;
-                case 3:
-                    menu = Bukkit.createInventory(null, 45, "Уровень клана");
-
-                    for (int index : indices) {
-                        menu.setItem(index, redStainedGlassPane);
-                    }
-
-                    configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_level_clan.level");
-
-                    back = new ItemBuilder(Material.SPECTRAL_ARROW)
-                            .setName(HexUtil.color(configurationSection.getString("in_menu.title")))
-                            .build();
-
-                    menu.setItem(34, back);
-
-                    slot = 10;
-                    ItemStack furnaceMinecart = new ItemStack(Material.FURNACE_MINECART);
-                    ItemMeta furnaceMinecartMeta = furnaceMinecart.getItemMeta();
-                    for (int i = 1; i <= LevelType.countLevel; i++) {
-                        if (clan.getLevel() < i) {
-                            furnaceMinecartMeta.setDisplayName(HexUtil.color(configurationSection.getString("not_received.title").replace("%level%", String.valueOf(i))));
-                            list = configurationSection.getStringList("not_received.lore");
-                            replacedList = list.stream().map(string -> {
+                    material = Material.matchMaterial(configurationSection.getString(key + ".material"));
+                    slot = configurationSection.getInt(key + ".slot");
+                    titleItem = HexUtil.color(configurationSection.getString(key + ".title"));
+                    lore = configurationSection.getStringList(key + ".lore").stream().map(
+                            string -> {
                                 String replacedString = string
                                         .replace("%name%", clan.getName())
                                         .replace("%members%", String.valueOf(clan.getMembers().size()))
+                                        .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(clan.getLevel())))
                                         .replace("%level%", String.valueOf(clan.getLevel()))
                                         .replace("%xp%", String.valueOf(clan.getXp()))
+                                        .replace("%balance%", String.valueOf(clan.getBalance()))
                                         .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
-                                        .replace("%maximum_balance%", String.valueOf(finalMaximumBalance))
+                                        .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(clan.getLevel())))
                                         .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
                                         .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
-                                return HexUtil.color(replacedString);
-                            }).collect(Collectors.toList());
-                            furnaceMinecartMeta.setLore(replacedList);
-                            furnaceMinecart.setItemMeta(furnaceMinecartMeta);
-                            menu.setItem(slot, furnaceMinecart);
-                            slot++;
-                            continue;
-                        }
 
-                        ItemStack chestMinecart = new ItemStack(Material.CHEST_MINECART);
-                        ItemMeta chestMinecartMeta = chestMinecart.getItemMeta();
-                        chestMinecartMeta.setDisplayName(HexUtil.color(configurationSection.getString("received.title").replace("%level%", String.valueOf(i))));
-                        list = configurationSection.getStringList("received.lore");
-                        replacedList = list.stream().map(string -> {
-                            String replacedString = string
-                                    .replace("%name%", clan.getName())
-                                    .replace("%members%", String.valueOf(clan.getMembers().size()))
-                                    .replace("%level%", String.valueOf(clan.getLevel()))
-                                    .replace("%xp%", String.valueOf(clan.getXp()))
-                                    .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
-                                    .replace("%maximum_balance%", String.valueOf(finalMaximumBalance))
-                                    .replace("%kills%", String.valueOf(PlayerStats.getKillsMembers(clan.getMembers())))
-                                    .replace("%deaths%", String.valueOf(PlayerStats.getDeathMembers((clan.getMembers()))));
-                            return HexUtil.color(replacedString);
-                        }).collect(Collectors.toList());
-                        chestMinecartMeta.setLore(replacedList);
-                        chestMinecart.setItemMeta(chestMinecartMeta);
-                        menu.setItem(slot, chestMinecart);
-                        slot++;
+                                return HexUtil.color(replacedString);
+                            }
+                    ).collect(Collectors.toList());
+
+                    if(configurationSection.contains(key + ".actions_when_clicking")) {
+
+                        String action = configurationSection.getString(key + ".actions_when_clicking");
+
+                        ItemStack item = new ItemBuilder(material)
+                                .setName(titleItem)
+                                .setLore(lore)
+                                .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, action)
+                                .build();
+
+                        menu.setItem(slot, item);
+                        continue;
+                    }
+
+                    ItemStack item = new ItemBuilder(material)
+                            .setName(titleItem)
+                            .setLore(lore)
+                            .build();
+
+                    menu.setItem(slot, item);
+
+                }
+
+                return menu;
+
+            }
+
+            if(id == 2) {
+
+                ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members");
+                int size = configurationSection.getInt("size");
+                String titleMenu = configurationSection.getString("title_menu");
+
+                menu = Bukkit.createInventory(null, size, HexUtil.color(titleMenu));
+
+                Material material;
+                int slot;
+                String titleItem;
+                List<String> lore;
+
+                material = Material.matchMaterial(configurationSection.getString("material"));
+                slot = configurationSection.getInt("slot");
+                titleItem = configurationSection.getString("title_item");
+                lore = configurationSection.getStringList("lore");
+
+                for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
+                    ModifiedPlayer modifiedPlayer = entry.getKey();
+                    titleItem = HexUtil.color(titleItem.replace("%player_name%", modifiedPlayer.getPlayer().getName()));
+                    PlayerStats playerStats = PlayerStats.PLAYERS.get(modifiedPlayer.getPlayerUUID());
+                    lore = lore.stream().map(
+                            string -> {
+                                String replacedString = string
+                                        .replace("%player_rank%", entry.getValue())
+                                        .replace("%player_kills%", String.valueOf(playerStats.getKills()))
+                                        .replace("%player_deaths%", String.valueOf(playerStats.getDeaths()));
+                                return HexUtil.color(replacedString);
+                            }
+                    ).collect(Collectors.toList());
+
+                    ItemStack item = new ItemBuilder(material)
+                            .setName(titleItem)
+                            .setLore(lore)
+                            .build();
+
+                    menu.setItem(slot, item);
+                    slot++;
+                }
+
+                configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members.items");
+
+                for(String key : configurationSection.getKeys(false)) {
+
+                    material = Material.matchMaterial(configurationSection.getString(key + ".material"));
+                    slot = configurationSection.getInt(key + ".slot");
+                    titleItem = HexUtil.color(configurationSection.getString(key + ".title"));
+                    lore = configurationSection.getStringList(key + ".lore").stream().map(HexUtil::color).toList();
+
+                    if(configurationSection.contains(key + ".actions_when_clicking")) {
+
+                        String action = configurationSection.getString(key + ".actions_when_clicking");
+
+                        ItemStack item = new ItemBuilder(material)
+                                .setName(titleItem)
+                                .setLore(lore)
+                                .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, action)
+                                .build();
+
+                        menu.setItem(slot, item);
+                        continue;
 
                     }
 
-                    return menu;
+                    ItemStack item = new ItemBuilder(material)
+                            .setName(titleItem)
+                            .setLore(lore)
+                            .build();
+
+                    menu.setItem(slot, item);
+                }
+
+                return menu;
+
             }
 
+           if(id == 3) {
+
+               ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_level");
+               int size = configurationSection.getInt("size");
+               String titleMenu = configurationSection.getString("title");
+
+               menu = Bukkit.createInventory(null, size, HexUtil.color(titleMenu));
+
+               Material material;
+               int slot = configurationSection.getInt("slot");
+               String titleItem;
+               List<String> lore;
+
+               for (int level = 1; level <= Level.levels.size(); level++) {
+                   int finalLevel = level;
+                   if (clan.getLevel() < level) {
+                       material = Material.matchMaterial(configurationSection.getString("not_received.material"));
+                       titleItem = HexUtil.color(configurationSection.getString("not_received.title").replace("%level%", String.valueOf(level)));
+                       lore = configurationSection.getStringList("not_received.lore").stream().map(string -> {
+                           String replacedString = string
+                                   .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(finalLevel)))
+                                   .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(finalLevel)));
+                           return HexUtil.color(replacedString);
+                       }).collect(Collectors.toList());
+
+                       ItemStack item = new ItemBuilder(material)
+                               .setName(titleItem)
+                               .setLore(lore)
+                               .build();
+
+                       menu.setItem(slot, item);
+                       slot++;
+                       continue;
+                   }
+
+                   material = Material.matchMaterial(configurationSection.getString("received.material"));
+                   titleItem = (HexUtil.color(configurationSection.getString("received.title").replace("%level%", String.valueOf(level))));
+                   lore = configurationSection.getStringList("received.lore").stream().map(string -> {
+                       String replacedString = string
+                               .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(finalLevel)))
+                               .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(finalLevel)));
+                       return HexUtil.color(replacedString);
+                   }).collect(Collectors.toList());
+
+                   ItemStack item = new ItemBuilder(material)
+                           .setName(titleItem)
+                           .setLore(lore)
+                           .build();
+
+                   menu.setItem(slot, item);
+                   slot++;
+
+               }
+
+               configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_level.items");
+
+               for(String key : configurationSection.getKeys(false)) {
+
+                   material = Material.matchMaterial(configurationSection.getString(key + ".material"));
+                   slot = configurationSection.getInt(key + ".slot");
+                   titleItem = HexUtil.color(configurationSection.getString(key + ".title"));
+                   lore = configurationSection.getStringList(key + ".lore").stream().map(HexUtil::color).toList();
+
+                   if(configurationSection.contains(key + ".actions_when_clicking")) {
+
+                       String action = configurationSection.getString(key + ".actions_when_clicking");
+
+                       ItemStack item = new ItemBuilder(material)
+                               .setName(titleItem)
+                               .setLore(lore)
+                               .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, action)
+                               .build();
+
+                       menu.setItem(slot, item);
+                       continue;
+                   }
+
+                   ItemStack item = new ItemBuilder(material)
+                           .setName(titleItem)
+                           .setLore(lore)
+                           .build();
+
+                   menu.setItem(slot, item);
+
+               }
+
+
+           }
+
+
             return menu;
+
 
         }
 

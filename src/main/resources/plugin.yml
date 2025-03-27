@@ -1,5 +1,5 @@
 name: TowerClans
-version: 'BETA-0.4A'
+version: 'BETA-0.5'
 main: phrase.towerClans.Plugin
 api-version: '1.18'
 depend:

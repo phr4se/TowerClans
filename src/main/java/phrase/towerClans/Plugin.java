@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import phrase.towerClans.clan.Level;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.commands.CommandLogger;
 import phrase.towerClans.commands.CommandMapper;
@@ -35,6 +36,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         chatUtil = new ChatUtil(this);
         configManager = new ConfigManager(this);
         commandMapper = new CommandMapper(this);
+        Level.intialize(this);
         new CommandLogger(this);
 
         if (!setupEconomy()) {

@@ -25,11 +25,11 @@ public class ClanTopCommand implements CommandHandler {
     @Override
     public boolean handler(Player player, String[] args) {
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan.items");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.top_clan");
 
         List<ClanImpl> clanList = ClanImpl.getClans().values().stream().sorted((o, o1) -> Integer.compare(o1.getXp(), o.getXp())).limit(10).collect(Collectors.toList());
         int place = 1;
-        String format = configurationSection.getString("top_clan.format");
+        String format = configurationSection.getString("format");
         List<String> list = new ArrayList<>();
         for(ClanImpl o : clanList) {
             list.add(HexUtil.color(format.replace("%place%", String.valueOf(place)).replace("%clan_name%", o.getName()).replace("%xp%", String.valueOf(o.getXp()))));

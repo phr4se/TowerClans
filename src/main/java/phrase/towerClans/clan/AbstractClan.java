@@ -15,13 +15,12 @@ public abstract class AbstractClan implements Clan {
         this.name = name;
 
         members = new HashMap<>();
-        level = LevelType.ONE.getId();
-        xp = LevelType.ONE.getXp();
+        level = Level.levels.get(1).getLevel();
+        xp = Level.levels.get(1).getXp();
         balance = 0;
         pvp = false;
-    }
 
-    public abstract void showMenu(ModifiedPlayer modifiedPlayer, int id);
+    }
 
     public enum RankType {
         LEADER("Лидер"),
@@ -39,71 +38,7 @@ public abstract class AbstractClan implements Clan {
         }
     }
 
-    public enum LevelType {
-
-        ONE(20, 250000, 0,1),
-        TWO(20, 500000, 1000,2),
-        THREE(20, 1000000, 1500, 3),
-        FOUR(20, 1750000, 2500,4),
-        FIVE(20, 2000000, 5000,5);
-
-        private final int maximumMembers;
-        private final int maximumBalance;
-        private final int xp;
-        private final int id;
-        public static final int countLevel = 5;
-
-        LevelType(int maximumMembers, int maximumBalance, int xp,int id) {
-            this.maximumMembers = maximumMembers;
-            this.maximumBalance = maximumBalance;
-            this.xp = xp;
-            this.id = id;
-        }
-
-        public static int getXpLevel(int level) {
-            LevelType levelType = null;
-
-            level += ++level;
-
-            levelType = switch (level) {
-                case 1 -> LevelType.ONE;
-                case 2 -> LevelType.TWO;
-                case 3 -> LevelType.THREE;
-                case 4 -> LevelType.FOUR;
-                case 5 -> LevelType.FIVE;
-                default -> levelType;
-            };
-
-            return levelType.getXp();
-        }
-
-        public static int getLevelMaximumBalance(int level) {
-            return switch (level) {
-                case 1 -> LevelType.ONE.getMaximumBalance();
-                case 2 -> LevelType.TWO.getMaximumBalance();
-                case 3 -> LevelType.THREE.getMaximumBalance();
-                case 4 -> LevelType.FOUR.getMaximumBalance();
-                case 5 -> LevelType.FIVE.getMaximumBalance();
-                default -> 0;
-            };
-        }
-
-        public int getMaximumMembers() {
-            return maximumMembers;
-        }
-
-        public int getMaximumBalance() {
-            return maximumBalance;
-        }
-
-        public int getXp() {
-            return xp;
-        }
-
-        public int getId() {
-            return id;
-        }
-    }
+    public abstract void showMenu(ModifiedPlayer modifiedPlayer, int id);
 
     public String getName() {
         return name;

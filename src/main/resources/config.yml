@@ -46,15 +46,16 @@ message:
       you_have_sent_a_request_to_join_the_clan: "&#808080Вы отправили запрос на вступление в клан"
       you_have_received_a_request_to_join_the_clan: "&#808080Вы получили запрос на вступление в клан %clan_name%"
       notification_of_the_invitation: "&#808080%player% вступил в клан"
-      accept:
-        has_anyone_sent_you_a_request_to_join_clan: "&#808080Вам никто не отправлял запрос на вступление в клан"
-        you_are_in_a_clan: "&#808080Вы в клане"
-        have_you_accepted_the_request_to_join_the_clan: "&#808080Вы приняли запрос на вступление в клан"
-        the_player_accepted_the_request_to_join_the_clan: "&#808080Игрок принял запрос на вступление в клан"
-      cancel:
-        has_anyone_sent_you_a_request_to_join_clan: "&#808080Вам никто не отправлял запрос на вступление в клан"
-        you_rejected_the_request_to_join_the_clan: "&#808080Вы отклонили запрос на вступление в клан"
-        the_player_rejected_the_request_to_join_the_clan: "&#808080Игрок отклонил запрос на вступление в клан"
+    accept:
+      has_anyone_sent_you_a_request_to_join_clan: "&#808080Вам никто не отправлял запрос на вступление в клан"
+      you_are_in_a_clan: "&#808080Вы в клане"
+      have_you_accepted_the_request_to_join_the_clan: "&#808080Вы приняли запрос на вступление в клан"
+      the_player_accepted_the_request_to_join_the_clan: "&#808080Игрок принял запрос на вступление в клан"
+      there_is_no_place_in_the_clan: "&#808080В клане нет места"
+    cancel:
+      has_anyone_sent_you_a_request_to_join_clan: "&#808080Вам никто не отправлял запрос на вступление в клан"
+      you_rejected_the_request_to_join_the_clan: "&#808080Вы отклонили запрос на вступление в клан"
+      the_player_rejected_the_request_to_join_the_clan: "&#808080Игрок отклонил запрос на вступление в клан"
     kick:
       usage_command: "&#808080Использование: /clan kick <игрок>"
       the_player_was_not_found: "&#808080Игрок не найден"
@@ -128,59 +129,135 @@ message:
         - "&#008000Убийств: &#ffff00%kills%"
         - "&#008000Смерти: &#ffff00%deaths%"
 
-
-
 settings:
   the_cost_of_creating_a_clan: 10000
+  clan_name:
+    min: 3
+    max: 10
+    message_about_exceeding_the_limits: "&#808080Название клана должно быть от %min% до %max% символов"
+    bad_words:
+      - "Admin"
+    the_clan_name_is_on_the_list_of_bad_words: "&#808080Название клана входит в список плохих слов"
+  top_clan:
+    format: "&#808080%place%. %clan_name%: %xp% XP"
+  level:
+    1:
+     level: 1
+     xp: 0
+     maximum_members: 3
+     maximum_balance: 250000
+    2:
+      level: 2
+      xp: 1000
+      maximum_members: 6
+      maximum_balance: 500000
+    3:
+      level: 3
+      xp: 2500
+      maximum_members: 12
+      maximum_balance: 1000000
+    4:
+      level: 4
+      xp: 5000
+      maximum_members: 18
+      maximum_balance: 1750000
+    5:
+      level: 5
+      xp: 7500
+      maximum_members: 24
+      maximum_balance: 2500000
+    6:
+      level: 6
+      xp: 10000
+      maximum_members: 30
+      maximum_balance: 5000000
   menu:
-      menu_clan:
-            items:
-              information:
-                title: "&#ff0000Информация"
-                lore:
-                - "&#008000Клан: &#ffff00%name%"
-                - "&#008000Участников: &#ffff00%members%&#008000/&#ffff0020"
-                - "&#008000Уровень: &#ffff00%level% &#008000(&#ffff00%xp% XP&#008000)"
-                - "&#008000Баланс: &#ffff00%balance%"
-                - "&#008000Убийств: &#ffff00%kills%"
-                - "&#008000Смерти: &#ffff00%deaths%"
-                - "&#008000PVP-Режим: &#ffff00%pvp%"
-                - "&#008000Лимит баланса: &#ffff00%maximum_balance%"
-              members_clan:
-                title: "&#ff0000Участники"
-                lore:
-                  - "&#808080Нажмите, чтобы посмотреть участников клана"
-              level_clan:
-                title: "&#ff0000Уровень клана"
-                lore:
-                  - "&#808080Нажмите, чтобы посмотреть уровень клана"
-              top_clan:
-                title: "&#ff0000Топ кланов"
-                format: "&#808080%place%. &#008000%clan_name%&#808080: %xp% &#ffff00XP"
-              exit:
-                title: "&#ff0000Выйти"
-      menu_clan_members:
-        player:
-            lore:
-              - "&#008000Ранг &#ffff00%rank%"
-              - "&#008000Убийств &#ffff00%kills%"
-              - "&#008000Смертей &#ffff00%deaths%"
-        in_menu:
-            title: "&#ff0000В меню"
-      menu_level_clan:
-        level:
-          received:
-            title: "&#ff0000Уровень %level%"
-            lore:
-              - "&#ff0000Получен"
-              - "&#008000Доступно:"
-              - "&#ffff00Лимит баланса %maximum_balance%"
-          not_received:
-            title: "&#ff0000Уровень %level%"
-            lore:
-              - "&#ff0000Не получен"
-              - "&#008000При получении будет доступно:"
-              - "&#ffff00Лимит баланса %maximum_balance%"
-          in_menu:
-            title: "&#ff0000В меню"
+     menu_clan_main:
+       size: 45
+       title: "%clan_name%"
+       items:
+         1:
+           material: knowledge_book
+           slot: 20
+           title: "&#ff0000Информация о клане"
+           lore:
+             - "&#008000Клан: &#ffff00%name%"
+             - "&#008000Участников: &#ffff00%members%&#008000/&#ffff00%maximum_members%"
+             - "&#008000Уровень: &#ffff00%level% &#008000(&#ffff00%xp% XP&#008000)"
+             - "&#008000Баланс: &#ffff00%balance%"
+             - "&#008000Убийств: &#ffff00%kills%"
+             - "&#008000Смерти: &#ffff00%deaths%"
+             - "&#008000PVP-Режим: &#ffff00%pvp%"
+             - "&#008000Лимит баланса: &#ffff00%maximum_balance%"
+         2:
+           material: totem_of_undying
+           slot: 21
+           title: "&#ff0000Участники клана"
+           lore:
+             - "&#808080Нажмите, чтобы посмотреть участников клана"
+           actions_when_clicking: "MENU_CLAN_MEMBERS"
+         3:
+           material: diamond
+           slot: 22
+           title: "&#ff0000Уровень клана"
+           lore:
+             - "&#808080Нажмите, чтобы посмотреть уровень клана"
+           actions_when_clicking: "MENU_CLAN_LEVEL"
+         4:
+           material: spectral_arrow
+           slot: 23
+           title: "&#ff0000Выйти"
+           lore:
+             - "&#808080Нажмите, чтобы выйти"
+           actions_when_clicking: "MENU_CLAN_EXIT"
+     menu_clan_members:
+       size: 45
+       title_menu: "Участники клана"
+       material: paper
+       slot: 0
+       title_item: "&#ff0000%player_name%"
+       lore:
+         - "&#808080Ранг %player_rank%"
+         - "&#808080Убийств %player_kills%"
+         - "&#808080Смертей %player_deaths%"
+       items:
+         1:
+           material: spectral_arrow
+           slot: 44
+           title: "&#ff0000Назад"
+           lore:
+             - "&#808080Нажмите, чтобы выйти"
+           actions_when_clicking: "MENU_CLAN_BACK"
+     menu_clan_level:
+       size: 45
+       title: "Уровень клана"
+       slot: 0
+       received:
+         material: chest_minecart
+         title: "&#ff0000Уровень %level%"
+         lore:
+           - "&#ff0000Получен"
+           - "&#008000Доступно:"
+           - "&#ffff00Лимит баланса: %maximum_balance%"
+           - "&#ffff00Лимит участников: %maximum_members%"
+       not_received:
+         material: furnace_minecart
+         title: "&#ff0000Уровень %level%"
+         lore:
+           - "&#ff0000Не получен"
+           - "&#008000При получении будет доступно:"
+           - "&#ffff00Лимит баланса: %maximum_balance%"
+           - "&#ffff00Лимит участников: %maximum_members%"
+       items:
+         1:
+           material: spectral_arrow
+           slot: 44
+           title: "&#ff0000Назад"
+           lore:
+             - "&#808080Нажмите, чтобы выйти"
+           actions_when_clicking: "MENU_CLAN_BACK"
+
+
+
+
 

@@ -1,6 +1,7 @@
 package phrase.towerClans.listener;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,9 +13,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.AbstractClan;
+import phrase.towerClans.clan.Level;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.PlayerStats;
 import phrase.towerClans.clan.impls.ClanImpl;
@@ -46,8 +50,6 @@ public class EventListener implements Listener {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan.items.members_clan");
-
         if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 1, plugin), event.getInventory())) {
 
             if(event.getCurrentItem() == null) {
@@ -55,32 +57,19 @@ public class EventListener implements Listener {
                 return;
             }
 
-
-            if (event.getCurrentItem().getType() == Material.TOTEM_OF_UNDYING && event.getCurrentItem().getItemMeta().getDisplayName().
-                    equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
+            ItemStack item = event.getCurrentItem();
+            if(item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING) != null) {
+                String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
+                ClanImpl.MenuType menu = ClanImpl.MenuType.valueOf(action);
                 event.setCancelled(true);
-                clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN_MEMBERS.getId());
+                clan.showMenu(modifiedPlayer, menu.getId());
+                return;
+            } else {
+                event.setCancelled(true);
                 return;
             }
 
-            configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan.items.level_clan");
 
-            if (event.getCurrentItem().getType() == Material.DIAMOND && event.getCurrentItem().getItemMeta().getDisplayName().
-                    equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
-                event.setCancelled(true);
-                clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_LEVEL_CLAN.getId());
-                return;
-            }
-
-            configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan.items.exit");
-
-            if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
-                event.setCancelled(true);
-                player.closeInventory();
-                return;
-            }
-
-            event.setCancelled(true);
 
         }
 
@@ -90,24 +79,20 @@ public class EventListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            if (event.getCurrentItem().getItemMeta().getDisplayName().startsWith("Участник")) {
+
+            ItemStack item = event.getCurrentItem();
+            if((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
+                String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
+
+                ClanImpl.MenuType menu = ClanImpl.MenuType.valueOf(action);
+                event.setCancelled(true);
+                clan.showMenu(modifiedPlayer, menu.getId());
+            } else {
                 event.setCancelled(true);
                 return;
             }
-
-            configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members.in_menu");
-
-            if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
-                event.setCancelled(true);
-                clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN.getId());
-                return;
-            }
-
-            event.setCancelled(true);
 
         }
-
-        configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_level_clan.level.in_menu");
 
         if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 3, plugin), event.getInventory())) {
 
@@ -116,13 +101,17 @@ public class EventListener implements Listener {
                 return;
             }
 
-            if(event.getCurrentItem().getType() == Material.SPECTRAL_ARROW && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(HexUtil.color(configurationSection.getString("title")))) {
+            ItemStack item = event.getCurrentItem();
+            if((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
+                String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
+
+                ClanImpl.MenuType menu = ClanImpl.MenuType.valueOf(action);
                 event.setCancelled(true);
-                clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN.getId());
-                return;
+                clan.showMenu(modifiedPlayer, menu.getId());
+            } else {
+                event.setCancelled(true);
             }
 
-            event.setCancelled(true);
         }
 
     }
@@ -222,7 +211,7 @@ public class EventListener implements Listener {
 
                 clan.setXp(clan.getXp() + 2);
                 int level = clan.getLevel();
-                int xp = AbstractClan.LevelType.getXpLevel(level);
+                int xp = Level.getXpLevel(level);
                 if(clan.getXp() >= xp) {
                     new BukkitRunnable() {
                         @Override
