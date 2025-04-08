@@ -1,5 +1,6 @@
 package phrase.towerClans.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -9,7 +10,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -23,9 +26,12 @@ import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.PlayerStats;
 import phrase.towerClans.clan.impls.ClanImpl;
 import phrase.towerClans.commands.impls.invite.ClanInviteCommand;
+import phrase.towerClans.commands.impls.invite.PlayerCalls;
+import phrase.towerClans.commands.impls.storage.ClanStorageCommand;
 import phrase.towerClans.utils.ChatUtil;
 import phrase.towerClans.utils.HexUtil;
 
+import java.util.ConcurrentModificationException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -41,8 +47,6 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-
-        if (!(event.getWhoClicked() instanceof Player)) return;
 
         Player player = (Player) event.getWhoClicked();
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
@@ -114,6 +118,21 @@ public class EventListener implements Listener {
 
         }
 
+        if(ClanImpl.MenuType.identical(clan.getStorage(), event.getInventory())) {
+            try {
+                ClanStorageCommand.PLAYERS.forEach(playerUUID -> Bukkit.getPlayer(playerUUID).openInventory(event.getInventory()));
+            } catch (ConcurrentModificationException ignored) {}
+        }
+
+    }
+
+    @EventHandler
+    public void onClose(InventoryCloseEvent event) {
+        if(ClanStorageCommand.PLAYERS.contains(event.getPlayer().getUniqueId())) {
+            ClanStorageCommand.PLAYERS.remove(event.getPlayer().getUniqueId());
+            ModifiedPlayer modifiedPlayer = ModifiedPlayer.get((Player) event.getPlayer());
+            ((ClanImpl) modifiedPlayer.getClan()).getStorage().setContents((event.getInventory().getContents()));
+        }
     }
 
     @EventHandler
@@ -211,7 +230,7 @@ public class EventListener implements Listener {
 
                 clan.setXp(clan.getXp() + 2);
                 int level = clan.getLevel();
-                int xp = Level.getXpLevel(level);
+                int xp = Level.getXpLevel(++level);
                 if(clan.getXp() >= xp) {
                     new BukkitRunnable() {
                         @Override
@@ -263,13 +282,7 @@ public class EventListener implements Listener {
             @Override
             public void run() {
                 UUID player = event.getPlayer().getUniqueId();
-                for (Map.Entry<UUID, UUID> entry : ClanInviteCommand.PLAYERS.entrySet()) {
-
-                    if(!entry.getKey().equals(player) && !entry.getValue().equals(player)) continue;
-
-                    ClanInviteCommand.PLAYERS.remove(entry.getKey());
-
-                }
+                PlayerCalls.removeQuitPlayers(player);
                 cancel();
             }
         }.runTaskAsynchronously(plugin);

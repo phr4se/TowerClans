@@ -16,7 +16,6 @@ import java.util.UUID;
 
 public class ClanInviteCommand implements CommandHandler {
 
-    public static final Map<UUID, UUID> PLAYERS = new HashMap<>();
     private final Plugin plugin;
     private final ChatUtil chatUtil;
 
@@ -60,7 +59,7 @@ public class ClanInviteCommand implements CommandHandler {
             return true;
         }
 
-        PLAYERS.put(targetPlayer.getUniqueId(), player.getUniqueId());
+        PlayerCalls.addPlayers(targetPlayer.getUniqueId(), player.getUniqueId());
         chatUtil.sendMessage(player, configurationSection.getString("you_have_sent_a_request_to_join_the_clan"));
         chatUtil.sendMessage(targetPlayer, configurationSection.getString("you_have_received_a_request_to_join_the_clan").replace("%clan_name%", ((ClanImpl)modifiedPlayer.getClan()).getName()));
 

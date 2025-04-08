@@ -1,6 +1,10 @@
 package phrase.towerClans.commands;
 
 import phrase.towerClans.Plugin;
+import phrase.towerClans.commands.impls.base.Base;
+import phrase.towerClans.commands.impls.base.ClanBaseCommand;
+import phrase.towerClans.commands.impls.base.ClanDelBaseCommand;
+import phrase.towerClans.commands.impls.base.ClanSetBaseCommand;
 import phrase.towerClans.commands.impls.chat.ClanChatCommand;
 import phrase.towerClans.commands.impls.create.ClanCreateCommand;
 import phrase.towerClans.commands.impls.disband.ClanDisbandCommand;
@@ -15,6 +19,7 @@ import phrase.towerClans.commands.impls.pvp.ClanPvpCommand;
 import phrase.towerClans.commands.impls.rank.ClanRankCommand;
 import phrase.towerClans.commands.impls.reload.ClanReloadCommand;
 import phrase.towerClans.commands.impls.stats.ClanStatsCommand;
+import phrase.towerClans.commands.impls.storage.ClanStorageCommand;
 import phrase.towerClans.commands.impls.top.ClanTopCommand;
 import phrase.towerClans.commands.impls.withdraw.ClanWithdrawCommand;
 
@@ -54,6 +59,10 @@ public class CommandLogger {
         COMMANDS.put("stats", new CommandDescription("towerclans.stats", new ClanStatsCommand(plugin)));
         COMMANDS.put("info", new CommandDescription("towerclans.info", new ClanInfoCommand(plugin)));
         COMMANDS.put("top", new CommandDescription("towerclans.top", new ClanTopCommand(plugin)));
+        COMMANDS.put("base", new CommandDescription("towerclans.base", new ClanBaseCommand(plugin)));
+        COMMANDS.put("setbase", new CommandDescription("towerclans.setbase", new ClanSetBaseCommand(plugin)));
+        COMMANDS.put("delbase", new CommandDescription("towerclans.delbase", new ClanDelBaseCommand(plugin)));
+        COMMANDS.put("storage", new CommandDescription("towerclans.storage", new ClanStorageCommand(plugin)));
     }
 
 }

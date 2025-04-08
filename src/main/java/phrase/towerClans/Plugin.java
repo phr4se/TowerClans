@@ -14,7 +14,7 @@ import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.commands.CommandLogger;
 import phrase.towerClans.commands.CommandMapper;
 import phrase.towerClans.commands.CommandResult;
-import phrase.towerClans.config.ConfigManager;
+import phrase.towerClans.manager.ConfigManager;
 import phrase.towerClans.listener.EventListener;
 import phrase.towerClans.placeholder.PluginPlaceholder;
 import phrase.towerClans.utils.ChatUtil;

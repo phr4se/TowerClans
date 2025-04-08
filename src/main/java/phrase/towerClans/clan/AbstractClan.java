@@ -1,5 +1,10 @@
 package phrase.towerClans.clan;
 
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import phrase.towerClans.Plugin;
+
 import java.util.*;
 
 public abstract class AbstractClan implements Clan {
@@ -19,7 +24,6 @@ public abstract class AbstractClan implements Clan {
         xp = Level.levels.get(1).getXp();
         balance = 0;
         pvp = false;
-
     }
 
     public enum RankType {
@@ -87,4 +91,5 @@ public abstract class AbstractClan implements Clan {
     public void setPvp(boolean pvp) {
         this.pvp = pvp;
     }
+
 }

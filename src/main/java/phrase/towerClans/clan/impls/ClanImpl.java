@@ -23,15 +23,22 @@ public class ClanImpl extends AbstractClan {
     private final Plugin plugin;
     private final ChatUtil chatUtil;
 
+    private Inventory storage;
+
     public ClanImpl(String name, Plugin plugin) {
         super(name);
         this.plugin = plugin;
         chatUtil = new ChatUtil(plugin);
+
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_storage");
+        int size = configurationSection.getInt("size");
+        String title = configurationSection.getString("title");
+        storage = Bukkit.createInventory(null, size, title);
     }
 
     @Override
     public ClanResponse invite(ModifiedPlayer modifiedPlayer) {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.accept");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.invite.accept");
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         if (clan.getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("you_are_in_a_clan"), ClanResponse.ResponseType.FAILURE);
         int maximumMembers = Level.getLevelMaximumMembers(clan.getLevel());
@@ -143,7 +150,7 @@ public class ClanImpl extends AbstractClan {
             chatUtil.sendMessage(entry.getKey().getPlayer(), configurationSection.getString("notification_of_disband"));
         }
 
-        CLANS.remove((clan).getName());
+        CLANS.remove(clan.getName());
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
@@ -167,6 +174,9 @@ public class ClanImpl extends AbstractClan {
             case 5:
                 modifiedPlayer.getPlayer().closeInventory();
                 break;
+            case 6:
+                modifiedPlayer.getPlayer().openInventory(storage);
+                break;
         }
 
     }
@@ -177,7 +187,8 @@ public class ClanImpl extends AbstractClan {
         MENU_CLAN_MEMBERS(2),
         MENU_CLAN_LEVEL(3),
         MENU_CLAN_BACK(4),
-        MENU_CLAN_EXIT(5);
+        MENU_CLAN_EXIT(5),
+        MENU_CLAN_STORAGE(6);
 
         private final int id;
 
@@ -274,9 +285,9 @@ public class ClanImpl extends AbstractClan {
 
                 for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
                     ModifiedPlayer modifiedPlayer = entry.getKey();
-                    titleItem = HexUtil.color(titleItem.replace("%player_name%", modifiedPlayer.getPlayer().getName()));
+                    String currentTitle = HexUtil.color(titleItem.replace("%player_name%", modifiedPlayer.getPlayer().getName()));
                     PlayerStats playerStats = PlayerStats.PLAYERS.get(modifiedPlayer.getPlayerUUID());
-                    lore = lore.stream().map(
+                    List<String> currentLore = lore.stream().map(
                             string -> {
                                 String replacedString = string
                                         .replace("%player_rank%", entry.getValue())
@@ -287,8 +298,8 @@ public class ClanImpl extends AbstractClan {
                     ).collect(Collectors.toList());
 
                     ItemStack item = new ItemBuilder(material)
-                            .setName(titleItem)
-                            .setLore(lore)
+                            .setName(currentTitle)
+                            .setLore(currentLore)
                             .build();
 
                     menu.setItem(slot, item);
@@ -417,9 +428,9 @@ public class ClanImpl extends AbstractClan {
 
                }
 
+               return menu;
 
            }
-
 
             return menu;
 
@@ -429,8 +440,6 @@ public class ClanImpl extends AbstractClan {
         public int getId() {
             return id;
         }
-
-
 
         public static boolean identical(Inventory o1, Inventory o2) {
 
@@ -456,8 +465,13 @@ public class ClanImpl extends AbstractClan {
 
     }
 
+    public Inventory getStorage() {
+        return storage;
+    }
 
-
+    public void setStorage(Inventory storage) {
+        this.storage = storage;
+    }
 
     public static Map<String, ClanImpl> getClans() {
         return CLANS;

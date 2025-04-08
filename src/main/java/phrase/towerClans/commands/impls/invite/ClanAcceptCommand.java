@@ -29,7 +29,7 @@ public class ClanAcceptCommand implements CommandHandler {
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.invite.accept");
 
-        UUID senderPlayer = ClanInviteCommand.PLAYERS.remove(player.getUniqueId());
+        UUID senderPlayer = PlayerCalls.removePlayers(player.getUniqueId());
 
         if (senderPlayer == null) {
             chatUtil.sendMessage(player, configurationSection.getString("has_anyone_sent_you_a_request_to_join_clan"));

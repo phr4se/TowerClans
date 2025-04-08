@@ -7,6 +7,7 @@ import phrase.towerClans.clan.AbstractClan;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.impls.ClanImpl;
 import phrase.towerClans.commands.CommandHandler;
+import phrase.towerClans.commands.impls.base.Base;
 import phrase.towerClans.utils.ChatUtil;
 
 import java.util.List;
@@ -80,6 +81,7 @@ public class ClanCreateCommand implements CommandHandler {
         modifiedPlayer.setClan(clan);
         clan.getMembers().put(modifiedPlayer, AbstractClan.RankType.LEADER.getName());
         ClanImpl.getClans().put(args[1], clan);
+        Base.setBase(clan, null);
 
         chatUtil.sendMessage(player, configurationSection.getString("you_have_created_a_clan"));
 

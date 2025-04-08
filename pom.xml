@@ -6,7 +6,7 @@
 
     <groupId>phrase</groupId>
     <artifactId>TowerClans</artifactId>
-    <version>BETA-0.5</version>
+    <version>BETA-0.6</version>
     <packaging>jar</packaging>
 
     <name>TowerClans</name>
@@ -87,6 +87,11 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.11.6</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.0</version>
         </dependency>
     </dependencies>
 </project>

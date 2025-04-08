@@ -1,13 +1,17 @@
-package phrase.towerClans.config;
+package phrase.towerClans.manager;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.PlayerStats;
 import phrase.towerClans.clan.impls.ClanImpl;
+import phrase.towerClans.commands.CommandResult;
+import phrase.towerClans.commands.impls.base.Base;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +51,8 @@ public class ConfigManager {
             int xp = configClans.getInt(name + ".xp");
             int balance = configClans.getInt(name + ".balance");
             boolean pvp = configClans.getBoolean(name + ".pvp");
+            Location base = configClans.getLocation(name + ".base");
+            ItemStack[] contents = configClans.getList(name + ".storage").toArray(new ItemStack[0]);
             List<String> list = configClans.getStringList(name + ".members");
             Map<ModifiedPlayer, String> members = new HashMap<>();
 
@@ -55,13 +61,13 @@ public class ConfigManager {
             clan.setXp(xp);
             clan.setBalance(balance);
             clan.setPvp(pvp);
-
+            Base.setBase(clan, base);
+            clan.getStorage().setContents(contents);
 
             for(String string : list) {
                 String[] strings = string.split(":");
                 String player = strings[0];
                 String rank = strings[1];
-                System.out.println(player + ":" + rank);
                 ModifiedPlayer modifiedPlayer = new ModifiedPlayer(Bukkit.getOfflinePlayer(player).getUniqueId(), clan);
 
                 members.put(modifiedPlayer, rank);
@@ -103,7 +109,7 @@ public class ConfigManager {
             ClanImpl clan = entry.getValue();
 
             if (configClans.contains(name + ".members")) {
-                configClans.set(name = ".members", null);
+                configClans.set(name + ".members", null);
             }
 
 
@@ -111,6 +117,8 @@ public class ConfigManager {
             configClans.set(name + ".xp", clan.getXp());
             configClans.set(name + ".balance", clan.getBalance());
             configClans.set(name + ".pvp", clan.isPvp());
+            configClans.set(name + ".base", Base.getBase(clan));
+            configClans.set(name + ".storage", clan.getStorage().getContents());
             for (Map.Entry<ModifiedPlayer, String> entry2 : clan.getMembers().entrySet()) {
 
                 String player = entry2.getKey().getPlayer().getName();
