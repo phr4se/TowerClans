@@ -49,7 +49,7 @@ public class ClanRankCommand implements CommandHandler {
         String name = args[1];
         Player targetPlayer;
         try {
-            targetPlayer = Objects.requireNonNull(Bukkit.getPlayer(name));
+            targetPlayer = Bukkit.getPlayer(name);
         } catch (NullPointerException e) {
             chatUtil.sendMessage(player, configurationSection.getString("the_player_is_offline"));
             return false;
@@ -62,6 +62,11 @@ public class ClanRankCommand implements CommandHandler {
             id = Integer.parseInt(args[2]);
         } catch (NumberFormatException e) {
             chatUtil.sendMessage(player, configurationSection.getString("usage_command"));
+        }
+
+        if(player.getUniqueId().equals(targetPlayer.getUniqueId())) {
+            chatUtil.sendMessage(player, configurationSection.getString("you_can't_change_your_rank"));
+            return true;
         }
 
         ClanResponse clanResponse = clan.rank(targetModifierPlayer, id);

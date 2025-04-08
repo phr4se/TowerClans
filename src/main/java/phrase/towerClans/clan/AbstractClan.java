@@ -1,10 +1,5 @@
 package phrase.towerClans.clan;
 
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import phrase.towerClans.Plugin;
-
 import java.util.*;
 
 public abstract class AbstractClan implements Clan {

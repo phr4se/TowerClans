@@ -24,6 +24,7 @@ public class ClanImpl extends AbstractClan {
     private final ChatUtil chatUtil;
 
     private Inventory storage;
+    private final Set<UUID> players = new HashSet<>();
 
     public ClanImpl(String name, Plugin plugin) {
         super(name);
@@ -475,5 +476,9 @@ public class ClanImpl extends AbstractClan {
 
     public static Map<String, ClanImpl> getClans() {
         return CLANS;
+    }
+
+    public Set<UUID> getPlayers() {
+        return players;
     }
 }

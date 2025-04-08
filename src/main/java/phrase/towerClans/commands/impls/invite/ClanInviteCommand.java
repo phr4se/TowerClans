@@ -49,13 +49,17 @@ public class ClanInviteCommand implements CommandHandler {
             return true;
         }
 
-
         String name = args[1];
 
         Player targetPlayer = Bukkit.getPlayer(name);
 
         if (targetPlayer == null) {
             chatUtil.sendMessage(player, configurationSection.getString("the_player_was_not_found"));
+            return true;
+        }
+
+        if(player.getUniqueId().equals(targetPlayer.getUniqueId())) {
+            chatUtil.sendMessage(player, configurationSection.getString("you_can't_invite_yourself"));
             return true;
         }
 

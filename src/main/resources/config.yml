@@ -45,6 +45,7 @@ message:
       the_player_was_not_found: "&#808080Игрок не найден"
       you_have_sent_a_request_to_join_the_clan: "&#808080Вы отправили запрос на вступление в клан"
       you_have_received_a_request_to_join_the_clan: "&#808080Вы получили запрос на вступление в клан %clan_name%"
+      you_can't_invite_yourself: "&#808080Вы не можете пригласить себя"
       notification_of_the_invitation: "&#808080%player% вступил в клан"
       accept:
         has_anyone_sent_you_a_request_to_join_clan: "&#808080Вам никто не отправлял запрос на вступление в клан"
@@ -66,6 +67,7 @@ message:
       you_were_kicked_out_of_the_clan: "&#808080Вас кикнули с клана"
       you_cannot_leave_the_clan: "&#808080Вы не можете покинуть клан"
       notification_of_exclusion: "&#808080%player% кикнут с клана"
+      you_can't_kick_yourself: "&#808080Вы не можете кикнуть себя"
     invest:
       usage_command: "&#808080Использование: /clan invest <сумма>"
       you're_not_in_the_clan: "&#808080Вы не в клане"
@@ -100,6 +102,7 @@ message:
       notification_of_rank: "&#808080%player% повышен до %rank%"
       you_can't_give_out_a_leader_rank: "&#808080Нельзя выдать ранг лидера"
       this_rank_does_not_exist: "&#808080Не существует данного ранга"
+      you_can't_change_your_rank: "&#808080Вы не можете изменить себе ранг"
     disband:
       you're_not_in_the_clan: "&#808080Вы не в клане"
       you_deleted_the_clan: "&#808080Вы удалили клан"

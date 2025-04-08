@@ -8,13 +8,8 @@ import phrase.towerClans.clan.impls.ClanImpl;
 import phrase.towerClans.commands.CommandHandler;
 import phrase.towerClans.utils.ChatUtil;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 public class ClanStorageCommand implements CommandHandler {
-
-    public static final Set<UUID> PLAYERS = new HashSet<>();
 
     private Plugin plugin;
     private ChatUtil chatUtil;
@@ -39,7 +34,7 @@ public class ClanStorageCommand implements CommandHandler {
 
         clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN_STORAGE.getId());
         chatUtil.sendMessage(player, configurationSection.getString("you_have_opened_the_clan's_storage"));
-        PLAYERS.add(player.getUniqueId());
+        clan.getPlayers().add(player.getUniqueId());
         return true;
     }
 }

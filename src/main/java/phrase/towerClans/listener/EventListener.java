@@ -31,14 +31,14 @@ import phrase.towerClans.commands.impls.storage.ClanStorageCommand;
 import phrase.towerClans.utils.ChatUtil;
 import phrase.towerClans.utils.HexUtil;
 
-import java.util.ConcurrentModificationException;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class EventListener implements Listener {
 
     private final Plugin plugin;
     private final ChatUtil chatUtil;
+
+    private final Set<UUID> isUpdatedInventory = new HashSet<>();
 
     public EventListener(Plugin plugin) {
         this.plugin = plugin;
@@ -120,18 +120,29 @@ public class EventListener implements Listener {
 
         if(ClanImpl.MenuType.identical(clan.getStorage(), event.getInventory())) {
             try {
-                ClanStorageCommand.PLAYERS.forEach(playerUUID -> Bukkit.getPlayer(playerUUID).openInventory(event.getInventory()));
-            } catch (ConcurrentModificationException ignored) {}
+                clan.getPlayers().forEach(playerUUID ->
+                {
+                    isUpdatedInventory.add(playerUUID);
+                    Bukkit.getPlayer(playerUUID).openInventory(event.getInventory());
+                }
+                );
+            } catch (Exception ignored) {}
         }
 
     }
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        if(ClanStorageCommand.PLAYERS.contains(event.getPlayer().getUniqueId())) {
-            ClanStorageCommand.PLAYERS.remove(event.getPlayer().getUniqueId());
-            ModifiedPlayer modifiedPlayer = ModifiedPlayer.get((Player) event.getPlayer());
-            ((ClanImpl) modifiedPlayer.getClan()).getStorage().setContents((event.getInventory().getContents()));
+        Player player = (Player) event.getPlayer();
+        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
+        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+        if (clan.getPlayers().contains(player.getUniqueId())) {
+            clan.getStorage().setContents((event.getInventory().getContents()));
+            if(!isUpdatedInventory.contains(player.getUniqueId())) {
+                clan.getPlayers().remove(event.getPlayer().getUniqueId());
+                return;
+            }
+            isUpdatedInventory.clear();
         }
     }
 

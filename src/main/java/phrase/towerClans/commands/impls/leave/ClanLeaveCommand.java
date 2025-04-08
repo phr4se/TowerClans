@@ -3,6 +3,7 @@ package phrase.towerClans.commands.impls.leave;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.AbstractClan;
 import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.impls.ClanImpl;
@@ -32,7 +33,7 @@ public class ClanLeaveCommand implements CommandHandler {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if (clan.getMembers().get(modifiedPlayer).equals("Лидер")) {
+        if (clan.getMembers().get(modifiedPlayer).equals(AbstractClan.RankType.LEADER.getName())) {
             chatUtil.sendMessage(player, configurationSection.getString("you_cannot_leave_the_clan"));
             return true;
         }

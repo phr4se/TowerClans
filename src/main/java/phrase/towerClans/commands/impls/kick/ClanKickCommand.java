@@ -55,6 +55,11 @@ public class ClanKickCommand implements CommandHandler {
 
         ModifiedPlayer targetModifiedPlayer = ModifiedPlayer.get(targetPlayer);
 
+        if(player.getUniqueId().equals(targetPlayer.getUniqueId())) {
+            chatUtil.sendMessage(player, configurationSection.getString("you_can't_kick_yourself"));
+            return true;
+        }
+
         if (clan.getMembers().get(modifiedPlayer).equals(AbstractClan.RankType.LEADER.getName())) {
             chatUtil.sendMessage(player, configurationSection.getString("you_cannot_leave_the_clan"));
             return true;
