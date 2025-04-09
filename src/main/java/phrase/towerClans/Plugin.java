@@ -11,6 +11,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import phrase.towerClans.clan.Level;
 import phrase.towerClans.clan.ModifiedPlayer;
+import phrase.towerClans.clan.Storage;
 import phrase.towerClans.commands.CommandLogger;
 import phrase.towerClans.commands.CommandMapper;
 import phrase.towerClans.commands.CommandResult;
@@ -37,6 +38,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         configManager = new ConfigManager(this);
         commandMapper = new CommandMapper(this);
         Level.intialize(this);
+        Storage.intialize(this);
         new CommandLogger(this);
 
         if (!setupEconomy()) {

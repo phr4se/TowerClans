@@ -36,6 +36,11 @@ public class ClanTopCommand implements CommandHandler {
             place++;
         }
 
+        if(list.isEmpty()) {
+            chatUtil.sendMessage(player, configurationSection.getString("there_are_no_clans"));
+            return true;
+        }
+
         for(String string : list) {
             chatUtil.sendMessage(player, string);
         }

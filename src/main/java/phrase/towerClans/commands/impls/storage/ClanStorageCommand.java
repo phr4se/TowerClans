@@ -34,7 +34,7 @@ public class ClanStorageCommand implements CommandHandler {
 
         clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN_STORAGE.getId());
         chatUtil.sendMessage(player, configurationSection.getString("you_have_opened_the_clan's_storage"));
-        clan.getPlayers().add(player.getUniqueId());
+        clan.getStorage().getPlayers().add(player.getUniqueId());
         return true;
     }
 }

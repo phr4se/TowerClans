@@ -1,7 +1,6 @@
 package phrase.towerClans.listener;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -10,7 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -20,14 +18,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import phrase.towerClans.Plugin;
-import phrase.towerClans.clan.AbstractClan;
 import phrase.towerClans.clan.Level;
 import phrase.towerClans.clan.ModifiedPlayer;
 import phrase.towerClans.clan.PlayerStats;
+import phrase.towerClans.clan.Storage;
 import phrase.towerClans.clan.impls.ClanImpl;
-import phrase.towerClans.commands.impls.invite.ClanInviteCommand;
 import phrase.towerClans.commands.impls.invite.PlayerCalls;
-import phrase.towerClans.commands.impls.storage.ClanStorageCommand;
 import phrase.towerClans.utils.ChatUtil;
 import phrase.towerClans.utils.HexUtil;
 
@@ -38,7 +34,6 @@ public class EventListener implements Listener {
     private final Plugin plugin;
     private final ChatUtil chatUtil;
 
-    private final Set<UUID> isUpdatedInventory = new HashSet<>();
 
     public EventListener(Plugin plugin) {
         this.plugin = plugin;
@@ -72,8 +67,6 @@ public class EventListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-
-
 
         }
 
@@ -118,15 +111,14 @@ public class EventListener implements Listener {
 
         }
 
-        if(ClanImpl.MenuType.identical(clan.getStorage(), event.getInventory())) {
-            try {
-                clan.getPlayers().forEach(playerUUID ->
-                {
-                    isUpdatedInventory.add(playerUUID);
+        if(ClanImpl.MenuType.identical(clan.getStorage().getInventory(), event.getInventory())) {
+            Set<UUID> copyPlayers = new HashSet<>(clan.getStorage().getPlayers());
+            copyPlayers.forEach(playerUUID -> {
+                if(!playerUUID.equals(player.getUniqueId())) {
+                    clan.getStorage().getIsUpdatedInventory().add(playerUUID);
                     Bukkit.getPlayer(playerUUID).openInventory(event.getInventory());
                 }
-                );
-            } catch (Exception ignored) {}
+            });
         }
 
     }
@@ -136,13 +128,15 @@ public class EventListener implements Listener {
         Player player = (Player) event.getPlayer();
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if (clan.getPlayers().contains(player.getUniqueId())) {
-            clan.getStorage().setContents((event.getInventory().getContents()));
-            if(!isUpdatedInventory.contains(player.getUniqueId())) {
-                clan.getPlayers().remove(event.getPlayer().getUniqueId());
+        Storage storage = clan.getStorage();
+        if (storage.getPlayers().contains(player.getUniqueId())) {
+            storage.getInventory().setContents((event.getInventory().getContents()));
+            if(!storage.getIsUpdatedInventory().contains(player.getUniqueId())) {
+                storage.getPlayers().remove(player.getUniqueId());
+                storage.getIsUpdatedInventory().remove(player.getUniqueId());
                 return;
             }
-            isUpdatedInventory.clear();
+            storage.getIsUpdatedInventory().remove(player.getUniqueId());
         }
     }
 
@@ -292,8 +286,14 @@ public class EventListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                UUID player = event.getPlayer().getUniqueId();
-                PlayerCalls.removeQuitPlayers(player);
+                Player player = event.getPlayer();
+                UUID playerUUID = player.getUniqueId();
+                PlayerCalls.removeQuitPlayers(playerUUID);
+                ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
+                ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+                Storage storage = clan.getStorage();
+                if(storage.getPlayers().contains(playerUUID)) storage.getPlayers().remove(playerUUID);
+                if(storage.getIsUpdatedInventory().contains(playerUUID)) storage.getIsUpdatedInventory().remove(playerUUID);
                 cancel();
             }
         }.runTaskAsynchronously(plugin);

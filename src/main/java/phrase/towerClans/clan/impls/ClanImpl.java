@@ -20,21 +20,13 @@ import java.util.stream.Collectors;
 public class ClanImpl extends AbstractClan {
 
     private static final Map<String, ClanImpl> CLANS = new HashMap<>();
-    private final Plugin plugin;
+    private Plugin plugin;
     private final ChatUtil chatUtil;
-
-    private Inventory storage;
-    private final Set<UUID> players = new HashSet<>();
 
     public ClanImpl(String name, Plugin plugin) {
         super(name);
         this.plugin = plugin;
         chatUtil = new ChatUtil(plugin);
-
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_storage");
-        int size = configurationSection.getInt("size");
-        String title = configurationSection.getString("title");
-        storage = Bukkit.createInventory(null, size, title);
     }
 
     @Override
@@ -176,7 +168,7 @@ public class ClanImpl extends AbstractClan {
                 modifiedPlayer.getPlayer().closeInventory();
                 break;
             case 6:
-                modifiedPlayer.getPlayer().openInventory(storage);
+                modifiedPlayer.getPlayer().openInventory(((ClanImpl) modifiedPlayer.getClan()).getStorage().getInventory());
                 break;
         }
 
@@ -466,19 +458,8 @@ public class ClanImpl extends AbstractClan {
 
     }
 
-    public Inventory getStorage() {
-        return storage;
-    }
-
-    public void setStorage(Inventory storage) {
-        this.storage = storage;
-    }
-
     public static Map<String, ClanImpl> getClans() {
         return CLANS;
     }
 
-    public Set<UUID> getPlayers() {
-        return players;
-    }
 }

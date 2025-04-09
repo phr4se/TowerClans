@@ -21,9 +21,7 @@ public class PlayerCalls {
     public static void removeQuitPlayers(UUID player) {
         for (Map.Entry<UUID, UUID> entry : PLAYERS.entrySet()) {
 
-            if(entry.getKey().equals(player) || entry.getValue().equals(player)) {
-                PlayerCalls.removePlayers(entry.getKey());
-            }
+            if(entry.getKey().equals(player) || entry.getValue().equals(player)) PlayerCalls.removePlayers(entry.getKey());
 
         }
     }

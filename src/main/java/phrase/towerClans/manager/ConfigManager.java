@@ -62,7 +62,7 @@ public class ConfigManager {
             clan.setBalance(balance);
             clan.setPvp(pvp);
             Base.setBase(clan, base);
-            clan.getStorage().setContents(contents);
+            clan.getStorage().getInventory().setContents(contents);
 
             for(String string : list) {
                 String[] strings = string.split(":");
@@ -118,7 +118,7 @@ public class ConfigManager {
             configClans.set(name + ".balance", clan.getBalance());
             configClans.set(name + ".pvp", clan.isPvp());
             configClans.set(name + ".base", Base.getBase(clan));
-            configClans.set(name + ".storage", clan.getStorage().getContents());
+            configClans.set(name + ".storage", clan.getStorage().getInventory().getContents());
             for (Map.Entry<ModifiedPlayer, String> entry2 : clan.getMembers().entrySet()) {
 
                 String player = entry2.getKey().getPlayer().getName();

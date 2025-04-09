@@ -10,6 +10,7 @@ public abstract class AbstractClan implements Clan {
     private int xp;
     private int balance;
     private boolean pvp;
+    private Storage storage;
 
     public AbstractClan(String name) {
         this.name = name;
@@ -19,6 +20,7 @@ public abstract class AbstractClan implements Clan {
         xp = Level.levels.get(1).getXp();
         balance = 0;
         pvp = false;
+        storage = new Storage();
     }
 
     public enum RankType {
@@ -87,4 +89,7 @@ public abstract class AbstractClan implements Clan {
         this.pvp = pvp;
     }
 
+    public Storage getStorage() {
+        return storage;
+    }
 }

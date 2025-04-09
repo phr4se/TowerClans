@@ -158,6 +158,7 @@ settings:
       - "Admin"
     the_clan_name_is_on_the_list_of_bad_words: "&#808080Название клана входит в список плохих слов"
   top_clan:
+    there_are_no_clans: "&#808080Нет кланов"
     format: "&#808080%place%. %clan_name%: %xp% XP"
   level:
     1:
