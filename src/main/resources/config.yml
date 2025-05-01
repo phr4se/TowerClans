@@ -18,7 +18,7 @@ message:
   - "&#008000/clan top - &#ffff00посмотреть топ кланов"
   - "&#008000/clan info <клан> - &#ffff00посмотреть информаю о клане"
   notification_of_a_level_increase: "&#ffff00Уровень клана повышен"
-  the_format_of_the_chat_message: "&#ff0000[%clan_name%] &f%format%"
+  not_in_the_clan: "&#008000Нет"
   you_are_not_a_player: "&#ff0000Вы не являетесь игроком!"
 
   uknown_command: "&#808080Команда не найдена"
@@ -122,7 +122,7 @@ message:
         - "&#808080Убийств: %kills%"
         - "&#808080Смертей: %deaths%"
     info:
-      usage_command: "&#808080Использование: /clan info <клаг>"
+      usage_command: "&#808080Использование: /clan info <клан>"
       there_is_no_such_clan: "&#808080Такого клана не существует"
       information_about_the_clan:
         - "&#008000Клан: &#ffff00%name%"
@@ -150,6 +150,7 @@ message:
 
 settings:
   the_cost_of_creating_a_clan: 10000
+  xp_for_murder: 2
   clan_name:
     min: 3
     max: 10
@@ -191,6 +192,11 @@ settings:
       xp: 10000
       maximum_members: 13
       maximum_balance: 5000000
+  rank:
+    leader: "Лидер"
+    deputy: "Заместитель"
+    member: "Участник"
+
   menu:
      menu_clan_main:
        size: 45

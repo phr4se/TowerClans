@@ -7,20 +7,28 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import phrase.towerClans.clan.Level;
-import phrase.towerClans.clan.ModifiedPlayer;
-import phrase.towerClans.clan.Storage;
+import phrase.towerClans.clan.attributes.clan.Level;
+import phrase.towerClans.clan.attributes.clan.Rank;
+import phrase.towerClans.clan.entity.ModifiedPlayer;
+import phrase.towerClans.clan.attributes.clan.Storage;
 import phrase.towerClans.commands.CommandLogger;
 import phrase.towerClans.commands.CommandMapper;
 import phrase.towerClans.commands.CommandResult;
-import phrase.towerClans.manager.ConfigManager;
-import phrase.towerClans.listener.EventListener;
-import phrase.towerClans.placeholder.PluginPlaceholder;
+import phrase.towerClans.listener.ClanListener;
+import phrase.towerClans.config.ConfigManager;
+import phrase.towerClans.listener.PlayerListener;
+import phrase.towerClans.utils.PluginPlaceholder;
 import phrase.towerClans.utils.ChatUtil;
+import phrase.towerClans.utils.UpdateChecker;
+import phrase.towerClans.utils.colorizer.ColorizerFactory;
+import phrase.towerClans.utils.colorizer.ColorizerProvider;
+import phrase.towerClans.utils.colorizer.ColorizerType;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 
 public final class Plugin extends JavaPlugin implements CommandExecutor {
@@ -29,21 +37,31 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
     public Economy economy;
     private static CommandMapper commandMapper;
     private static ChatUtil chatUtil;
+    private static ColorizerProvider colorizerProvider;
 
     @Override
     public void onEnable() {
 
+        Logger logger = getLogger();
+        PluginManager pluginManager = Bukkit.getPluginManager();
+
         saveDefaultConfig();
+
+        if(!UpdateChecker.check().equals(getDescription().getVersion())) logger.severe("Вы используете устаревшую версию плагина");
+
+        colorizerProvider = ColorizerFactory.getProvider(ColorizerType.HEX);
+
         chatUtil = new ChatUtil(this);
         configManager = new ConfigManager(this);
         commandMapper = new CommandMapper(this);
         Level.intialize(this);
         Storage.intialize(this);
+        Rank.intialize(this);
         new CommandLogger(this);
 
         if (!setupEconomy()) {
-            getLogger().severe("Vault не найден. Плагин будет выключен");
-            getServer().getPluginManager().disablePlugin(this);
+            logger.severe("Vault не найден. Плагин будет выключен");
+            pluginManager.disablePlugin(this);
             return;
         }
 
@@ -52,9 +70,10 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         getCommand("clan").setExecutor(this);
 
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) new PluginPlaceholder().register();
+        if (pluginManager.getPlugin("PlaceholderAPI") != null) new PluginPlaceholder().register();
 
-        getServer().getPluginManager().registerEvents(new EventListener(this), this);
+        pluginManager.registerEvents(new PlayerListener(this), this);
+        pluginManager.registerEvents(new ClanListener(this), this);
 
     }
 
@@ -116,5 +135,9 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         return true;
 
+    }
+
+    public static ColorizerProvider getColorizerProvider() {
+        return colorizerProvider;
     }
 }

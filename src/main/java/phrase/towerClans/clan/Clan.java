@@ -1,5 +1,7 @@
 package phrase.towerClans.clan;
 
+import phrase.towerClans.clan.entity.ModifiedPlayer;
+
 public interface Clan {
 
     ClanResponse invite(ModifiedPlayer modifiedPlayer);

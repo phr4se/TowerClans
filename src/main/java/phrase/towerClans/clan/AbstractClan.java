@@ -1,5 +1,9 @@
 package phrase.towerClans.clan;
 
+import phrase.towerClans.clan.attributes.clan.Level;
+import phrase.towerClans.clan.attributes.clan.Storage;
+import phrase.towerClans.clan.entity.ModifiedPlayer;
+
 import java.util.*;
 
 public abstract class AbstractClan implements Clan {
@@ -10,7 +14,7 @@ public abstract class AbstractClan implements Clan {
     private int xp;
     private int balance;
     private boolean pvp;
-    private Storage storage;
+    private final Storage storage;
 
     public AbstractClan(String name) {
         this.name = name;
@@ -21,22 +25,6 @@ public abstract class AbstractClan implements Clan {
         balance = 0;
         pvp = false;
         storage = new Storage();
-    }
-
-    public enum RankType {
-        LEADER("Лидер"),
-        DEPUTY("Заместитель"),
-        MEMBER("Участник");
-
-        private final String name;
-
-        RankType(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
     }
 
     public abstract void showMenu(ModifiedPlayer modifiedPlayer, int id);
