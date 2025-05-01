@@ -6,17 +6,16 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import phrase.towerClans.clan.Clan;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 
-public class OpenMenuClanLevel extends Event implements Cancellable {
+public class ClickMenuClanLevelEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final ModifiedPlayer modifiedPlayer;
     private final InventoryClickEvent event;
 
-    public OpenMenuClanLevel(ModifiedPlayer modifiedPlayer, InventoryClickEvent event) {
+    public ClickMenuClanLevelEvent(ModifiedPlayer modifiedPlayer, InventoryClickEvent event) {
         this.modifiedPlayer = modifiedPlayer;
         this.event = event;
     }

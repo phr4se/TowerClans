@@ -32,7 +32,7 @@ public class ClanListener implements Listener {
     }
 
     @EventHandler
-    public void onOpenMenuClanMain(OpenMenuClanMain event) {
+    public void onClickMenuClanMain(ClickMenuClanMainEvent event) {
         ItemStack item = event.getCurrentItem();
         if(item == null) {
             event.setCancelled(true);
@@ -53,7 +53,7 @@ public class ClanListener implements Listener {
     }
 
     @EventHandler
-    public void onClanMenuMembers(OpenMenuClanMembers event) {
+    public void onClickClanMenuMembers(ClickMenuClanMembersEvent event) {
         ItemStack item = event.getCurrentItem();
         if(item == null) {
             event.setCancelled(true);
@@ -75,7 +75,7 @@ public class ClanListener implements Listener {
     }
 
     @EventHandler
-    public void onClanMenuLevel(OpenMenuClanLevel event) {
+    public void onClickClanMenuLevel(ClickMenuClanLevelEvent event) {
         ItemStack item = event.getCurrentItem();
         if(event.getCurrentItem() == null) {
             event.setCancelled(true);

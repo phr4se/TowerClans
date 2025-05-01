@@ -1,6 +1,5 @@
 package phrase.towerClans.listener;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,7 +8,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.PluginManager;
@@ -55,11 +53,11 @@ public class PlayerListener implements Listener {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 1, plugin), event.getInventory())) pluginManager.callEvent(new OpenMenuClanMain(modifiedPlayer, event));
+        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 1, plugin), event.getInventory())) pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
 
-        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 2, plugin), event.getInventory())) pluginManager.callEvent(new OpenMenuClanMembers(modifiedPlayer, event));
+        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 2, plugin), event.getInventory())) pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
 
-        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 3, plugin), event.getInventory())) pluginManager.callEvent(new OpenMenuClanLevel(modifiedPlayer, event));
+        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 3, plugin), event.getInventory())) pluginManager.callEvent(new ClickMenuClanLevelEvent(modifiedPlayer, event));
 
         if(ClanImpl.MenuType.identical(clan.getStorage().getInventory(), event.getInventory())) pluginManager.callEvent(new OpenStorageEvent(clan, player, event.getInventory()));
 
