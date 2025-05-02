@@ -3,6 +3,7 @@ package phrase.towerClans.clan;
 import phrase.towerClans.clan.attributes.clan.Level;
 import phrase.towerClans.clan.attributes.clan.Storage;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
+import phrase.towerClans.gui.MenuType;
 
 import java.util.*;
 
@@ -12,6 +13,7 @@ public abstract class AbstractClan implements Clan {
     private Map<ModifiedPlayer, String> members;
     private int level;
     private int xp;
+    private int availableSlots;
     private int balance;
     private boolean pvp;
     private final Storage storage;
@@ -20,14 +22,15 @@ public abstract class AbstractClan implements Clan {
         this.name = name;
 
         members = new HashMap<>();
-        level = Level.levels.get(1).getLevel();
-        xp = Level.levels.get(1).getXp();
+        level = 1;
+        xp = Level.getXpLevel(level);
+        availableSlots = Level.getAvailableSlots(level);
         balance = 0;
         pvp = false;
         storage = new Storage();
     }
 
-    public abstract void showMenu(ModifiedPlayer modifiedPlayer, int id);
+    public abstract void showMenu(ModifiedPlayer modifiedPlayer, MenuType menuType);
 
     public String getName() {
         return name;
@@ -51,6 +54,10 @@ public abstract class AbstractClan implements Clan {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getAvailableSlots() {
+        return availableSlots;
     }
 
     public int getXp() {

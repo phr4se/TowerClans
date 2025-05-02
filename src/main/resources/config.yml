@@ -165,31 +165,37 @@ settings:
     1:
      level: 1
      xp: 0
+     available: 9
      maximum_members: 3
      maximum_balance: 250000
     2:
       level: 2
       xp: 1000
+      available: 18
       maximum_members: 5
       maximum_balance: 500000
     3:
       level: 3
       xp: 2500
+      available: 27
       maximum_members: 7
       maximum_balance: 1000000
     4:
       level: 4
       xp: 5000
+      available: 36
       maximum_members: 9
       maximum_balance: 1750000
     5:
       level: 5
       xp: 7500
+      available: 45
       maximum_members: 11
       maximum_balance: 2500000
     6:
       level: 6
       xp: 10000
+      available: 54
       maximum_members: 13
       maximum_balance: 5000000
   rank:
@@ -266,6 +272,7 @@ settings:
            - "&#008000Доступно:"
            - "&#ffff00Лимит баланса: %maximum_balance%"
            - "&#ffff00Лимит участников: %maximum_members%"
+           - "&#ffff00Слотов в хранилище: %available%"
        not_received:
          material: furnace_minecart
          title: "&#ff0000Уровень %level%"
@@ -274,6 +281,7 @@ settings:
            - "&#008000При получении будет доступно:"
            - "&#ffff00Лимит баланса: %maximum_balance%"
            - "&#ffff00Лимит участников: %maximum_members%"
+           - "&#ffff00Слотов в хранилище: %available%"
        items:
          1:
            material: spectral_arrow
@@ -285,6 +293,9 @@ settings:
      menu_clan_storage:
        size: 54
        title: "Хранилище клана"
+       item:
+         material: red_stained_glass_pane
+         title: "&#808080Заблокировано"
 
 
 

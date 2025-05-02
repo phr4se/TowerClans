@@ -1,0 +1,112 @@
+package phrase.towerClans.gui.impl;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
+import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.attributes.clan.Level;
+import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.gui.ItemBuilder;
+import phrase.towerClans.gui.MenuService;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+class MenuClanLevelService implements MenuService {
+
+    @Override
+    public Inventory create(ClanImpl clan, Plugin plugin) {
+
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_level");
+        int size = configurationSection.getInt("size");
+        String titleMenu = configurationSection.getString("title");
+
+        Inventory menu = Bukkit.createInventory(null, size, colorizerProvider.colorize(titleMenu));
+
+        Material material;
+        int slot = configurationSection.getInt("slot");
+        String titleItem;
+        List<String> lore;
+
+        for (int level = 1; level <= Level.levels.size(); level++) {
+            int finalLevel = level;
+            if (clan.getLevel() < level) {
+                material = Material.matchMaterial(configurationSection.getString("not_received.material"));
+                titleItem = colorizerProvider.colorize(configurationSection.getString("not_received.title").replace("%level%", String.valueOf(level)));
+                lore = configurationSection.getStringList("not_received.lore").stream().map(string -> {
+                    String replacedString = string
+                            .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(finalLevel)))
+                            .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(finalLevel)))
+                            .replace("%available%", String.valueOf(Level.getAvailableSlots(finalLevel)));
+                    return colorizerProvider.colorize(replacedString);
+                }).collect(Collectors.toList());
+
+                ItemStack item = new ItemBuilder(material)
+                        .setName(titleItem)
+                        .setLore(lore)
+                        .build();
+
+                menu.setItem(slot, item);
+                slot++;
+                continue;
+            }
+
+            material = Material.matchMaterial(configurationSection.getString("received.material"));
+            titleItem = (colorizerProvider.colorize(configurationSection.getString("received.title").replace("%level%", String.valueOf(level))));
+            lore = configurationSection.getStringList("received.lore").stream().map(string -> {
+                String replacedString = string
+                        .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(finalLevel)))
+                        .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(finalLevel)))
+                        .replace("%available%", String.valueOf(Level.getAvailableSlots(finalLevel)));
+                return colorizerProvider.colorize(replacedString);
+            }).collect(Collectors.toList());
+
+            ItemStack item = new ItemBuilder(material)
+                    .setName(titleItem)
+                    .setLore(lore)
+                    .build();
+
+            menu.setItem(slot, item);
+            slot++;
+
+        }
+
+        configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_level.items");
+
+        for(String key : configurationSection.getKeys(false)) {
+
+            material = Material.matchMaterial(configurationSection.getString(key + ".material"));
+            slot = configurationSection.getInt(key + ".slot");
+            titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
+            lore = configurationSection.getStringList(key + ".lore").stream().map(colorizerProvider::colorize).toList();
+
+            if(configurationSection.contains(key + ".actions_when_clicking")) {
+
+                String action = configurationSection.getString(key + ".actions_when_clicking");
+
+                ItemStack item = new ItemBuilder(material)
+                        .setName(titleItem)
+                        .setLore(lore)
+                        .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, action)
+                        .build();
+
+                menu.setItem(slot, item);
+                continue;
+            }
+
+            ItemStack item = new ItemBuilder(material)
+                    .setName(titleItem)
+                    .setLore(lore)
+                    .build();
+
+            menu.setItem(slot, item);
+
+        }
+
+        return menu;
+    }
+}

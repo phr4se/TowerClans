@@ -44,7 +44,7 @@ public class ClickMenuClanLevelEvent extends Event implements Cancellable {
 
     @Override
     public void setCancelled(boolean b) {
-        event.setCancelled(true);
+        event.setCancelled(b);
     }
 
 }

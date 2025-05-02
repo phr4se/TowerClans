@@ -10,6 +10,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 import phrase.towerClans.Plugin;
@@ -20,6 +22,8 @@ import phrase.towerClans.clan.attributes.clan.Storage;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.commands.impl.invite.PlayerCalls;
 import phrase.towerClans.events.*;
+import phrase.towerClans.gui.MenuFactory;
+import phrase.towerClans.gui.MenuType;
 import phrase.towerClans.utils.ChatUtil;
 import phrase.towerClans.utils.colorizer.ColorizerProvider;
 
@@ -53,14 +57,40 @@ public class PlayerListener implements Listener {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 1, plugin), event.getInventory())) pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MAIN).getMenu(clan, plugin), event.getInventory()))
+            pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
 
-        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 2, plugin), event.getInventory())) pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS).getMenu(clan, plugin), event.getInventory()))
+            pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
 
-        if (ClanImpl.MenuType.identical(ClanImpl.MenuType.getMenu(clan, 3, plugin), event.getInventory())) pluginManager.callEvent(new ClickMenuClanLevelEvent(modifiedPlayer, event));
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_LEVEL).getMenu(clan, plugin), event.getInventory()))
+            pluginManager.callEvent(new ClickMenuClanLevelEvent(modifiedPlayer, event));
 
-        if(ClanImpl.MenuType.identical(clan.getStorage().getInventory(), event.getInventory())) pluginManager.callEvent(new OpenStorageEvent(clan, player, event.getInventory()));
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_STORAGE).getMenu(clan, plugin), event.getInventory()))
+            pluginManager.callEvent(new ClickMenuClanStorageEvent(clan, player, event.getInventory(), event));
 
+    }
+
+    private boolean identical (Inventory o1, Inventory o2) {
+
+        ItemStack[] items1 = o1.getContents();
+        ItemStack[] items2 = o2.getContents();
+
+        if (items1.length != items2.length) return false;
+
+        for (int i = 0; i < items1.length; i++) {
+            ItemStack item1 = items1[i];
+            ItemStack item2 = items2[i];
+
+            if (item1 == null && item2 == null) continue;
+
+            if (item1 == null || item2 == null) return false;
+
+            if (!item1.isSimilar(item2)) return false;
+
+        }
+
+        return true;
     }
 
     @EventHandler
@@ -70,7 +100,7 @@ public class PlayerListener implements Listener {
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         if(clan == null) return;
         Storage storage = clan.getStorage();
-        if(storage.getPlayers().contains(player.getUniqueId())) pluginManager.callEvent(new CloseStorageEvent(clan, player, event.getInventory()));
+        if(storage.getPlayers().contains(player.getUniqueId())) pluginManager.callEvent(new CloseMenuClanStorageEvent(clan, player, event.getInventory()));
     }
 
     @EventHandler

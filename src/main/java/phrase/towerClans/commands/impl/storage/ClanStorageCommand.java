@@ -6,6 +6,7 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.commands.CommandHandler;
+import phrase.towerClans.gui.MenuType;
 import phrase.towerClans.utils.ChatUtil;
 
 
@@ -32,7 +33,7 @@ public class ClanStorageCommand implements CommandHandler {
             return true;
         }
 
-        clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN_STORAGE.getId());
+        clan.showMenu(modifiedPlayer, MenuType.MENU_CLAN_STORAGE);
         chatUtil.sendMessage(player, configurationSection.getString("you_have_opened_the_clan's_storage"));
         clan.getStorage().getPlayers().add(player.getUniqueId());
         return true;

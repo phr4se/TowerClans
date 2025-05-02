@@ -14,12 +14,14 @@ public class Level {
     private final int xp;
     private final int maximumBalance;
     private final int maximumMembers;
+    private final int availableSlots;
 
-    public Level(int level, int xp, int maximumBalance, int maximumMembers) {
+    public Level(int level, int xp, int maximumBalance, int maximumMembers, int availableSlots) {
         this.level = level;
         this.xp = xp;
         this.maximumBalance = maximumBalance;
         this.maximumMembers = maximumMembers;
+        this.availableSlots = availableSlots;
     }
 
     public int getLevel() {
@@ -38,6 +40,8 @@ public class Level {
         return maximumMembers;
     }
 
+    public int getAvailableSlots() { return availableSlots; }
+
     public static int getXpLevel(int level) {
         return levels.get(level).getXp();
     }
@@ -49,6 +53,8 @@ public class Level {
     public static int getLevelMaximumMembers(int level) {
         return levels.get(level).getMaximumMembers();
     }
+
+    public static int getAvailableSlots(int level) { return levels.get(level).getAvailableSlots(); }
 
     public static void intialize(Plugin plugin) {
 
@@ -62,7 +68,8 @@ public class Level {
             int xp = configurationSection.getInt(key + ".xp");
             int maximumBalance = configurationSection.getInt(key + ".maximum_balance");
             int maximumMembers = configurationSection.getInt(key + ".maximum_members");
-            levels.put(id, new Level(level, xp, maximumBalance, maximumMembers));
+            int availableSlots = configurationSection.getInt(key + ".available");
+            levels.put(id, new Level(level, xp, maximumBalance, maximumMembers, availableSlots));
             id++;
 
         }

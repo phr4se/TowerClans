@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class ModifiedPlayer {
 
-    private UUID playerUUID;
+    private final UUID playerUUID;
     private Clan clan;
 
     public ModifiedPlayer(UUID playerUUID, Clan clan) {
@@ -53,10 +53,6 @@ public class ModifiedPlayer {
 
     public UUID getPlayerUUID() {
         return playerUUID;
-    }
-
-    public void setPlayerUUID(UUID playerUUID) {
-        this.playerUUID = playerUUID;
     }
 
     @Override

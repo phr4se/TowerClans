@@ -1,36 +1,23 @@
 package phrase.towerClans.clan.impl;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.*;
 import phrase.towerClans.clan.attributes.clan.Level;
 import phrase.towerClans.clan.attributes.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
-import phrase.towerClans.clan.attributes.player.Stats;
+import phrase.towerClans.gui.MenuFactory;
+import phrase.towerClans.gui.MenuProvider;
+import phrase.towerClans.gui.MenuType;
 import phrase.towerClans.utils.ChatUtil;
-import phrase.towerClans.utils.colorizer.ColorizerProvider;
 
 import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ClanImpl extends AbstractClan {
 
     private static final Map<String, ClanImpl> CLANS = new HashMap<>();
     private final Plugin plugin;
     private final ChatUtil chatUtil;
-    private final static ColorizerProvider colorizerProvider;
-
-    static {
-        colorizerProvider = Plugin.getColorizerProvider();
-    }
 
     public ClanImpl(String name, Plugin plugin) {
         super(name);
@@ -157,355 +144,18 @@ public class ClanImpl extends AbstractClan {
     }
 
     @Override
-    public void showMenu(ModifiedPlayer modifiedPlayer, int id) {
-        Inventory menu;
-
-        switch (id) {
-            case 1, 4:
-                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 1, plugin);
-                modifiedPlayer.getPlayer().openInventory(menu);
-                break;
-            case 2:
-                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 2, plugin);
-                modifiedPlayer.getPlayer().openInventory(menu);
-                break;
-            case 3:
-                menu = MenuType.getMenu((ClanImpl) modifiedPlayer.getClan(), 3, plugin);
-                modifiedPlayer.getPlayer().openInventory(menu);
-                break;
-            case 5:
-                modifiedPlayer.getPlayer().closeInventory();
-                break;
-            case 6:
-                modifiedPlayer.getPlayer().openInventory(((ClanImpl) modifiedPlayer.getClan()).getStorage().getInventory());
-                break;
+    public void showMenu(ModifiedPlayer modifiedPlayer, MenuType menuType) {
+        MenuProvider menuProvider = MenuFactory.getProvider(menuType);
+        if(menuProvider == null) {
+            modifiedPlayer.getPlayer().closeInventory();
+            return;
         }
-
-    }
-
-    public enum MenuType {
-
-        MENU_CLAN_MAIN(1),
-        MENU_CLAN_MEMBERS(2),
-        MENU_CLAN_LEVEL(3),
-        MENU_CLAN_BACK(4),
-        MENU_CLAN_EXIT(5),
-        MENU_CLAN_STORAGE(6);
-
-        private final int id;
-
-        MenuType(int id) {
-            this.id = id;
-        }
-
-        public static Inventory getMenu(ClanImpl clan, int id, Plugin plugin) {
-
-            Inventory menu = null;
-
-            if(id == 1) {
-
-                ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_main");
-
-                int size = configurationSection.getInt("size");
-                String titleMenu = configurationSection.getString("title").replace("%clan_name%", clan.getName());
-                menu = Bukkit.createInventory(null, size, colorizerProvider.colorize(titleMenu));
-
-                configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_main.items");
-
-                Material material;
-                int slot;
-                String titleItem;
-                List<String> lore;
-
-                for(String key : configurationSection.getKeys(false)) {
-
-                    material = Material.matchMaterial(configurationSection.getString(key + ".material"));
-                    slot = configurationSection.getInt(key + ".slot");
-                    titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
-                    lore = configurationSection.getStringList(key + ".lore").stream().map(
-                            string -> {
-                                String replacedString = string
-                                        .replace("%name%", clan.getName())
-                                        .replace("%members%", String.valueOf(clan.getMembers().size()))
-                                        .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(clan.getLevel())))
-                                        .replace("%level%", String.valueOf(clan.getLevel()))
-                                        .replace("%xp%", String.valueOf(clan.getXp()))
-                                        .replace("%balance%", String.valueOf(clan.getBalance()))
-                                        .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
-                                        .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(clan.getLevel())))
-                                        .replace("%kills%", String.valueOf(Stats.getKillsMembers(clan.getMembers())))
-                                        .replace("%deaths%", String.valueOf(Stats.getDeathMembers((clan.getMembers()))));
-                                return colorizerProvider.colorize(replacedString);
-                            }
-                    ).collect(Collectors.toList());
-
-                    if(configurationSection.contains(key + ".actions_when_clicking")) {
-
-                        String action = configurationSection.getString(key + ".actions_when_clicking");
-
-                        ItemStack item = new ItemBuilder(material)
-                                .setName(titleItem)
-                                .setLore(lore)
-                                .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, action)
-                                .build();
-
-                        menu.setItem(slot, item);
-                        continue;
-                    }
-
-                    ItemStack item = new ItemBuilder(material)
-                            .setName(titleItem)
-                            .setLore(lore)
-                            .build();
-
-                    menu.setItem(slot, item);
-
-                }
-
-                return menu;
-
-            }
-
-            if(id == 2) {
-
-                ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members");
-                int size = configurationSection.getInt("size");
-                String titleMenu = configurationSection.getString("title_menu");
-
-                menu = Bukkit.createInventory(null, size, colorizerProvider.colorize(titleMenu));
-
-                Material material;
-                int slot;
-                String titleItem;
-                List<String> lore;
-
-                material = Material.matchMaterial(configurationSection.getString("material"));
-                slot = configurationSection.getInt("slot");
-                titleItem = configurationSection.getString("title_item");
-                lore = configurationSection.getStringList("lore");
-
-                for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-                    ModifiedPlayer modifiedPlayer = entry.getKey();
-                    String currentTitle = colorizerProvider.colorize(titleItem.replace("%player_name%", modifiedPlayer.getPlayer().getName()));
-                    Stats playerStats = Stats.PLAYERS.get(modifiedPlayer.getPlayerUUID());
-                    List<String> currentLore = lore.stream().map(
-                            string -> {
-                                String replacedString = string
-                                        .replace("%player_rank%", entry.getValue())
-                                        .replace("%player_kills%", String.valueOf(playerStats.getKills()))
-                                        .replace("%player_deaths%", String.valueOf(playerStats.getDeaths()));
-                                return colorizerProvider.colorize(replacedString);
-                            }
-                    ).collect(Collectors.toList());
-
-                    ItemStack item = new ItemBuilder(material)
-                            .setName(currentTitle)
-                            .setLore(currentLore)
-                            .build();
-
-                    menu.setItem(slot, item);
-                    slot++;
-                }
-
-                configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members.items");
-
-                for(String key : configurationSection.getKeys(false)) {
-
-                    material = Material.matchMaterial(configurationSection.getString(key + ".material"));
-                    slot = configurationSection.getInt(key + ".slot");
-                    titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
-                    lore = configurationSection.getStringList(key + ".lore").stream().map(colorizerProvider::colorize).toList();
-
-                    if(configurationSection.contains(key + ".actions_when_clicking")) {
-
-                        String action = configurationSection.getString(key + ".actions_when_clicking");
-
-                        ItemStack item = new ItemBuilder(material)
-                                .setName(titleItem)
-                                .setLore(lore)
-                                .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, action)
-                                .build();
-
-                        menu.setItem(slot, item);
-                        continue;
-
-                    }
-
-                    ItemStack item = new ItemBuilder(material)
-                            .setName(titleItem)
-                            .setLore(lore)
-                            .build();
-
-                    menu.setItem(slot, item);
-                }
-
-                return menu;
-
-            }
-
-           if(id == 3) {
-
-               ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_level");
-               int size = configurationSection.getInt("size");
-               String titleMenu = configurationSection.getString("title");
-
-               menu = Bukkit.createInventory(null, size, colorizerProvider.colorize(titleMenu));
-
-               Material material;
-               int slot = configurationSection.getInt("slot");
-               String titleItem;
-               List<String> lore;
-
-               for (int level = 1; level <= Level.levels.size(); level++) {
-                   int finalLevel = level;
-                   if (clan.getLevel() < level) {
-                       material = Material.matchMaterial(configurationSection.getString("not_received.material"));
-                       titleItem = colorizerProvider.colorize(configurationSection.getString("not_received.title").replace("%level%", String.valueOf(level)));
-                       lore = configurationSection.getStringList("not_received.lore").stream().map(string -> {
-                           String replacedString = string
-                                   .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(finalLevel)))
-                                   .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(finalLevel)));
-                           return colorizerProvider.colorize(replacedString);
-                       }).collect(Collectors.toList());
-
-                       ItemStack item = new ItemBuilder(material)
-                               .setName(titleItem)
-                               .setLore(lore)
-                               .build();
-
-                       menu.setItem(slot, item);
-                       slot++;
-                       continue;
-                   }
-
-                   material = Material.matchMaterial(configurationSection.getString("received.material"));
-                   titleItem = (colorizerProvider.colorize(configurationSection.getString("received.title").replace("%level%", String.valueOf(level))));
-                   lore = configurationSection.getStringList("received.lore").stream().map(string -> {
-                       String replacedString = string
-                               .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(finalLevel)))
-                               .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(finalLevel)));
-                       return colorizerProvider.colorize(replacedString);
-                   }).collect(Collectors.toList());
-
-                   ItemStack item = new ItemBuilder(material)
-                           .setName(titleItem)
-                           .setLore(lore)
-                           .build();
-
-                   menu.setItem(slot, item);
-                   slot++;
-
-               }
-
-               configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_level.items");
-
-               for(String key : configurationSection.getKeys(false)) {
-
-                   material = Material.matchMaterial(configurationSection.getString(key + ".material"));
-                   slot = configurationSection.getInt(key + ".slot");
-                   titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
-                   lore = configurationSection.getStringList(key + ".lore").stream().map(colorizerProvider::colorize).toList();
-
-                   if(configurationSection.contains(key + ".actions_when_clicking")) {
-
-                       String action = configurationSection.getString(key + ".actions_when_clicking");
-
-                       ItemStack item = new ItemBuilder(material)
-                               .setName(titleItem)
-                               .setLore(lore)
-                               .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, action)
-                               .build();
-
-                       menu.setItem(slot, item);
-                       continue;
-                   }
-
-                   ItemStack item = new ItemBuilder(material)
-                           .setName(titleItem)
-                           .setLore(lore)
-                           .build();
-
-                   menu.setItem(slot, item);
-
-               }
-
-               return menu;
-
-           }
-
-            return menu;
-
-
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public static boolean identical(Inventory o1, Inventory o2) {
-
-            ItemStack[] items1 = o1.getContents();
-            ItemStack[] items2 = o2.getContents();
-
-            if(items1.length != items2.length) return false;
-
-            for(int i = 0; i < items1.length; i++) {
-                ItemStack item1 = items1[i];
-                ItemStack item2 = items2[i];
-
-                if(item1 == null && item2 == null) continue;
-
-                if(item1 == null || item2 == null) return false;
-
-                if(!item1.isSimilar(item2)) return false;
-
-            }
-
-            return true;
-        }
+        modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin));
 
     }
 
     public static Map<String, ClanImpl> getClans() {
         return CLANS;
-    }
-
-    static class ItemBuilder {
-
-        private final ItemStack itemStack;
-        private ItemMeta itemMeta;
-
-        public ItemBuilder(Material material) {
-            this.itemStack = new ItemStack(material);
-            this.itemMeta = itemStack.getItemMeta();
-        }
-
-        public ItemBuilder setName(String name) {
-            if (itemMeta != null) {
-                itemMeta.setDisplayName(name);
-            }
-            return this;
-        }
-
-        public ItemBuilder setLore(List<String> lore) {
-            if (itemMeta != null) {
-                itemMeta.setLore(lore);
-            }
-            return this;
-        }
-
-        public <T, Z> ItemBuilder setPersistentDataContainer(NamespacedKey key, PersistentDataType<T, Z> type, Z value) {
-            if (itemMeta != null) {
-                itemMeta.getPersistentDataContainer().set(key, type, value);
-            }
-            return this;
-        }
-
-        public ItemStack build() {
-            itemStack.setItemMeta(itemMeta);
-            return itemStack;
-        }
-
     }
 
 }

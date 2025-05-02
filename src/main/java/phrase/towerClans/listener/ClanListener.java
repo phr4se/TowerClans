@@ -1,11 +1,13 @@
 package phrase.towerClans.listener;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,7 +16,9 @@ import phrase.towerClans.clan.attributes.clan.Storage;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.events.*;
+import phrase.towerClans.gui.MenuType;
 import phrase.towerClans.utils.ChatUtil;
+import phrase.towerClans.utils.colorizer.ColorizerProvider;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -25,6 +29,11 @@ public class ClanListener implements Listener {
     
     private final Plugin plugin;
     private final ChatUtil chatUtil;
+    private final static ColorizerProvider colorizerProvider;
+
+    static {
+        colorizerProvider = Plugin.getColorizerProvider();
+    }
 
     public ClanListener(Plugin plugin) {
         this.plugin = plugin;
@@ -44,9 +53,9 @@ public class ClanListener implements Listener {
 
         if(item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING) != null) {
             String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
-            ClanImpl.MenuType menu = ClanImpl.MenuType.valueOf(action);
+            MenuType menu = MenuType.valueOf(action);
             event.setCancelled(true);
-            clan.showMenu(modifiedPlayer, menu.getId());
+            clan.showMenu(modifiedPlayer, menu);
         } else {
             event.setCancelled(true);
         }
@@ -66,9 +75,9 @@ public class ClanListener implements Listener {
         if((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
             String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
 
-            ClanImpl.MenuType menu = ClanImpl.MenuType.valueOf(action);
+            MenuType menu = MenuType.valueOf(action);
             event.setCancelled(true);
-            clan.showMenu(modifiedPlayer, menu.getId());
+            clan.showMenu(modifiedPlayer, menu);
         } else {
             event.setCancelled(true);
         }
@@ -88,9 +97,9 @@ public class ClanListener implements Listener {
         if((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
             String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
 
-            ClanImpl.MenuType menu = ClanImpl.MenuType.valueOf(action);
+            MenuType menu = MenuType.valueOf(action);
             event.setCancelled(true);
-            clan.showMenu(modifiedPlayer, menu.getId());
+            clan.showMenu(modifiedPlayer, menu);
         } else {
             event.setCancelled(true);
         }
@@ -129,7 +138,13 @@ public class ClanListener implements Listener {
     }
 
     @EventHandler
-    public void onOpenStorage(OpenStorageEvent event) {
+    public void onClickMenuClanStorage(ClickMenuClanStorageEvent event) {
+        ItemStack item = event.getCurrentItem();
+        if(item != null) {
+            if (item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("no_available"), PersistentDataType.STRING) != null)
+                event.setCancelled(true);
+        }
+
         ClanImpl clan = (ClanImpl) event.getClan();
         Player player = event.getPlayer();
         Set<UUID> copyPlayers = new HashSet<>(clan.getStorage().getPlayers());
@@ -142,7 +157,7 @@ public class ClanListener implements Listener {
     }
 
     @EventHandler
-    public void onCloseStorage(CloseStorageEvent event) {
+    public void onCloseMenuClanStorage(CloseMenuClanStorageEvent event) {
         Player player = event.getPlayer();
         ClanImpl clan = (ClanImpl) event.getClan();
         Storage storage = clan.getStorage();
@@ -154,5 +169,6 @@ public class ClanListener implements Listener {
         }
         storage.getIsUpdatedInventory().remove(player.getUniqueId());
     }
+
     
 }

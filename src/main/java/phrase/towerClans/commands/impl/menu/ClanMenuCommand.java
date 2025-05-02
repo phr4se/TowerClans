@@ -6,6 +6,7 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.commands.CommandHandler;
+import phrase.towerClans.gui.MenuType;
 import phrase.towerClans.utils.ChatUtil;
 
 public class ClanMenuCommand implements CommandHandler {
@@ -30,7 +31,7 @@ public class ClanMenuCommand implements CommandHandler {
         }
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        clan.showMenu(modifiedPlayer, ClanImpl.MenuType.MENU_CLAN_MAIN.getId());
+        clan.showMenu(modifiedPlayer, MenuType.MENU_CLAN_MAIN);
         chatUtil.sendMessage(player, configurationSection.getString("you_have_opened_the_clan_menu"));
 
         return true;
