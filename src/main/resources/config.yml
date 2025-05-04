@@ -205,12 +205,12 @@ settings:
 
   menu:
     item_per_page: 36
-    back:
+    previous:
       material: spectral_arrow
-      title: "&#ff0000Назад"
-    forward:
+      title: "&#ff0000Предыдущая"
+    next:
       material: spectral_arrow
-      title: "&#ff0000Вперед"
+      title: "&#ff0000Следующая"
     menu_clan_main:
        size: 45
        title: "%clan_name%"

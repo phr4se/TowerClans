@@ -70,14 +70,14 @@ public class MenuPages {
     public static void intialize(Plugin plugin) {
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu");
         itemPerPage = configurationSection.getInt("item_per_page");
-        configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.back");
+        configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.previous");
         Material materialBack = Material.matchMaterial(configurationSection.getString("material"));
         String titleBack = configurationSection.getString("title");
         previous = new ItemBuilder(materialBack)
                 .setName(colorizerProvider.colorize(titleBack))
                 .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "MENU_CLAN_PREVIOUS")
                 .build();
-        configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.forward");
+        configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.next");
         Material materialForward = Material.matchMaterial(configurationSection.getString("material"));
         String titleForward = configurationSection.getString("title");
         next = new ItemBuilder(materialForward)
