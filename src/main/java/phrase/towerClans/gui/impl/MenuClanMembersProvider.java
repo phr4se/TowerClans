@@ -27,8 +27,8 @@ public class MenuClanMembersProvider extends MenuProvider {
         MenuClanMembersService.unRegister(player);
     }
 
-    public boolean isRegister(UUID player) {
-        return MenuClanMembersService.isRegister(player);
+    public boolean isRegistered(UUID player) {
+        return MenuClanMembersService.isRegistered(player);
     }
 
     public MenuPages getMenuPages(UUID player) {

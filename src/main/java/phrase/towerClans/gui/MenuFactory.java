@@ -12,8 +12,8 @@ public class MenuFactory {
             case MENU_CLAN_MAIN, MENU_CLAN_BACK -> new MenuClanMainProvider();
             case MENU_CLAN_MEMBERS -> new MenuClanMembersProvider();
             case MENU_CLAN_LEVEL -> new MenuClanLevelProvider();
-            case MENU_CLAN_EXIT -> null;
             case MENU_CLAN_STORAGE -> new MenuClanStorageProvider();
+            default -> null;
         };
     }
 

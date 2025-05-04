@@ -237,7 +237,7 @@ public class PlayerListener implements Listener {
                 if(storage.getPlayers().contains(playerUUID)) storage.getPlayers().remove(playerUUID);
                 if(storage.getIsUpdatedInventory().contains(playerUUID)) storage.getIsUpdatedInventory().remove(playerUUID);
                 MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
-                if(menuClanMembersProvider.isRegister(player.getUniqueId())) menuClanMembersProvider.unRegister(player.getUniqueId());
+                if(menuClanMembersProvider.isRegistered(player.getUniqueId())) menuClanMembersProvider.unRegister(player.getUniqueId());
                 cancel();
             }
         }.runTaskAsynchronously(plugin);

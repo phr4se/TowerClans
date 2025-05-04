@@ -14,8 +14,8 @@ import java.util.List;
 public class MenuPages {
 
     private static int itemPerPage;
-    private static ItemStack back;
-    private static ItemStack forward;
+    private static ItemStack previous;
+    private static ItemStack next;
     private final static ColorizerProvider colorizerProvider;
 
     static {
@@ -55,8 +55,8 @@ public class MenuPages {
     }
 
     private void createButtonNavigation(Inventory menu) {
-        menu.setItem(menu.getSize() - 6, back);
-        menu.setItem(menu.getSize() - 4, forward);
+        menu.setItem(menu.getSize() - 6, previous);
+        menu.setItem(menu.getSize() - 4, next);
     }
 
     public boolean hasNextPage() {
@@ -73,19 +73,18 @@ public class MenuPages {
         configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.back");
         Material materialBack = Material.matchMaterial(configurationSection.getString("material"));
         String titleBack = configurationSection.getString("title");
-        back = new ItemBuilder(materialBack)
+        previous = new ItemBuilder(materialBack)
                 .setName(colorizerProvider.colorize(titleBack))
-                .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "back")
+                .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "MENU_CLAN_PREVIOUS")
                 .build();
         configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.forward");
         Material materialForward = Material.matchMaterial(configurationSection.getString("material"));
         String titleForward = configurationSection.getString("title");
-        forward = new ItemBuilder(materialForward)
+        next = new ItemBuilder(materialForward)
                 .setName(colorizerProvider.colorize(titleForward))
-                .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "forward")
+                .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "MENU_CLAN_NEXT")
                 .build();
     }
-
 
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
@@ -94,6 +93,7 @@ public class MenuPages {
     public int getCurrentPage() {
         return currentPage;
     }
+
 
 
 }

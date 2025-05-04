@@ -111,7 +111,7 @@ class MenuClanMembersService implements MenuService {
         PLAYERS.remove(player);
     }
 
-    public static boolean isRegister(UUID player) {
+    public static boolean isRegistered(UUID player) {
         return PLAYERS.containsKey(player);
     }
 

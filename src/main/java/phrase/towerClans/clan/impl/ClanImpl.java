@@ -159,18 +159,15 @@ public class ClanImpl extends AbstractClan {
             return;
         }
 
-        switch (menuType) {
-            case MENU_CLAN_MEMBERS -> {
-                MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) menuProvider;
-                Inventory menu = menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin);
-                List<ItemStack> contents = Arrays.stream(menu.getContents()).filter((itemStack -> itemStack != null)).toList();
-                contents = contents.stream().filter(itemStack -> itemStack.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("player"), PersistentDataType.STRING) != null).toList();
-                MenuPages menuPages = menuClanMembersProvider.register(modifiedPlayer.getPlayerUUID(), new MenuPages(0, contents, menu));
-                modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
-            }
-            default -> modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin));
+        if (menuType == MenuType.MENU_CLAN_MEMBERS) {
+            MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) menuProvider;
+            Inventory menu = menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin);
+            List<ItemStack> contents = Arrays.stream(menu.getContents()).filter((itemStack -> itemStack != null)).toList();
+            contents = contents.stream().filter(itemStack -> itemStack.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("player"), PersistentDataType.STRING) != null).toList();
+            MenuPages menuPages = menuClanMembersProvider.register(modifiedPlayer.getPlayerUUID(), new MenuPages(0, contents, menu));
+            modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
+        } else modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin));
 
-        }
 
     }
 

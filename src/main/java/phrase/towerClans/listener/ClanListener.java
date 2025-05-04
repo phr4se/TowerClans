@@ -74,33 +74,30 @@ public class ClanListener implements Listener {
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
         if((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
+            MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
             String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
-            MenuClanMembersProvider menuProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
-            switch(action) {
-                case "back" -> {
-                    event.setCancelled(true);
-                    MenuPages menuPages = menuProvider.getMenuPages(modifiedPlayer.getPlayerUUID());
-                    if(!menuPages.hasPreviousPage()) return;
+            MenuType menu = MenuType.valueOf(action);
+            event.setCancelled(true);
+            switch (menu) {
+                case MENU_CLAN_PREVIOUS -> {
+                    MenuPages menuPages = menuClanMembersProvider.getMenuPages(modifiedPlayer.getPlayerUUID());
+                    if (!menuPages.hasPreviousPage()) return;
                     menuPages.setCurrentPage(menuPages.getCurrentPage() - 1);
                     modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
                 }
-                case "forward" -> {
-                    event.setCancelled(true);
-                    MenuPages menuPages = menuProvider.getMenuPages(modifiedPlayer.getPlayerUUID());
+                case MENU_CLAN_NEXT -> {
+                    MenuPages menuPages = menuClanMembersProvider.getMenuPages(modifiedPlayer.getPlayerUUID());
                     if(!menuPages.hasNextPage()) return;
                     menuPages.setCurrentPage(menuPages.getCurrentPage() + 1);
                     modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
                 }
-                default -> {
-                    MenuType menu = MenuType.valueOf(action);
-                    event.setCancelled(true);
-                    clan.showMenu(modifiedPlayer, menu);
-                }
+                default -> clan.showMenu(modifiedPlayer, menu);
             }
         } else {
             event.setCancelled(true);
         }
     }
+
 
     @EventHandler
     public void onClickClanMenuLevel(ClickMenuClanLevelEvent event) {
