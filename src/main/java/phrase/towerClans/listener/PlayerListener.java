@@ -15,17 +15,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 import phrase.towerClans.Plugin;
-import phrase.towerClans.clan.attributes.clan.Level;
+import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
-import phrase.towerClans.clan.attributes.player.Stats;
-import phrase.towerClans.clan.attributes.clan.Storage;
+import phrase.towerClans.clan.attribute.player.Stats;
+import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.impl.ClanImpl;
-import phrase.towerClans.commands.impl.invite.PlayerCalls;
-import phrase.towerClans.events.*;
+import phrase.towerClans.command.impl.invite.PlayerCalls;
+import phrase.towerClans.event.*;
 import phrase.towerClans.gui.MenuFactory;
+import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuType;
-import phrase.towerClans.utils.ChatUtil;
-import phrase.towerClans.utils.colorizer.ColorizerProvider;
+import phrase.towerClans.gui.impl.MenuClanMembersProvider;
+import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.util.colorizer.ColorizerProvider;
 
 import java.util.*;
 
@@ -35,7 +37,6 @@ public class PlayerListener implements Listener {
     private final ChatUtil chatUtil;
     private final PluginManager pluginManager;
     private final static ColorizerProvider colorizerProvider;
-    private final int plusXp;
 
     static {
         colorizerProvider = Plugin.getColorizerProvider();
@@ -45,7 +46,6 @@ public class PlayerListener implements Listener {
         this.plugin = plugin;
         pluginManager = plugin.getServer().getPluginManager();
         chatUtil = new ChatUtil(plugin);
-        plusXp = plugin.getConfig().getInt("settings.xp_for_murder");
     }
 
     @EventHandler
@@ -59,6 +59,11 @@ public class PlayerListener implements Listener {
 
         if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MAIN).getMenu(clan, plugin), event.getInventory()))
             pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
+
+        if(((MenuClanMembersProvider)MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS)).getMenuPages(player.getUniqueId()) != null) {
+            MenuPages menuPages = ((MenuClanMembersProvider)MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS)).getMenuPages(player.getUniqueId());
+            if(identical(menuPages.get(menuPages.getCurrentPage()), event.getInventory())) pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
+        }
 
         if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS).getMenu(clan, plugin), event.getInventory()))
             pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
@@ -182,7 +187,7 @@ public class PlayerListener implements Listener {
                 }
 
                 ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-                clan.setXp(clan.getXp() + plusXp);
+                clan.setXp(clan.getXp() + Level.getXpForMurder());
 
                 int nextLevel = clan.getLevel() + 1;
                 int xp = Level.getXpLevel(nextLevel);
@@ -231,6 +236,8 @@ public class PlayerListener implements Listener {
                 Storage storage = clan.getStorage();
                 if(storage.getPlayers().contains(playerUUID)) storage.getPlayers().remove(playerUUID);
                 if(storage.getIsUpdatedInventory().contains(playerUUID)) storage.getIsUpdatedInventory().remove(playerUUID);
+                MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
+                if(menuClanMembersProvider.isRegister(player.getUniqueId())) menuClanMembersProvider.unRegister(player.getUniqueId());
                 cancel();
             }
         }.runTaskAsynchronously(plugin);

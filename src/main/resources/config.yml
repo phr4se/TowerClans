@@ -204,7 +204,14 @@ settings:
     member: "Участник"
 
   menu:
-     menu_clan_main:
+    item_per_page: 36
+    back:
+      material: spectral_arrow
+      title: "&#ff0000Назад"
+    forward:
+      material: spectral_arrow
+      title: "&#ff0000Вперед"
+    menu_clan_main:
        size: 45
        title: "%clan_name%"
        items:
@@ -242,7 +249,7 @@ settings:
            lore:
              - "&#808080Нажмите, чтобы выйти"
            actions_when_clicking: "MENU_CLAN_EXIT"
-     menu_clan_members:
+    menu_clan_members:
        size: 45
        title_menu: "Участники клана"
        material: paper
@@ -260,7 +267,7 @@ settings:
            lore:
              - "&#808080Нажмите, чтобы выйти"
            actions_when_clicking: "MENU_CLAN_BACK"
-     menu_clan_level:
+    menu_clan_level:
        size: 45
        title: "Уровень клана"
        slot: 0
@@ -290,7 +297,7 @@ settings:
            lore:
              - "&#808080Нажмите, чтобы выйти"
            actions_when_clicking: "MENU_CLAN_BACK"
-     menu_clan_storage:
+    menu_clan_storage:
        size: 54
        title: "Хранилище клана"
        item:

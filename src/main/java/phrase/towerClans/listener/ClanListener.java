@@ -1,24 +1,25 @@
 package phrase.towerClans.listener;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import phrase.towerClans.Plugin;
-import phrase.towerClans.clan.attributes.clan.Storage;
+import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
-import phrase.towerClans.events.*;
+import phrase.towerClans.event.*;
+import phrase.towerClans.gui.MenuFactory;
+import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuType;
-import phrase.towerClans.utils.ChatUtil;
-import phrase.towerClans.utils.colorizer.ColorizerProvider;
+import phrase.towerClans.gui.impl.MenuClanMembersProvider;
+import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.util.colorizer.ColorizerProvider;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -74,10 +75,28 @@ public class ClanListener implements Listener {
 
         if((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
             String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
-
-            MenuType menu = MenuType.valueOf(action);
-            event.setCancelled(true);
-            clan.showMenu(modifiedPlayer, menu);
+            MenuClanMembersProvider menuProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
+            switch(action) {
+                case "back" -> {
+                    event.setCancelled(true);
+                    MenuPages menuPages = menuProvider.getMenuPages(modifiedPlayer.getPlayerUUID());
+                    if(!menuPages.hasPreviousPage()) return;
+                    menuPages.setCurrentPage(menuPages.getCurrentPage() - 1);
+                    modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
+                }
+                case "forward" -> {
+                    event.setCancelled(true);
+                    MenuPages menuPages = menuProvider.getMenuPages(modifiedPlayer.getPlayerUUID());
+                    if(!menuPages.hasNextPage()) return;
+                    menuPages.setCurrentPage(menuPages.getCurrentPage() + 1);
+                    modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
+                }
+                default -> {
+                    MenuType menu = MenuType.valueOf(action);
+                    event.setCancelled(true);
+                    clan.showMenu(modifiedPlayer, menu);
+                }
+            }
         } else {
             event.setCancelled(true);
         }

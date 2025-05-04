@@ -10,22 +10,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import phrase.towerClans.clan.attributes.clan.Level;
-import phrase.towerClans.clan.attributes.clan.Rank;
+import phrase.towerClans.clan.attribute.clan.Level;
+import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
-import phrase.towerClans.clan.attributes.clan.Storage;
-import phrase.towerClans.commands.CommandLogger;
-import phrase.towerClans.commands.CommandMapper;
-import phrase.towerClans.commands.CommandResult;
+import phrase.towerClans.clan.attribute.clan.Storage;
+import phrase.towerClans.command.CommandLogger;
+import phrase.towerClans.command.CommandMapper;
+import phrase.towerClans.command.CommandResult;
+import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.listener.ClanListener;
 import phrase.towerClans.config.ConfigManager;
 import phrase.towerClans.listener.PlayerListener;
-import phrase.towerClans.utils.PluginPlaceholder;
-import phrase.towerClans.utils.ChatUtil;
-import phrase.towerClans.utils.UpdateChecker;
-import phrase.towerClans.utils.colorizer.ColorizerFactory;
-import phrase.towerClans.utils.colorizer.ColorizerProvider;
-import phrase.towerClans.utils.colorizer.ColorizerType;
+import phrase.towerClans.util.PluginPlaceholder;
+import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.util.UpdateChecker;
+import phrase.towerClans.util.colorizer.ColorizerFactory;
+import phrase.towerClans.util.colorizer.ColorizerProvider;
+import phrase.towerClans.util.colorizer.ColorizerType;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -57,6 +58,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         Level.intialize(this);
         Storage.intialize(this);
         Rank.intialize(this);
+        MenuPages.intialize(this);
         new CommandLogger(this);
 
         if (!setupEconomy()) {

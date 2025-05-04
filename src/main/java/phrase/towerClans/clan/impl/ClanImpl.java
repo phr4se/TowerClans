@@ -1,15 +1,21 @@
 package phrase.towerClans.clan.impl;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.*;
-import phrase.towerClans.clan.attributes.clan.Level;
-import phrase.towerClans.clan.attributes.clan.Rank;
+import phrase.towerClans.clan.attribute.clan.Level;
+import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.gui.MenuFactory;
+import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuProvider;
 import phrase.towerClans.gui.MenuType;
-import phrase.towerClans.utils.ChatUtil;
+import phrase.towerClans.gui.impl.MenuClanMembersProvider;
+import phrase.towerClans.util.ChatUtil;
 
 import java.util.*;
 
@@ -143,6 +149,8 @@ public class ClanImpl extends AbstractClan {
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
+
+
     @Override
     public void showMenu(ModifiedPlayer modifiedPlayer, MenuType menuType) {
         MenuProvider menuProvider = MenuFactory.getProvider(menuType);
@@ -150,7 +158,19 @@ public class ClanImpl extends AbstractClan {
             modifiedPlayer.getPlayer().closeInventory();
             return;
         }
-        modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin));
+
+        switch (menuType) {
+            case MENU_CLAN_MEMBERS -> {
+                MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) menuProvider;
+                Inventory menu = menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin);
+                List<ItemStack> contents = Arrays.stream(menu.getContents()).filter((itemStack -> itemStack != null)).toList();
+                contents = contents.stream().filter(itemStack -> itemStack.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("player"), PersistentDataType.STRING) != null).toList();
+                MenuPages menuPages = menuClanMembersProvider.register(modifiedPlayer.getPlayerUUID(), new MenuPages(0, contents, menu));
+                modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
+            }
+            default -> modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin));
+
+        }
 
     }
 

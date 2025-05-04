@@ -1,7 +1,7 @@
 package phrase.towerClans.clan;
 
-import phrase.towerClans.clan.attributes.clan.Level;
-import phrase.towerClans.clan.attributes.clan.Storage;
+import phrase.towerClans.clan.attribute.clan.Level;
+import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.gui.MenuType;
 

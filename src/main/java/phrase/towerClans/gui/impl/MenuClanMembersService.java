@@ -8,17 +8,19 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import phrase.towerClans.Plugin;
-import phrase.towerClans.clan.attributes.player.Stats;
+import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.gui.ItemBuilder;
+import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuService;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class MenuClanMembersService implements MenuService {
+
+    private final static Map<UUID, MenuPages> PLAYERS = new HashMap<>();
 
     @Override
     public Inventory create(ClanImpl clan, Plugin plugin) {
@@ -56,6 +58,7 @@ class MenuClanMembersService implements MenuService {
             ItemStack item = new ItemBuilder(material)
                     .setName(currentTitle)
                     .setLore(currentLore)
+                    .setPersistentDataContainer(NamespacedKey.fromString("player"), PersistentDataType.STRING, "player")
                     .build();
 
             menu.setItem(slot, item);
@@ -92,9 +95,29 @@ class MenuClanMembersService implements MenuService {
                     .build();
 
             menu.setItem(slot, item);
+
         }
 
         return menu;
 
     }
+
+    public static MenuPages register(UUID player, MenuPages menuPages) {
+        PLAYERS.put(player, menuPages);
+        return PLAYERS.get(player);
+    }
+
+    public static void unRegister(UUID player) {
+        PLAYERS.remove(player);
+    }
+
+    public static boolean isRegister(UUID player) {
+        return PLAYERS.containsKey(player);
+    }
+
+    public static MenuPages getMenuPages(UUID player) {
+        return PLAYERS.get(player);
+    }
+
+
 }

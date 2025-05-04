@@ -8,15 +8,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
-import phrase.towerClans.clan.attributes.player.Stats;
+import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.impl.ClanImpl;
-import phrase.towerClans.commands.impl.base.Base;
+import phrase.towerClans.command.impl.base.Base;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class ConfigManager {
+public class
+ConfigManager {
 
     private static File fileClans;
     private static YamlConfiguration configClans;
