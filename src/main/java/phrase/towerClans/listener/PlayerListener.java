@@ -60,9 +60,10 @@ public class PlayerListener implements Listener {
         if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MAIN).getMenu(clan, plugin), event.getInventory()))
             pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
 
-        if(((MenuClanMembersProvider)MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS)).getMenuPages(player.getUniqueId()) != null) {
-            MenuPages menuPages = ((MenuClanMembersProvider)MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS)).getMenuPages(player.getUniqueId());
-            if(identical(menuPages.get(menuPages.getCurrentPage()), event.getInventory())) pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
+        if (((MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS)).getMenuPages(player.getUniqueId()) != null) {
+            MenuPages menuPages = ((MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS)).getMenuPages(player.getUniqueId());
+            if (identical(menuPages.get(menuPages.getCurrentPage()), event.getInventory()))
+                pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
         }
 
         if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS).getMenu(clan, plugin), event.getInventory()))
@@ -76,7 +77,7 @@ public class PlayerListener implements Listener {
 
     }
 
-    private boolean identical (Inventory o1, Inventory o2) {
+    private boolean identical(Inventory o1, Inventory o2) {
 
         ItemStack[] items1 = o1.getContents();
         ItemStack[] items2 = o2.getContents();
@@ -103,165 +104,114 @@ public class PlayerListener implements Listener {
         Player player = (Player) event.getPlayer();
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if(clan == null) return;
+        if (clan == null) return;
         Storage storage = clan.getStorage();
-        if(storage.getPlayers().contains(player.getUniqueId())) pluginManager.callEvent(new CloseMenuClanStorageEvent(clan, player, event.getInventory()));
+        if (storage.getPlayers().contains(player.getUniqueId()))
+            pluginManager.callEvent(new CloseMenuClanStorageEvent(clan, player, event.getInventory()));
     }
 
     @EventHandler
     public void onPvp(EntityDamageByEntityEvent event) {
 
-        new BukkitRunnable() {
+        if (!(event.getDamager() instanceof Player)) return;
 
-            @Override
-            public void run() {
 
-                if(!(event.getDamager() instanceof Player)) {
+        Player attacker = (Player) event.getDamager();
+
+        if (!(event.getEntity() instanceof Player)) return;
+
+
+        Player defender = (Player) event.getEntity();
+
+        ModifiedPlayer attackerModifiedPlayer = ModifiedPlayer.get(attacker);
+        ModifiedPlayer defenderModifiedPlayer = ModifiedPlayer.get(defender);
+
+        ClanImpl attackerClan = (ClanImpl) attackerModifiedPlayer.getClan();
+        ClanImpl defenderClan = (ClanImpl) defenderModifiedPlayer.getClan();
+        if (attackerClan == null || defenderClan == null) return;
+
+
+        if (!attackerClan.getName().equals(defenderClan.getName())) return;
+
+
+        if (attackerClan.isPvp()) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    event.setCancelled(true);
                     cancel();
-                    return;
                 }
+            }.runTask(plugin);
+        }
 
-                Player attacker = (Player) event.getDamager();
-
-                if(!(event.getEntity() instanceof Player)) {
-                    cancel();
-                    return;
-                }
-
-                Player defender = (Player) event.getEntity();
-
-                ModifiedPlayer attackerModifiedPlayer = ModifiedPlayer.get(attacker);
-                ModifiedPlayer defenderModifiedPlayer = ModifiedPlayer.get(defender);
-
-                ClanImpl attackerClan = (ClanImpl) attackerModifiedPlayer.getClan();
-                ClanImpl defenderClan = (ClanImpl) defenderModifiedPlayer.getClan();
-                if(attackerClan == null || defenderClan == null) {
-                    cancel();
-                    return;
-                }
-
-                if(!attackerClan.getName().equals(defenderClan.getName())) {
-                    cancel();
-                    return;
-                }
-
-                if(attackerClan.isPvp()) {
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            event.setCancelled(true);
-                            cancel();
-                        }
-                    }.runTask(plugin);
-                }
-
-                cancel();
-
-            }
-        }.runTaskAsynchronously(plugin);
     }
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
+        
+        Player player = event.getEntity().getKiller();
+        if (player == null) return;
 
-        new BukkitRunnable() {
 
-            @Override
-            public void run() {
+        if (event.getEntity() instanceof Player)
+            return;
 
-                Player player = event.getEntity().getKiller();
-                if(player == null) {
-                    cancel();
-                    return;
-                }
 
-                if(event.getEntity() instanceof Player) {
-                    cancel();
-                    return;
-                }
+        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
+        if (modifiedPlayer.getClan() == null) return;
 
-                ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
-                if(modifiedPlayer.getClan() == null) {
-                    cancel();
-                    return;
-                }
 
-                ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-                clan.setXp(clan.getXp() + Level.getXpForMurder());
+        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+        clan.setXp(clan.getXp() + Level.getXpForMurder());
 
-                int nextLevel = clan.getLevel() + 1;
-                int xp = Level.getXpLevel(nextLevel);
-                if(clan.getXp() >= xp) pluginManager.callEvent(new LevelUpEvent(clan));
-            }
-        }.runTaskAsynchronously(plugin);
+        int nextLevel = clan.getLevel() + 1;
+        int xp = Level.getXpLevel(nextLevel);
+        if (clan.getXp() >= xp) pluginManager.callEvent(new LevelUpEvent(clan));
 
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
 
-                Player player = event.getEntity().getKiller();
-                Player targetPlayer = event.getEntity();
+        Player player = event.getEntity().getKiller();
+        Player targetPlayer = event.getEntity();
 
-                Stats targetPlayerStats = Stats.PLAYERS.get(targetPlayer.getUniqueId());
-                if(player == null) {
-                    targetPlayerStats.setDeaths(targetPlayerStats.getDeaths() + 1);
-                    cancel();
-                    return;
-                }
-                Stats playerStats = Stats.PLAYERS.get(player.getUniqueId());
-                targetPlayerStats.setDeaths(targetPlayerStats.getDeaths() + 1);
-                playerStats.setKills(playerStats.getKills() + 1);
-                cancel();
-
-            }
-
-        }.runTaskAsynchronously(plugin);
+        Stats targetPlayerStats = Stats.PLAYERS.get(targetPlayer.getUniqueId());
+        if (player == null) {
+            targetPlayerStats.setDeaths(targetPlayerStats.getDeaths() + 1);
+            return;
+        }
+        Stats playerStats = Stats.PLAYERS.get(player.getUniqueId());
+        targetPlayerStats.setDeaths(targetPlayerStats.getDeaths() + 1);
+        playerStats.setKills(playerStats.getKills() + 1);
     }
 
     @EventHandler
     public void onExit(PlayerQuitEvent event) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Player player = event.getPlayer();
-                UUID playerUUID = player.getUniqueId();
-                PlayerCalls.removeQuitPlayers(playerUUID);
-                ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
-                ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-                if(clan == null) return;
-                Storage storage = clan.getStorage();
-                if(storage.getPlayers().contains(playerUUID)) storage.getPlayers().remove(playerUUID);
-                if(storage.getIsUpdatedInventory().contains(playerUUID)) storage.getIsUpdatedInventory().remove(playerUUID);
-                MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
-                if(menuClanMembersProvider.isRegistered(player.getUniqueId())) menuClanMembersProvider.unRegister(player.getUniqueId());
-                cancel();
-            }
-        }.runTaskAsynchronously(plugin);
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        PlayerCalls.removeQuitPlayers(playerUUID);
+        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
+        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+        if (clan == null) return;
+        Storage storage = clan.getStorage();
+        if (storage.getPlayers().contains(playerUUID)) storage.getPlayers().remove(playerUUID);
+        if (storage.getIsUpdatedInventory().contains(playerUUID))
+            storage.getIsUpdatedInventory().remove(playerUUID);
+        MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
+        if (menuClanMembersProvider.isRegistered(player.getUniqueId()))
+            menuClanMembersProvider.unRegister(player.getUniqueId());
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        new BukkitRunnable() {
 
-            @Override
-            public void run() {
+        UUID player = event.getPlayer().getUniqueId();
 
-                UUID player = event.getPlayer().getUniqueId();
+        if (Stats.PLAYERS.containsKey(player)) return;
 
-                if(Stats.PLAYERS.containsKey(player)) {
-                    cancel();
-                    return;
-                }
-
-                Stats.PLAYERS.put(player, new Stats(0, 0));
-                cancel();
-            }
-        }.runTaskAsynchronously(plugin);
-
+        Stats.PLAYERS.put(player, new Stats(0, 0));
     }
 
 }
+
