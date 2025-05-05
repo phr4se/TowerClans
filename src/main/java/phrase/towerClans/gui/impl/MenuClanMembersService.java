@@ -31,48 +31,14 @@ class MenuClanMembersService implements MenuService {
 
         Inventory menu = Bukkit.createInventory(null, size, colorizerProvider.colorize(titleMenu));
 
-        Material material;
-        int slot;
-        String titleItem;
-        List<String> lore;
-
-        material = Material.matchMaterial(configurationSection.getString("material"));
-        slot = configurationSection.getInt("slot");
-        titleItem = configurationSection.getString("title_item");
-        lore = configurationSection.getStringList("lore");
-
-        for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            ModifiedPlayer modifiedPlayer = entry.getKey();
-            String currentTitle = colorizerProvider.colorize(titleItem.replace("%player_name%", modifiedPlayer.getPlayer().getName()));
-            Stats playerStats = Stats.PLAYERS.get(modifiedPlayer.getPlayerUUID());
-            List<String> currentLore = lore.stream().map(
-                    string -> {
-                        String replacedString = string
-                                .replace("%player_rank%", entry.getValue())
-                                .replace("%player_kills%", String.valueOf(playerStats.getKills()))
-                                .replace("%player_deaths%", String.valueOf(playerStats.getDeaths()));
-                        return colorizerProvider.colorize(replacedString);
-                    }
-            ).collect(Collectors.toList());
-
-            ItemStack item = new ItemBuilder(material)
-                    .setName(currentTitle)
-                    .setLore(currentLore)
-                    .setPersistentDataContainer(NamespacedKey.fromString("player"), PersistentDataType.STRING, "player")
-                    .build();
-
-            menu.setItem(slot, item);
-            slot++;
-        }
-
         configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members.items");
 
         for(String key : configurationSection.getKeys(false)) {
 
-            material = Material.matchMaterial(configurationSection.getString(key + ".material"));
-            slot = configurationSection.getInt(key + ".slot");
-            titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
-            lore = configurationSection.getStringList(key + ".lore").stream().map(colorizerProvider::colorize).toList();
+            Material material = Material.matchMaterial(configurationSection.getString(key + ".material"));
+            int slot = configurationSection.getInt(key + ".slot");
+            String titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
+            List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(colorizerProvider::colorize).toList();
 
             if(configurationSection.contains(key + ".actions_when_clicking")) {
 
@@ -99,6 +65,46 @@ class MenuClanMembersService implements MenuService {
         }
 
         return menu;
+
+    }
+
+    public List<ItemStack> getPlayers(ClanImpl clan, Plugin plugin) {
+
+        List<ItemStack> players = new ArrayList<>();
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members");
+
+        Material material;
+        String titleItem;
+        List<String> lore;
+
+        material = Material.matchMaterial(configurationSection.getString("material"));
+        titleItem = configurationSection.getString("title_item");
+        lore = configurationSection.getStringList("lore");
+
+        for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
+            ModifiedPlayer modifiedPlayer = entry.getKey();
+            String currentTitle = colorizerProvider.colorize(titleItem.replace("%player_name%", modifiedPlayer.getPlayer().getName()));
+            Stats playerStats = Stats.PLAYERS.get(modifiedPlayer.getPlayerUUID());
+            List<String> currentLore = lore.stream().map(
+                    string -> {
+                        String replacedString = string
+                                .replace("%player_rank%", entry.getValue())
+                                .replace("%player_kills%", String.valueOf(playerStats.getKills()))
+                                .replace("%player_deaths%", String.valueOf(playerStats.getDeaths()));
+                        return colorizerProvider.colorize(replacedString);
+                    }
+            ).collect(Collectors.toList());
+
+            ItemStack item = new ItemBuilder(material)
+                    .setName(currentTitle)
+                    .setLore(currentLore)
+                    .setPersistentDataContainer(NamespacedKey.fromString("player"), PersistentDataType.STRING, "player")
+                    .build();
+
+            players.add(item);
+        }
+
+        return players;
 
     }
 

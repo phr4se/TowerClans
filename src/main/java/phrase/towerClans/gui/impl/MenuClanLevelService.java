@@ -26,18 +26,14 @@ class MenuClanLevelService implements MenuService {
         String titleMenu = configurationSection.getString("title");
 
         Inventory menu = Bukkit.createInventory(null, size, colorizerProvider.colorize(titleMenu));
-
-        Material material;
         int slot = configurationSection.getInt("slot");
-        String titleItem;
-        List<String> lore;
 
         for (int level = 1; level <= Level.levels.size(); level++) {
             int finalLevel = level;
             if (clan.getLevel() < level) {
-                material = Material.matchMaterial(configurationSection.getString("not_received.material"));
-                titleItem = colorizerProvider.colorize(configurationSection.getString("not_received.title").replace("%level%", String.valueOf(level)));
-                lore = configurationSection.getStringList("not_received.lore").stream().map(string -> {
+                Material material = Material.matchMaterial(configurationSection.getString("not_received.material"));
+                String titleItem = colorizerProvider.colorize(configurationSection.getString("not_received.title").replace("%level%", String.valueOf(level)));
+                List<String> lore = configurationSection.getStringList("not_received.lore").stream().map(string -> {
                     String replacedString = string
                             .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(finalLevel)))
                             .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(finalLevel)))
@@ -55,9 +51,9 @@ class MenuClanLevelService implements MenuService {
                 continue;
             }
 
-            material = Material.matchMaterial(configurationSection.getString("received.material"));
-            titleItem = (colorizerProvider.colorize(configurationSection.getString("received.title").replace("%level%", String.valueOf(level))));
-            lore = configurationSection.getStringList("received.lore").stream().map(string -> {
+            Material material = Material.matchMaterial(configurationSection.getString("received.material"));
+            String titleItem = (colorizerProvider.colorize(configurationSection.getString("received.title").replace("%level%", String.valueOf(level))));
+            List<String> lore = configurationSection.getStringList("received.lore").stream().map(string -> {
                 String replacedString = string
                         .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(finalLevel)))
                         .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(finalLevel)))
@@ -79,10 +75,10 @@ class MenuClanLevelService implements MenuService {
 
         for(String key : configurationSection.getKeys(false)) {
 
-            material = Material.matchMaterial(configurationSection.getString(key + ".material"));
+            Material material = Material.matchMaterial(configurationSection.getString(key + ".material"));
             slot = configurationSection.getInt(key + ".slot");
-            titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
-            lore = configurationSection.getStringList(key + ".lore").stream().map(colorizerProvider::colorize).toList();
+            String titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
+            List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(colorizerProvider::colorize).toList();
 
             if(configurationSection.contains(key + ".actions_when_clicking")) {
 

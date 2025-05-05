@@ -136,7 +136,7 @@ public class ClanImpl extends AbstractClan {
     @Override
     public ClanResponse disband(ModifiedPlayer modifiedPlayer) {
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.disband");
-        if (!getMembers().get(modifiedPlayer).equals("Лидер")) return new ClanResponse(configurationSection.getString("you_are_not_a_leader"), ClanResponse.ResponseType.FAILURE);
+        if (!getMembers().get(modifiedPlayer).equals(Rank.RankType.LEADER.getName())) return new ClanResponse(configurationSection.getString("you_are_not_a_leader"), ClanResponse.ResponseType.FAILURE);
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
@@ -162,9 +162,8 @@ public class ClanImpl extends AbstractClan {
         if (menuType == MenuType.MENU_CLAN_MEMBERS) {
             MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) menuProvider;
             Inventory menu = menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin);
-            List<ItemStack> contents = Arrays.stream(menu.getContents()).filter((itemStack -> itemStack != null)).toList();
-            contents = contents.stream().filter(itemStack -> itemStack.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("player"), PersistentDataType.STRING) != null).toList();
-            MenuPages menuPages = menuClanMembersProvider.register(modifiedPlayer.getPlayerUUID(), new MenuPages(0, contents, menu));
+            List<ItemStack> players = menuClanMembersProvider.getPlayers(((ClanImpl) modifiedPlayer.getClan()), plugin);
+            MenuPages menuPages = menuClanMembersProvider.register(modifiedPlayer.getPlayerUUID(), new MenuPages(0, players, menu));
             modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
         } else modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin));
 

@@ -29,17 +29,12 @@ class MenuClanMainService implements MenuService {
 
         configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_main.items");
 
-        Material material;
-        int slot;
-        String titleItem;
-        List<String> lore;
-
         for(String key : configurationSection.getKeys(false)) {
 
-            material = Material.matchMaterial(configurationSection.getString(key + ".material"));
-            slot = configurationSection.getInt(key + ".slot");
-            titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
-            lore = configurationSection.getStringList(key + ".lore").stream().map(
+            Material material = Material.matchMaterial(configurationSection.getString(key + ".material"));
+            int slot = configurationSection.getInt(key + ".slot");
+            String titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
+            List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(
                     string -> {
                         String replacedString = string
                                 .replace("%name%", clan.getName())
