@@ -55,7 +55,7 @@ public class ClanInfoCommand implements CommandHandler {
                     .replace("%xp%", String.valueOf(clan.getXp()))
                     .replace("%balance%", String.valueOf(clan.getBalance()))
                     .replace("%kills%", String.valueOf(Stats.getKillsMembers(clan.getMembers())))
-                    .replace("%deaths%", String.valueOf(Stats.getDeathMembers((clan.getMembers()))));
+                    .replace("%deaths%", String.valueOf(Stats.getDeathsMembers((clan.getMembers()))));
             return colorizerProvider.colorize(replacedString);
         }).collect(Collectors.toList());
 

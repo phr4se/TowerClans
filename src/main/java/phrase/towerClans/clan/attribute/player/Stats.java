@@ -33,7 +33,7 @@ public class Stats {
 
     }
 
-    public static int getDeathMembers(Map<ModifiedPlayer, String> members) {
+    public static int getDeathsMembers(Map<ModifiedPlayer, String> members) {
 
         int deaths = 0;
 

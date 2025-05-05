@@ -134,15 +134,8 @@ public class PlayerListener implements Listener {
         if (!attackerClan.getName().equals(defenderClan.getName())) return;
 
 
-        if (attackerClan.isPvp()) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    event.setCancelled(true);
-                    cancel();
-                }
-            }.runTask(plugin);
-        }
+        if (attackerClan.isPvp()) event.setCancelled(true);
+
 
     }
 
