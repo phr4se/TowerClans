@@ -13,7 +13,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.scheduler.BukkitRunnable;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.entity.ModifiedPlayer;

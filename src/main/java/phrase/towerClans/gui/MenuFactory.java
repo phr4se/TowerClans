@@ -1,9 +1,6 @@
 package phrase.towerClans.gui;
 
-import phrase.towerClans.gui.impl.MenuClanLevelProvider;
-import phrase.towerClans.gui.impl.MenuClanMainProvider;
-import phrase.towerClans.gui.impl.MenuClanMembersProvider;
-import phrase.towerClans.gui.impl.MenuClanStorageProvider;
+import phrase.towerClans.gui.impl.*;
 
 public class MenuFactory {
 

@@ -17,11 +17,13 @@ import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.command.CommandLogger;
 import phrase.towerClans.command.CommandMapper;
 import phrase.towerClans.command.CommandResult;
+import phrase.towerClans.config.Config;
+import phrase.towerClans.config.impl.ConfigClans;
+import phrase.towerClans.config.impl.ConfigPlayers;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.listener.ClanListener;
-import phrase.towerClans.config.ConfigManager;
 import phrase.towerClans.listener.PlayerListener;
-import phrase.towerClans.util.PluginPlaceholder;
+import phrase.towerClans.util.Placeholder;
 import phrase.towerClans.util.ChatUtil;
 import phrase.towerClans.util.UpdateChecker;
 import phrase.towerClans.util.colorizer.ColorizerFactory;
@@ -34,7 +36,8 @@ import java.util.logging.Logger;
 
 public final class Plugin extends JavaPlugin implements CommandExecutor {
 
-    private ConfigManager configManager;
+    private Config configClans;
+    private Config configPlayers;
     public Economy economy;
     private static CommandMapper commandMapper;
     private static ChatUtil chatUtil;
@@ -53,8 +56,9 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         colorizerProvider = ColorizerFactory.getProvider(ColorizerType.HEX);
 
         chatUtil = new ChatUtil(this);
-        configManager = new ConfigManager(this);
         commandMapper = new CommandMapper(this);
+        configClans = new ConfigClans(this);
+        configPlayers = new ConfigPlayers(this);
         Level.intialize(this);
         Storage.intialize(this);
         Rank.intialize(this);
@@ -67,12 +71,13 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
             return;
         }
 
-        configManager.loadClans();
-        configManager.loadPlayers();
+        configClans.load();
+        configPlayers.load();
 
         getCommand("clan").setExecutor(this);
 
-        if (pluginManager.getPlugin("PlaceholderAPI") != null) new PluginPlaceholder().register();
+        if (pluginManager.isPluginEnabled("PlaceholderAPI")) new Placeholder().register();
+
 
         pluginManager.registerEvents(new PlayerListener(this), this);
         pluginManager.registerEvents(new ClanListener(this), this);
@@ -92,8 +97,8 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onDisable() {
-        configManager.saveClans();
-        configManager.savePlayers();
+        configClans.save();
+        configPlayers.save();
     }
 
 

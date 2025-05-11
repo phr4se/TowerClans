@@ -13,7 +13,7 @@ public abstract class AbstractClan implements Clan {
     private Map<ModifiedPlayer, String> members;
     private int level;
     private int xp;
-    private int availableSlots;
+    private final int availableSlots;
     private int balance;
     private boolean pvp;
     private final Storage storage;
@@ -31,6 +31,8 @@ public abstract class AbstractClan implements Clan {
     }
 
     public abstract void showMenu(ModifiedPlayer modifiedPlayer, MenuType menuType);
+
+    public abstract void glow();
 
     public String getName() {
         return name;

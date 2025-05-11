@@ -41,6 +41,12 @@ public class ClanStatsCommand implements CommandHandler {
         Player targetPlayer = Bukkit.getPlayer(args[1]);
 
         ModifiedPlayer targetModifiedPlayer = ModifiedPlayer.get(targetPlayer);
+
+        if(targetModifiedPlayer == null) {
+            chatUtil.sendMessage(player, configurationSection.getString("the_player_is_offline"));
+            return true;
+        }
+
         ClanImpl targetClan = (ClanImpl) targetModifiedPlayer.getClan();
 
         if (targetClan == null) {

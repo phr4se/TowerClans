@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 
-public class PluginPlaceholder extends PlaceholderExpansion {
+public class Placeholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
@@ -20,7 +20,7 @@ public class PluginPlaceholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "BETA-0.6F";
+        return "BETA-0.7";
     }
 
     @Override

@@ -149,8 +149,6 @@ public class ClanImpl extends AbstractClan {
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
-
-
     @Override
     public void showMenu(ModifiedPlayer modifiedPlayer, MenuType menuType) {
         MenuProvider menuProvider = MenuFactory.getProvider(menuType);
@@ -167,6 +165,11 @@ public class ClanImpl extends AbstractClan {
             modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
         } else modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin));
 
+
+    }
+
+    @Override
+    public void glow() {
 
     }
 

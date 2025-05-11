@@ -1,73 +1,72 @@
 message:
-  prefix: "&#ff0000[>>] Клан: "
-  you_don't_have_permission: "&#808080У вас нет прав"
+  prefix: "&#FF00FF[⚔] "
+  you_don't_have_permission: "&cУ вас нет прав"
   a_player_without_a_clan:
-  - "&#008000/clan create - &#ffff00создать клан"
-  - "&#008000/clan top - &#ffff00посмотреть топ кланов"
+  - "&6/clan create - &fсоздать клан"
+  - "&6/clan top - &fпосмотреть топ кланов"
   a_player_with_a_clan:
-  - "&#008000/clan menu - &#ffff00открыть меню клана"
-  - "&#008000/clan invite <игрок> - &#ffff00добавить игрока в клан"
-  - "&#008000/clan kick <игрок> - &#ffff00исключить игрока из клана"
-  - "&#008000/clan invest <сумма> - &#ffff00пополнить баланс клана"
-  - "&#008000/clan withdraw <сумма> - &#ffff00снять с баланса клана"
-  - "&#008000/clan leave - &#ffff00покинуть клан"
-  - "&#008000/clan chat <сообщение> - &#ffff00написать сообщение в чат клана"
-  - "&#008000/clan pvp - &#ffff00включить/выключить PVP-режим"
-  - "&#008000/clan disband - &#ffff00удалить клан"
-  - "&#008000/clan rank <игрок> <2 - заместитель, 3 - участник> - &#ffff00назначить ранг игроку"
-  - "&#008000/clan top - &#ffff00посмотреть топ кланов"
-  - "&#008000/clan info <клан> - &#ffff00посмотреть информаю о клане"
-  notification_of_a_level_increase: "&#ffff00Уровень клана повышен"
-  not_in_the_clan: "&#008000Нет"
-  you_are_not_a_player: "&#ff0000Вы не являетесь игроком!"
+  - "&6/clan menu - &fоткрыть меню клана"
+  - "&6/clan invite <игрок> - &fдобавить игрока в клан"
+  - "&6/clan kick <игрок> - &fисключить игрока из клана"
+  - "&f/clan invest <сумма> - &fпополнить баланс клана"
+  - "&6/clan withdraw <сумма> - &fснять с баланса клана"
+  - "&6/clan leave - &fпокинуть клан"
+  - "&6/clan chat <сообщение> - &fнаписать сообщение в чат клана"
+  - "&6/clan pvp - &fвключить/выключить PVP-режим"
+  - "&6/clan disband - &fудалить клан"
+  - "&6/clan rank <игрок> <2 - заместитель, 3 - участник> - &fназначить ранг игроку"
+  - "&6/clan top - &fпосмотреть топ кланов"
+  - "&6/clan info <клан> - &fпосмотреть информаю о клане"
+  notification_of_a_level_increase: "&fУровень клана повышен"
+  you_are_not_a_player: "&fВы не являетесь игроком!"
 
-  uknown_command: "&#808080Команда не найдена"
-  no_permission: "&#808080У вас нет прав"
-  error: "&#808080Не найден обработчик для команды"
+  uknown_command: "&cКоманда не найдена"
+  no_permission: "&cУ вас нет прав"
+  error: "&cНе найден обработчик для команды"
 
   command:
     chat:
-      message_format: "&#008000%rank% &#ffff00%player%: &f%message%"
-      you're_not_in_the_clan: "&#808080Вы не в клане"
+      message_format: "&6%rank% &e%player%: &f%message%"
+      you're_not_in_the_clan: "&cВы не в клане"
     create:
-      usage_command: "&#808080Использование: /clan create <имя клана>"
-      you_are_in_a_clan: "&#808080Вы в клане"
-      a_clan_with_that_name_already_exists: "&#808080Клан с таким именем уже существует"
-      you_don't_have_enough: "&#808080Вам не хватает %amount%"
-      you_have_created_a_clan: "&#808080Вы создали клан"
+      usage_command: "&6Использование: &f/clan create <имя клана>"
+      you_are_in_a_clan: "&cВы в клане"
+      a_clan_with_that_name_already_exists: "&cКлан с таким именем уже существует"
+      you_don't_have_enough: "&cВам не хватает %amount%"
+      you_have_created_a_clan: "&fВы создали клан"
     menu:
-      you're_not_in_the_clan: "&#808080Вы не в клане"
-      you_have_opened_the_clan_menu: "&#808080Вы открыли меню"
+      you're_not_in_the_clan: "&cВы не в клане"
+      you_have_opened_the_clan_menu: "&fВы открыли меню"
     invite:
-      usage_command: "&#808080Использование: /clan invite <игрок>"
-      you're_not_in_the_clan: "&#808080Вы не в клане"
-      you_don't_have_permission: "&#808080У вас нет прав"
-      the_player_was_not_found: "&#808080Игрок не найден"
-      you_have_sent_a_request_to_join_the_clan: "&#808080Вы отправили запрос на вступление в клан"
-      you_have_received_a_request_to_join_the_clan: "&#808080Вы получили запрос на вступление в клан %clan_name%"
-      you_can't_invite_yourself: "&#808080Вы не можете пригласить себя"
-      notification_of_the_invitation: "&#808080%player% вступил в клан"
+      usage_command: "&6Использование: &f/clan invite <игрок>"
+      you're_not_in_the_clan: "&cВы не в клане"
+      you_don't_have_permission: "&cУ вас нет прав"
+      the_player_was_not_found: "&cИгрок не найден"
+      you_have_sent_a_request_to_join_the_clan: "&fВы отправили запрос на вступление в клан"
+      you_have_received_a_request_to_join_the_clan: "&fВы получили запрос на вступление в клан &6%clan_name%"
+      you_can't_invite_yourself: "&cВы не можете пригласить себя"
+      notification_of_the_invitation: "&e%player% &fвступил в клан"
       accept:
-        has_anyone_sent_you_a_request_to_join_clan: "&#808080Вам никто не отправлял запрос на вступление в клан"
-        you_are_in_a_clan: "&#808080Вы в клане"
-        have_you_accepted_the_request_to_join_the_clan: "&#808080Вы приняли запрос на вступление в клан"
-        the_player_accepted_the_request_to_join_the_clan: "&#808080Игрок принял запрос на вступление в клан"
-        there_is_no_place_in_the_clan: "&#808080В клане нет места"
+        has_anyone_sent_you_a_request_to_join_clan: "&fВам никто не отправлял запрос на вступление в клан"
+        you_are_in_a_clan: "&cВы в клане"
+        have_you_accepted_the_request_to_join_the_clan: "&fВы приняли запрос на вступление в клан"
+        the_player_accepted_the_request_to_join_the_clan: "&fИгрок принял запрос на вступление в клан"
+        there_is_no_place_in_the_clan: "&cВ клане нет места"
       cancel:
-        has_anyone_sent_you_a_request_to_join_clan: "&#808080Вам никто не отправлял запрос на вступление в клан"
-        you_rejected_the_request_to_join_the_clan: "&#808080Вы отклонили запрос на вступление в клан"
-        the_player_rejected_the_request_to_join_the_clan: "&#808080Игрок отклонил запрос на вступление в клан"
+        has_anyone_sent_you_a_request_to_join_clan: "&cВам никто не отправлял запрос на вступление в клан"
+        you_rejected_the_request_to_join_the_clan: "&fВы отклонили запрос на вступление в клан"
+        the_player_rejected_the_request_to_join_the_clan: "&cИгрок отклонил запрос на вступление в клан"
     kick:
-      usage_command: "&#808080Использование: /clan kick <игрок>"
-      the_player_was_not_found: "&#808080Игрок не найден"
-      you_don't_have_permission: "&#808080У вас нет прав"
-      you're_not_in_the_clan: "&#808080Вы не в клане"
-      the_player_is_not_in_the_clan: "&#808080Игрок не в клане"
-      you_kicked_a_player_from_the_clan: "&#808080Вы кикнули с клана игрока"
-      you_were_kicked_out_of_the_clan: "&#808080Вас кикнули с клана"
-      you_cannot_leave_the_clan: "&#808080Вы не можете покинуть клан"
-      notification_of_exclusion: "&#808080%player% кикнут с клана"
-      you_can't_kick_yourself: "&#808080Вы не можете кикнуть себя"
+      usage_command: "&6Использование: &f/clan kick <игрок>"
+      the_player_was_not_found: "&cИгрок не найден"
+      you_don't_have_permission: "&cУ вас нет прав"
+      you're_not_in_the_clan: "&cВы не в клане"
+      the_player_is_not_in_the_clan: "&cИгрок не в клане"
+      you_kicked_a_player_from_the_clan: "&fВы кикнули с клана игрока"
+      you_were_kicked_out_of_the_clan: "&fВас кикнули с клана"
+      you_cannot_leave_the_clan: "&cВы не можете покинуть клан"
+      notification_of_exclusion: "&e%player% &fкикнут с клана"
+      you_can't_kick_yourself: "&cВы не можете кикнуть себя"
     invest:
       usage_command: "&#808080Использование: /clan invest <сумма>"
       you're_not_in_the_clan: "&#808080Вы не в клане"
@@ -76,127 +75,127 @@ message:
       there_is_no_place_in_the_clan: "&#808080В клане нет места для валюты"
       notification_of_investment: "&#808080%player% положил в клан %amount% валюты"
     withdraw:
-      usage_command: "&#808080Использование: /clan withdraw <сумма>"
-      you're_not_in_the_clan: "&#808080Вы не в клане"
-      you_don't_have_permission: "&#808080У вас нет прав"
-      you_have_withdrawn_from_the_clan: "&#808080Вы сняли с клана валюту"
-      not_in_the_clan: "&#808080В клане нет столько валюты"
-      notification_of_withdrawal: "&#808080%player% снял с клана %amount% валюты"
+      usage_command: "&6Использование: &f/clan withdraw <сумма>"
+      you're_not_in_the_clan: "&cВы не в клане"
+      you_don't_have_permission: "&cУ вас нет прав"
+      you_have_withdrawn_from_the_clan: "&fВы сняли с клана валюту"
+      not_in_the_clan: "&cВ клане нет столько валюты"
+      notification_of_withdrawal: "&e%player% &fснял с клана &6%amount% &fвалюты"
     leave:
-      you're_not_in_the_clan: "&#808080Вы не в клане"
-      you_cannot_leave_the_clan: "&#808080Вы не можете покинуть клан"
-      you_have_left_the_clan: "&#808080Вы покинули клан"
-      notification_of_exclusion: "&#808080%player% ушел с клана"
+      you're_not_in_the_clan: "&cВы не в клане"
+      you_cannot_leave_the_clan: "&cВы не можете покинуть клан"
+      you_have_left_the_clan: "&fВы покинули клан"
+      notification_of_exclusion: "&e%player% &fушел с клана"
     pvp:
-      you're_not_in_the_clan: "&#808080Вы не в клане"
-      you_don't_have_permission: "&#808080У вас нет прав"
-      you_have_enabled_pvp_in_the_clan: "&#808080Вы включили пвп в клане"
-      you_have_disabled_pvp_in_the_clan: "&#808080Вы выключили пвп в клане"
+      you're_not_in_the_clan: "&cВы не в клане"
+      you_don't_have_permission: "&cУ вас нет прав"
+      you_have_enabled_pvp_in_the_clan: "&fВы включили пвп в клане"
+      you_have_disabled_pvp_in_the_clan: "&fВы выключили пвп в клане"
     rank:
-      usage_command: "&#808080Использование: /clan rank <игрок> <ранг>"
-      you're_not_in_the_clan: "&#808080Вы не в клане"
-      you_don't_have_permission: "&#808080У вас нет прав"
-      the_player_is_offline: "&#808080Игрок не в сети"
-      you_have_set_the_player's_rank: "&#808080Вы установили %player% ранг %rank%"
-      you_have_been_set_a_rank: "&#808080%player% вам установил ранг %rank%"
-      notification_of_rank: "&#808080%player% повышен до %rank%"
-      you_can't_give_out_a_leader_rank: "&#808080Нельзя выдать ранг лидера"
-      this_rank_does_not_exist: "&#808080Не существует данного ранга"
-      you_can't_change_your_rank: "&#808080Вы не можете изменить себе ранг"
+      usage_command: "&6Использование: &f/clan rank <игрок> <ранг>"
+      you're_not_in_the_clan: "&fВы не в клане"
+      you_don't_have_permission: "&cУ вас нет прав"
+      the_player_is_offline: "&cИгрок не в сети"
+      you_have_set_the_player's_rank: "&fВы установили &e%player% &fранг &6%rank%"
+      you_have_been_set_a_rank: "&e%player% &fвам установил ранг &6%rank%"
+      notification_of_rank: "&e%player% &fповышен до &6%rank%"
+      you_can't_give_out_a_leader_rank: "&cНельзя выдать ранг лидера"
+      this_rank_does_not_exist: "&cНе существует данного ранга"
+      you_can't_change_your_rank: "&cВы не можете изменить себе ранг"
     disband:
-      you're_not_in_the_clan: "&#808080Вы не в клане"
-      you_deleted_the_clan: "&#808080Вы удалили клан"
-      you_are_not_a_leader: "&#808080Вы не лидер"
-      notification_of_disband: "&#808080Клан удален"
+      you're_not_in_the_clan: "&cВы не в клане"
+      you_deleted_the_clan: "&fВы удалили клан"
+      you_are_not_a_leader: "&cВы не лидер"
+      notification_of_disband: "&fКлан удален"
     reload:
-      you_don't_have_permission: "&#808080У вас нет прав"
-      you_have_reloaded_the_config: "&#808080Вы перезагрузили конфиг"
+      you_don't_have_permission: "&cУ вас нет прав"
+      you_have_reloaded_the_config: "&fВы перезагрузили конфиг"
     stats:
-      usage_command: "&#808080Использование: /clan stats <игрок>"
-      the_player_is_offline: "&#808080Игрок не в сети"
-      you're_not_in_the_clan: "&#808080Вы не в клане"
-      the_player_is_not_in_the_clan: "&#808080Игрок не в клане"
-      the_player_is_not_in_your_clan: "&#808080Игрок не в вашем клане"
+      usage_command: "&6Использование: &f/clan stats <игрок>"
+      the_player_is_offline: "&cИгрок не в сети"
+      you're_not_in_the_clan: "&cВы не в клане"
+      the_player_is_not_in_the_clan: "&cИгрок не в клане"
+      the_player_is_not_in_your_clan: "&cИгрок не в вашем клане"
       player_statistics:
-        - "&#808080Статистика игрока %player%"
-        - "&#808080Убийств: %kills%"
-        - "&#808080Смертей: %deaths%"
+        - "&fСтатистика игрока &e%player%"
+        - "&fУбийств: &a%kills%"
+        - "&fСмертей: &c%deaths%"
     info:
-      usage_command: "&#808080Использование: /clan info <клан>"
-      there_is_no_such_clan: "&#808080Такого клана не существует"
+      usage_command: "&6Использование: &f/clan info <клан>"
+      there_is_no_such_clan: "&cТакого клана не существует"
       information_about_the_clan:
-        - "&#008000Клан: &#ffff00%name%"
-        - "&#008000Участников: &#ffff00%members%&#008000/&#ffff0020"
-        - "&#008000Уровень: &#ffff00%level% &#008000(&#ffff00%xp% XP&#008000)"
-        - "&#008000Баланс: &#ffff00%balance%"
-        - "&#008000Убийств: &#ffff00%kills%"
-        - "&#008000Смерти: &#ffff00%deaths%"
+        - "&fКлан: &6%name%"
+        - "&fУчастников: &6%members%&7"
+        - "&fУровень: &6%level% &7(&6%xp% &fXP&7)"
+        - "&fБаланс: &6%balance%"
+        - "&fУбийств: &a%kills%"
+        - "&fСмерти: &c%deaths%"
     base:
-      you're_not_in_the_clan: "&#808080Вы не в клане"
-      the_clan_doesn't_have_a_base: "&#808080Нет базы у клана"
-      you_have_been_teleported_to_the_clan_base: "&#808080Вы телепортированы на базу клана"
+      you're_not_in_the_clan: "&cВы не в клане"
+      the_clan_doesn't_have_a_base: "&cНет базы у клана"
+      you_have_been_teleported_to_the_clan_base: "&fВы телепортированы на базу клана"
       setbase:
-        you're_not_in_the_clan: "&#808080Вы не в клане"
-        you_are_not_a_leader: "&#808080Вы не лидер"
-        have_you_established_a_clan_base: "&#808080Вы установили базу клана"
+        you're_not_in_the_clan: "&cВы не в клане"
+        you_are_not_a_leader: "&cВы не лидер"
+        have_you_established_a_clan_base: "&fВы установили базу клана"
       delbase:
-        you're_not_in_the_clan: "&#808080Вы не в клане"
-        the_clan_doesn't_have_a_base: "&#808080Нет базы у клана"
-        you_are_not_a_leader: "&#808080Вы не лидер"
-        you_have_deleted_the_clan's_database: "&#808080Вы удалили базу у клана"
+        you're_not_in_the_clan: "&cВы не в клане"
+        the_clan_doesn't_have_a_base: "&cНет базы у клана"
+        you_are_not_a_leader: "&cВы не лидер"
+        you_have_deleted_the_clan's_database: "&fВы удалили базу у клана"
     storage:
-      you're_not_in_the_clan: "&#808080Вы не в клане"
-      you_have_opened_the_clan's_storage: "&#808080Вы открыли хранилище клана"
+      you're_not_in_the_clan: "&cВы не в клане"
+      you_have_opened_the_clan's_storage: "&fВы открыли хранилище клана"
 
 settings:
   the_cost_of_creating_a_clan: 10000
   xp_for_murder: 2
   clan_name:
-    min: 3
+    min: 2
     max: 10
-    message_about_exceeding_the_limits: "&#808080Название клана должно быть от %min% до %max% символов"
+    message_about_exceeding_the_limits: "&fНазвание клана должно быть от &c%min% &fдо &a%max% &fсимволов"
     bad_words:
       - "Admin"
-    the_clan_name_is_on_the_list_of_bad_words: "&#808080Название клана входит в список плохих слов"
+    the_clan_name_is_on_the_list_of_bad_words: "&cНазвание клана входит в список плохих слов"
   top_clan:
-    there_are_no_clans: "&#808080Нет кланов"
-    format: "&#808080%place%. %clan_name%: %xp% XP"
+    there_are_no_clans: "&cНет кланов"
+    format: "&6%place%. &e%clan_name%: &6%xp% &fXP"
   level:
     1:
      level: 1
      xp: 0
      available: 9
-     maximum_members: 3
+     maximum_members: 5
      maximum_balance: 250000
     2:
       level: 2
       xp: 1000
       available: 18
-      maximum_members: 5
+      maximum_members: 10
       maximum_balance: 500000
     3:
       level: 3
       xp: 2500
       available: 27
-      maximum_members: 7
+      maximum_members: 15
       maximum_balance: 1000000
     4:
       level: 4
       xp: 5000
       available: 36
-      maximum_members: 9
+      maximum_members: 20
       maximum_balance: 1750000
     5:
       level: 5
       xp: 7500
       available: 45
-      maximum_members: 11
+      maximum_members: 25
       maximum_balance: 2500000
     6:
       level: 6
       xp: 10000
       available: 54
-      maximum_members: 13
+      maximum_members: 30
       maximum_balance: 5000000
   rank:
     leader: "Лидер"
@@ -204,105 +203,104 @@ settings:
     member: "Участник"
 
   menu:
-    item_per_page: 36
+    item_per_page: 18
     previous:
       material: spectral_arrow
-      title: "&#ff0000Предыдущая"
+      title: "&cПредыдущая"
     next:
       material: spectral_arrow
-      title: "&#ff0000Следующая"
+      title: "&aСледующая"
     menu_clan_main:
-       size: 45
+       size: 27
        title: "%clan_name%"
        items:
          1:
            material: knowledge_book
-           slot: 20
-           title: "&#ff0000Информация о клане"
+           slot: 11
+           title: "&6Информация о клане"
            lore:
-             - "&#008000Клан: &#ffff00%name%"
-             - "&#008000Участников: &#ffff00%members%&#008000/&#ffff00%maximum_members%"
-             - "&#008000Уровень: &#ffff00%level% &#008000(&#ffff00%xp% XP&#008000)"
-             - "&#008000Баланс: &#ffff00%balance%"
-             - "&#008000Убийств: &#ffff00%kills%"
-             - "&#008000Смерти: &#ffff00%deaths%"
-             - "&#008000PVP-Режим: &#ffff00%pvp%"
-             - "&#008000Лимит баланса: &#ffff00%maximum_balance%"
+             - "&fКлан: &6%name%"
+             - "&fУчастников: &e%members%&7/&6%maximum_members%"
+             - "&fУровень: &6%level% &7(&6%xp% &fXP&7)"
+             - "&fБаланс: &6%balance%"
+             - "&fУбийств: &a%kills%"
+             - "&fСмерти: &c%deaths%"
+             - "&fPVP-Режим: &6%pvp%"
+             - "&fЛимит баланса: &6%maximum_balance%"
          2:
            material: totem_of_undying
-           slot: 21
-           title: "&#ff0000Участники клана"
+           slot: 13
+           title: "&6Участники клана"
            lore:
-             - "&#808080Нажмите, чтобы посмотреть участников клана"
+             - "&fНажмите, чтобы посмотреть участников клана"
            actions_when_clicking: "MENU_CLAN_MEMBERS"
          3:
            material: diamond
-           slot: 22
-           title: "&#ff0000Уровень клана"
+           slot: 15
+           title: "&6Уровень клана"
            lore:
-             - "&#808080Нажмите, чтобы посмотреть уровень клана"
+             - "&fНажмите, чтобы посмотреть уровень клана"
            actions_when_clicking: "MENU_CLAN_LEVEL"
          4:
            material: spectral_arrow
-           slot: 23
-           title: "&#ff0000Выйти"
+           slot: 26
+           title: "&cВыйти"
            lore:
-             - "&#808080Нажмите, чтобы выйти"
+             - "&fНажмите, чтобы выйти"
            actions_when_clicking: "MENU_CLAN_EXIT"
     menu_clan_members:
-       size: 45
+       size: 27
        title_menu: "Участники клана"
        material: paper
-       slot: 0
-       title_item: "&#ff0000%player_name%"
+       title_item: "&e%player_name%"
        lore:
-         - "&#808080Ранг %player_rank%"
-         - "&#808080Убийств %player_kills%"
-         - "&#808080Смертей %player_deaths%"
+         - "&fРанг: &6%player_rank%"
+         - "&fУбийств: &a%player_kills%"
+         - "&fСмертей: &c%player_deaths%"
        items:
          1:
            material: spectral_arrow
-           slot: 44
-           title: "&#ff0000Назад"
+           slot: 26
+           title: "&cНазад"
            lore:
-             - "&#808080Нажмите, чтобы выйти"
+             - "&fНажмите, чтобы выйти"
            actions_when_clicking: "MENU_CLAN_BACK"
     menu_clan_level:
-       size: 45
+       size: 27
        title: "Уровень клана"
        slot: 0
        received:
          material: chest_minecart
-         title: "&#ff0000Уровень %level%"
+         title: "&fУровень &6%level%"
          lore:
-           - "&#ff0000Получен"
-           - "&#008000Доступно:"
-           - "&#ffff00Лимит баланса: %maximum_balance%"
-           - "&#ffff00Лимит участников: %maximum_members%"
-           - "&#ffff00Слотов в хранилище: %available%"
+           - "&fСтатус: &aПолучен"
+           - ""
+           - "&fЛимит баланса: &6%maximum_balance%"
+           - "&fЛимит участников: &6%maximum_members%"
+           - "&fСлотов в хранилище: &6%available%"
        not_received:
          material: furnace_minecart
-         title: "&#ff0000Уровень %level%"
+         title: "&fУровень &6%level%"
          lore:
-           - "&#ff0000Не получен"
-           - "&#008000При получении будет доступно:"
-           - "&#ffff00Лимит баланса: %maximum_balance%"
-           - "&#ffff00Лимит участников: %maximum_members%"
-           - "&#ffff00Слотов в хранилище: %available%"
+           - "&fСтатус: &cНе получен"
+           - ""
+           - "&fЛимит баланса: &6%maximum_balance%"
+           - "&fЛимит участников: &6%maximum_members%"
+           - "&fСлотов в хранилище: &6%available%"
        items:
          1:
            material: spectral_arrow
-           slot: 44
-           title: "&#ff0000Назад"
+           slot: 26
+           title: "&cНазад"
            lore:
-             - "&#808080Нажмите, чтобы выйти"
+             - "&fНажмите, чтобы выйти"
            actions_when_clicking: "MENU_CLAN_BACK"
     menu_clan_storage:
        size: 54
        title: "Хранилище клана"
        item:
          material: red_stained_glass_pane
-         title: "&#808080Заблокировано"
+         title: "&cЗаблокировано"
 
 
 
