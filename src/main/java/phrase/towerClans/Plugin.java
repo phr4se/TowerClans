@@ -1,5 +1,8 @@
 package phrase.towerClans;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLib;
+import com.comphenix.protocol.ProtocolLibrary;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -21,6 +24,7 @@ import phrase.towerClans.command.CommandResult;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.config.impl.ConfigClans;
 import phrase.towerClans.config.impl.ConfigPlayers;
+import phrase.towerClans.glow.GlowPacketListener;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.listener.ClanListener;
 import phrase.towerClans.listener.PlayerListener;
@@ -85,6 +89,14 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         pluginManager.registerEvents(new PlayerListener(this), this);
         pluginManager.registerEvents(new ClanListener(this), this);
+
+        ProtocolLibrary.getProtocolManager()
+                .addPacketListener(
+                        new GlowPacketListener(
+                                this,
+                                PacketType.Play.Server.ENTITY_EQUIPMENT
+                        )
+                );
 
     }
 

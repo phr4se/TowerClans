@@ -1,10 +1,7 @@
 package phrase.towerClans.glow;
 
-import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +15,9 @@ import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.event.ClanGlowDisableEvent;
 import phrase.towerClans.event.ClanGlowEnableEvent;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Optional;
 
 public class Glow {
     private static final HashSet<ModifiedPlayer> enabledGlowing = new HashSet<>();
