@@ -32,7 +32,7 @@ public abstract class AbstractClan implements Clan {
 
     public abstract void showMenu(ModifiedPlayer modifiedPlayer, MenuType menuType);
 
-    public abstract void glow();
+    public abstract void glow(ModifiedPlayer modifiedPlayer);
 
     public String getName() {
         return name;

@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import phrase.towerClans.clan.Clan;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.glow.Glow;
 
 import java.util.Map;
 import java.util.Objects;
@@ -13,6 +14,7 @@ public class ModifiedPlayer {
 
     private final UUID playerUUID;
     private Clan clan;
+    private Glow.LeatherColor selectedColor = new Glow.LeatherColor(100,255,100);
 
     public ModifiedPlayer(UUID playerUUID, Clan clan) {
         this.playerUUID = playerUUID;
@@ -21,6 +23,14 @@ public class ModifiedPlayer {
 
     public Player getPlayer() {
         return Bukkit.getPlayer(playerUUID);
+    }
+
+    public void setSelectedColor(Glow.LeatherColor selectedColor) {
+        this.selectedColor = selectedColor;
+    }
+
+    public Glow.LeatherColor getSelectedColor() {
+        return selectedColor;
     }
 
     public static ModifiedPlayer get(Player player) {

@@ -2,6 +2,7 @@ package phrase.towerClans;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -42,12 +43,15 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
     private static CommandMapper commandMapper;
     private static ChatUtil chatUtil;
     private static ColorizerProvider colorizerProvider;
+    private static NamespacedKey namespacedKey;
 
     @Override
     public void onEnable() {
 
         Logger logger = getLogger();
         PluginManager pluginManager = Bukkit.getPluginManager();
+
+        namespacedKey = new NamespacedKey(this, "clans");
 
         saveDefaultConfig();
 
@@ -142,6 +146,10 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         return true;
 
+    }
+
+    public static NamespacedKey getNamespacedKey() {
+        return namespacedKey;
     }
 
     public static ColorizerProvider getColorizerProvider() {

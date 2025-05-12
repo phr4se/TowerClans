@@ -146,6 +146,9 @@ message:
     storage:
       you're_not_in_the_clan: "&cВы не в клане"
       you_have_opened_the_clan's_storage: "&fВы открыли хранилище клана"
+    glow:
+      enabled: '&7Отображение союзников &aвключено&7.'
+      disabled: '&7Отображение союзников &cвыключено&7.'
 
 settings:
   the_cost_of_creating_a_clan: 10000

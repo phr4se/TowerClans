@@ -169,7 +169,9 @@ public class ClanImpl extends AbstractClan {
     }
 
     @Override
-    public void glow() {
+    public void glow(ModifiedPlayer modifiedPlayer) {
+
+
 
     }
 
