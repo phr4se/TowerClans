@@ -27,6 +27,7 @@ import phrase.towerClans.config.impl.ConfigPlayers;
 import phrase.towerClans.glow.GlowPacketListener;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.listener.ClanListener;
+import phrase.towerClans.listener.GlowListener;
 import phrase.towerClans.listener.PlayerListener;
 import phrase.towerClans.util.Placeholder;
 import phrase.towerClans.util.ChatUtil;
@@ -78,6 +79,11 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
             pluginManager.disablePlugin(this);
             return;
         }
+        if (!setupProtocolLib()) {
+            logger.severe("ProtocolLib не найден. Плагин будет выключен");
+            pluginManager.disablePlugin(this);
+            return;
+        }
 
         configClans.load();
         configPlayers.load();
@@ -89,6 +95,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         pluginManager.registerEvents(new PlayerListener(this), this);
         pluginManager.registerEvents(new ClanListener(this), this);
+        pluginManager.registerEvents(new GlowListener(),this);
 
         ProtocolLibrary.getProtocolManager()
                 .addPacketListener(
@@ -109,6 +116,10 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         economy = registeredServiceProvider.getProvider();
         return true;
+    }
+
+    private boolean setupProtocolLib() {
+        return getServer().getPluginManager().getPlugin("ProtocolLib") != null;
     }
 
     @Override

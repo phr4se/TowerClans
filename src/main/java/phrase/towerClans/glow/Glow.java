@@ -1,5 +1,8 @@
 package phrase.towerClans.glow;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
@@ -37,9 +40,16 @@ public class Glow {
 
         if (!event.isCancelled()) {
             enabledGlowing.add(modifiedPlayer);
+
+            broadcastChange();
+
         }
 
         executeRunnable(runnable);
+    }
+
+    public static boolean isGlowEnabled(ModifiedPlayer modifiedPlayer) {
+        return enabledGlowing.contains(modifiedPlayer);
     }
 
     /**
@@ -54,9 +64,9 @@ public class Glow {
         if (enabledGlowing.contains(modifiedPlayer) && !event.isCancelled()) {
 
             enabledGlowing.remove(modifiedPlayer);
+            broadcastChange();
 
         }
-
 
         executeRunnable(runnable);
     }
@@ -72,11 +82,25 @@ public class Glow {
         Clan senderClan = sender.getClan();
         Clan receiverClan = receiver.getClan();
 
+        if (senderClan == null || receiverClan == null) return false;
+
         return senderClan.equals(receiverClan);
     }
 
     public static HashSet<ModifiedPlayer> getEnabledPlayers() {
         return enabledGlowing;
+    }
+
+    /**
+     * Уведомляет сервер о том, что игрок сменил броню,
+     * нужно чтобы броня начала отображаться.
+     */
+    public static void broadcastChange() {
+        PacketContainer container = ProtocolLibrary.getProtocolManager()
+                .createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
+
+        ProtocolLibrary.getProtocolManager()
+                .broadcastServerPacket(container);
     }
 
     public static final class LeatherColor {

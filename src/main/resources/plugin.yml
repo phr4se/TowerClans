@@ -4,6 +4,7 @@ main: phrase.towerClans.Plugin
 api-version: '1.18'
 depend:
   - Vault
+  - ProtocolLib
 soft-depend:
   - PlaceholderAPI
 commands:
