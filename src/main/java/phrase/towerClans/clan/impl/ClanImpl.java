@@ -168,11 +168,6 @@ public class ClanImpl extends AbstractClan {
 
     }
 
-    @Override
-    public void glow() {
-
-    }
-
     public static Map<String, ClanImpl> getClans() {
         return CLANS;
     }

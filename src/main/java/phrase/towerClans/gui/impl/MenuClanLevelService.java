@@ -28,7 +28,7 @@ class MenuClanLevelService implements MenuService {
         Inventory menu = Bukkit.createInventory(null, size, colorizerProvider.colorize(titleMenu));
         int slot = configurationSection.getInt("slot");
 
-        for (int level = 1; level <= Level.levels.size(); level++) {
+        for (int level = 1; level <= Level.getCountLevels(); level++) {
             int finalLevel = level;
             if (clan.getLevel() < level) {
                 Material material = Material.matchMaterial(configurationSection.getString("not_received.material"));

@@ -116,16 +116,12 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
             if (modifiedPlayer.getClan() == null) {
                 List<String> list = configurationSection.getStringList("a_player_without_a_clan");
-                for (String string : list) {
-                    chatUtil.sendMessage(player, string);
-                }
+                list.forEach(string -> chatUtil.sendMessage(player, string));
                 return true;
             }
 
             List<String> list = configurationSection.getStringList("a_player_with_a_clan");
-            for (String string : list) {
-                chatUtil.sendMessage(player, string);
-            }
+            list.forEach(string -> chatUtil.sendMessage(player, string));
 
             return true;
 

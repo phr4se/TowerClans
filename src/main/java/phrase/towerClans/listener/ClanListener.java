@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class ClanListener implements Listener {
-    
+
     private final Plugin plugin;
     private final ChatUtil chatUtil;
     private final static ColorizerProvider colorizerProvider;
@@ -44,7 +44,7 @@ public class ClanListener implements Listener {
     @EventHandler
     public void onClickMenuClanMain(ClickMenuClanMainEvent event) {
         ItemStack item = event.getCurrentItem();
-        if(item == null) {
+        if (item == null) {
             event.setCancelled(true);
             return;
         }
@@ -52,7 +52,7 @@ public class ClanListener implements Listener {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if(item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING) != null) {
+        if (item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING) != null) {
             String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
             MenuType menu = MenuType.valueOf(action);
             event.setCancelled(true);
@@ -65,7 +65,7 @@ public class ClanListener implements Listener {
     @EventHandler
     public void onClickClanMenuMembers(ClickMenuClanMembersEvent event) {
         ItemStack item = event.getCurrentItem();
-        if(item == null) {
+        if (item == null) {
             event.setCancelled(true);
             return;
         }
@@ -73,7 +73,7 @@ public class ClanListener implements Listener {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
+        if ((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
             MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
             String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
             MenuType menu = MenuType.valueOf(action);
@@ -87,7 +87,7 @@ public class ClanListener implements Listener {
                 }
                 case MENU_CLAN_NEXT -> {
                     MenuPages menuPages = menuClanMembersProvider.getMenuPages(modifiedPlayer.getPlayerUUID());
-                    if(!menuPages.hasNextPage()) return;
+                    if (!menuPages.hasNextPage()) return;
                     menuPages.setCurrentPage(menuPages.getCurrentPage() + 1);
                     modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
                 }
@@ -102,7 +102,7 @@ public class ClanListener implements Listener {
     @EventHandler
     public void onClickClanMenuLevel(ClickMenuClanLevelEvent event) {
         ItemStack item = event.getCurrentItem();
-        if(event.getCurrentItem() == null) {
+        if (event.getCurrentItem() == null) {
             event.setCancelled(true);
             return;
         }
@@ -110,7 +110,7 @@ public class ClanListener implements Listener {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
+        if ((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
             String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
 
             MenuType menu = MenuType.valueOf(action);
@@ -123,33 +123,17 @@ public class ClanListener implements Listener {
 
     @EventHandler
     public void onLevelUp(LevelUpEvent event) {
-        
-        new BukkitRunnable() {
 
-            private final ClanImpl clan = (ClanImpl) event.getClan();
-            
-            @Override
-            public void run() {
-                
-                new BukkitRunnable() {
-                    
-                    private final ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message");
-                    @Override
-                    public void run() {
-                        for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-                            String string = configurationSection.getString("notification_of_a_level_increase");
-                            chatUtil.sendMessage(entry.getKey().getPlayer(), string);
-                        }
-                        cancel();
-                    }
-                }.runTask(plugin);
+        ClanImpl clan = (ClanImpl) event.getClan();
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message");
 
-                int nextLevel = clan.getLevel() + 1;
-                
-                clan.setLevel(nextLevel);
-                
-            }
-        }.runTaskAsynchronously(plugin);
+        for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
+            String string = configurationSection.getString("notification_of_a_level_increase");
+            chatUtil.sendMessage(entry.getKey().getPlayer(), string);
+        }
+
+        int nextLevel = clan.getLevel() + 1;
+        clan.setLevel(nextLevel);
         
     }
 

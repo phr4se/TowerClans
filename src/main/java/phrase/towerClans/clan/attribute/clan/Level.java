@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Level {
 
-    public static Map<Integer, Level> levels = new HashMap<>();
+    private final static Map<Integer, Level> levels = new HashMap<>();
 
     private final int level;
     private final int xp;
@@ -16,6 +16,7 @@ public class Level {
     private final int maximumMembers;
     private final int availableSlots;
     private static int xpForMurder;
+    private static int countLevels;
 
     public Level(int level, int xp, int maximumBalance, int maximumMembers, int availableSlots) {
         this.level = level;
@@ -61,6 +62,10 @@ public class Level {
         return xpForMurder;
     }
 
+    public static int getCountLevels() {
+        return countLevels;
+    }
+
     public static void intialize(Plugin plugin) {
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings");
@@ -68,7 +73,7 @@ public class Level {
 
         configurationSection = plugin.getConfig().getConfigurationSection("settings.level");
 
-        int id = 1;
+        countLevels = 0;
 
         for(String key : configurationSection.getKeys(false)) {
 
@@ -77,8 +82,8 @@ public class Level {
             int maximumBalance = configurationSection.getInt(key + ".maximum_balance");
             int maximumMembers = configurationSection.getInt(key + ".maximum_members");
             int availableSlots = configurationSection.getInt(key + ".available");
-            levels.put(id, new Level(level, xp, maximumBalance, maximumMembers, availableSlots));
-            id++;
+            levels.put(level, new Level(countLevels, xp, maximumBalance, maximumMembers, availableSlots));
+            countLevels++;
 
         }
 
