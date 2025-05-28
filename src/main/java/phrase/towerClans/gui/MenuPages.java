@@ -14,8 +14,8 @@ import java.util.List;
 public class MenuPages {
 
     private static int itemPerPage;
-    private static ItemStack previous;
-    private static ItemStack forward;
+    private static ItemStack prev;
+    private static ItemStack next;
     private final static ColorizerProvider colorizerProvider;
 
     static {
@@ -55,8 +55,8 @@ public class MenuPages {
     }
 
     private void createButtonNavigation(Inventory menu) {
-        menu.setItem(menu.getSize() - 6, previous);
-        menu.setItem(menu.getSize() - 4, forward);
+        menu.setItem(menu.getSize() - 6, prev);
+        menu.setItem(menu.getSize() - 4, next);
     }
 
     public boolean hasNextPage() {
@@ -73,18 +73,18 @@ public class MenuPages {
         itemPerPage = configurationSection.getInt("item_per_page");
 
         configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.previous");
-        Material materialBack = Material.matchMaterial(configurationSection.getString("material"));
-        String titleBack = configurationSection.getString("title");
-        previous = new ItemBuilder(materialBack)
-                .setName(colorizerProvider.colorize(titleBack))
+        Material materialPrev = Material.matchMaterial(configurationSection.getString("material"));
+        String titlePrev = configurationSection.getString("title");
+        prev = new ItemBuilder(materialPrev)
+                .setName(colorizerProvider.colorize(titlePrev))
                 .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "MENU_CLAN_PREVIOUS")
                 .build();
         
         configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.next");
-        Material materialForward = Material.matchMaterial(configurationSection.getString("material"));
-        String titleForward = configurationSection.getString("title");
-        forward = new ItemBuilder(materialForward)
-                .setName(colorizerProvider.colorize(titleForward))
+        Material materialNext = Material.matchMaterial(configurationSection.getString("material"));
+        String titleNext = configurationSection.getString("title");
+        next = new ItemBuilder(materialNext)
+                .setName(colorizerProvider.colorize(titleNext))
                 .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "MENU_CLAN_NEXT")
                 .build();
     }
