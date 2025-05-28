@@ -23,7 +23,7 @@ public class Storage {
         inventory = Bukkit.createInventory(null, size, title);
     }
 
-    public static void intialize(Plugin plugin) {
+    public static void initialize(Plugin plugin) {
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_storage");
         size = configurationSection.getInt("size");
         title = configurationSection.getString("title");

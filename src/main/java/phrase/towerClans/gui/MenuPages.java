@@ -15,7 +15,7 @@ public class MenuPages {
 
     private static int itemPerPage;
     private static ItemStack previous;
-    private static ItemStack next;
+    private static ItemStack forward;
     private final static ColorizerProvider colorizerProvider;
 
     static {
@@ -56,7 +56,7 @@ public class MenuPages {
 
     private void createButtonNavigation(Inventory menu) {
         menu.setItem(menu.getSize() - 6, previous);
-        menu.setItem(menu.getSize() - 4, next);
+        menu.setItem(menu.getSize() - 4, forward);
     }
 
     public boolean hasNextPage() {
@@ -67,9 +67,11 @@ public class MenuPages {
         return currentPage > 0;
     }
 
-    public static void intialize(Plugin plugin) {
+    public static void initialize(Plugin plugin) {
+
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu");
         itemPerPage = configurationSection.getInt("item_per_page");
+
         configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.previous");
         Material materialBack = Material.matchMaterial(configurationSection.getString("material"));
         String titleBack = configurationSection.getString("title");
@@ -77,10 +79,11 @@ public class MenuPages {
                 .setName(colorizerProvider.colorize(titleBack))
                 .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "MENU_CLAN_PREVIOUS")
                 .build();
+        
         configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.next");
         Material materialForward = Material.matchMaterial(configurationSection.getString("material"));
         String titleForward = configurationSection.getString("title");
-        next = new ItemBuilder(materialForward)
+        forward = new ItemBuilder(materialForward)
                 .setName(colorizerProvider.colorize(titleForward))
                 .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "MENU_CLAN_NEXT")
                 .build();

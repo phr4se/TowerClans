@@ -21,7 +21,7 @@ public class Rank {
         }
     }
 
-    public static void intialize(Plugin plugin) {
+    public static void initialize(Plugin plugin) {
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.rank");
 
         RankType.LEADER.setName(configurationSection.getString("leader"));

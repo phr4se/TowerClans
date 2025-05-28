@@ -22,7 +22,6 @@ import phrase.towerClans.command.CommandResult;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.config.impl.ConfigClans;
 import phrase.towerClans.config.impl.ConfigPlayers;
-import phrase.towerClans.glow.Glow;
 import phrase.towerClans.glow.GlowPacketListener;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.listener.ClanListener;
@@ -63,10 +62,10 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         commandMapper = new CommandMapper(this);
         configClans = new ConfigClans(this);
         configPlayers = new ConfigPlayers(this);
-        Level.intialize(this);
-        Storage.intialize(this);
-        Rank.intialize(this);
-        MenuPages.intialize(this);
+        Level.initialize(this);
+        Storage.initialize(this);
+        Rank.initialize(this);
+        MenuPages.initialize(this);
         new CommandLogger(this);
 
         if (!setupEconomy()) {

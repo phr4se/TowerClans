@@ -62,11 +62,12 @@ public class Level {
         return xpForMurder;
     }
 
+
     public static int getCountLevels() {
         return countLevels;
     }
 
-    public static void intialize(Plugin plugin) {
+    public static void initialize(Plugin plugin) {
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings");
         xpForMurder = configurationSection.getInt("xp_for_murder");
