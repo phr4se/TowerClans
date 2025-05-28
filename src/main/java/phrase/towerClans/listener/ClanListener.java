@@ -8,12 +8,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.event.*;
+import phrase.towerClans.glow.Glow;
 import phrase.towerClans.gui.MenuFactory;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuType;
@@ -21,10 +21,7 @@ import phrase.towerClans.gui.impl.MenuClanMembersProvider;
 import phrase.towerClans.util.ChatUtil;
 import phrase.towerClans.util.colorizer.ColorizerProvider;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class ClanListener implements Listener {
 
@@ -102,7 +99,7 @@ public class ClanListener implements Listener {
     @EventHandler
     public void onClickClanMenuLevel(ClickMenuClanLevelEvent event) {
         ItemStack item = event.getCurrentItem();
-        if (event.getCurrentItem() == null) {
+        if (item == null) {
             event.setCancelled(true);
             return;
         }
@@ -119,6 +116,53 @@ public class ClanListener implements Listener {
         } else {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onClickMenuClanGlow(ClickMenuClanGlowEvent event) {
+        ItemStack item = event.getCurrentItem();
+        if (item == null) {
+            event.setCancelled(true);
+            return;
+        }
+
+        ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
+        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+
+        if((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
+            event.setCancelled(true);
+            String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
+
+            try {
+                Glow.LeatherColor color = Glow.LeatherColor.valueOf(action);
+                clan.setColor(color);
+            } catch (IllegalArgumentException e) {
+                MenuType menuType = MenuType.valueOf(action);
+                clan.showMenu(modifiedPlayer, menuType);
+            }
+
+
+        } else {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onJoin(JoinEvent event) {
+
+        ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
+
+        Glow.changeForPlayer(modifiedPlayer, false);
+
+    }
+
+    @EventHandler
+    public void onLeave(LeaveEvent event) {
+
+        ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
+
+        Glow.changeForPlayer(modifiedPlayer, false, ((ClanImpl) event.getClan()).getMembers());
+
     }
 
     @EventHandler
@@ -170,5 +214,4 @@ public class ClanListener implements Listener {
         storage.getIsUpdatedInventory().remove(player.getUniqueId());
     }
 
-    
 }

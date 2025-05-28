@@ -9,7 +9,8 @@ public enum MenuType {
     MENU_CLAN_EXIT(5),
     MENU_CLAN_STORAGE(6),
     MENU_CLAN_PREVIOUS(7),
-    MENU_CLAN_NEXT(8);
+    MENU_CLAN_NEXT(8),
+    MENU_CLAN_GLOW(9);
 
     private final int id;
 

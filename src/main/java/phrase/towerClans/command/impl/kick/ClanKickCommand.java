@@ -9,6 +9,7 @@ import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
+import phrase.towerClans.event.LeaveEvent;
 import phrase.towerClans.util.ChatUtil;
 
 public class ClanKickCommand implements CommandHandler {
@@ -60,7 +61,7 @@ public class ClanKickCommand implements CommandHandler {
             return true;
         }
 
-        if (clan.getMembers().get(modifiedPlayer).equals(Rank.RankType.LEADER.getName())) {
+        if (clan.getMembers().get(targetModifiedPlayer).equals(Rank.RankType.LEADER.getName())) {
             chatUtil.sendMessage(player, configurationSection.getString("you_cannot_leave_the_clan"));
             return true;
         }
@@ -70,6 +71,7 @@ public class ClanKickCommand implements CommandHandler {
         if (clanResponse.isSuccess()) {
             chatUtil.sendMessage(player, configurationSection.getString("you_kicked_a_player_from_the_clan"));
             chatUtil.sendMessage(targetPlayer, configurationSection.getString("you_were_kicked_out_of_the_clan"));
+            plugin.getServer().getPluginManager().callEvent(new LeaveEvent(clan, targetModifiedPlayer));
             return true;
         } else {
             if(clanResponse.getMessage() != null) {

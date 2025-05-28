@@ -10,6 +10,7 @@ import phrase.towerClans.clan.*;
 import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
+import phrase.towerClans.glow.Glow;
 import phrase.towerClans.gui.MenuFactory;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuProvider;
@@ -165,6 +166,22 @@ public class ClanImpl extends AbstractClan {
             modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
         } else modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin));
 
+
+    }
+
+    @Override
+    public void glow(ModifiedPlayer modifiedPlayer, Plugin plugin) {
+
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.glow");
+
+        if(!Glow.isEnableForPlayer(modifiedPlayer)) {
+            Glow.enableForPlayer(modifiedPlayer);
+            chatUtil.sendMessage(modifiedPlayer.getPlayer(), configurationSection.getString("you_have_enabled_glow"));
+            return;
+        }
+
+        Glow.disableForPlayer(modifiedPlayer);
+        chatUtil.sendMessage(modifiedPlayer.getPlayer(), configurationSection.getString("you_have_disabled_glow"));
 
     }
 

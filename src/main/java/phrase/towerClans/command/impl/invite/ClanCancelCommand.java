@@ -24,7 +24,7 @@ public class ClanCancelCommand implements CommandHandler {
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.invite.cancel");
 
-        UUID senderPlayer = PlayerCalls.removePlayers(player.getUniqueId());
+        UUID senderPlayer = PlayerCalls.removePlayer(player.getUniqueId());
 
         if (senderPlayer == null) {
             chatUtil.sendMessage(player, configurationSection.getString("has_anyone_sent_you_a_request_to_join_clan"));

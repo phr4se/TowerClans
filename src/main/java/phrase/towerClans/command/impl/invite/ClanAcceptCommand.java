@@ -8,6 +8,7 @@ import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
+import phrase.towerClans.event.JoinEvent;
 import phrase.towerClans.util.ChatUtil;
 
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class ClanAcceptCommand implements CommandHandler {
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.invite.accept");
 
-        UUID senderPlayer = PlayerCalls.removePlayers(player.getUniqueId());
+        UUID senderPlayer = PlayerCalls.removePlayer(player.getUniqueId());
 
         if (senderPlayer == null) {
             chatUtil.sendMessage(player, configurationSection.getString("has_anyone_sent_you_a_request_to_join_clan"));
@@ -47,6 +48,8 @@ public class ClanAcceptCommand implements CommandHandler {
         modifiedPlayer.setClan(clan);
         ClanResponse clanResponse = clan.invite(modifiedPlayer);
 
+        plugin.getServer().getPluginManager().callEvent(new JoinEvent(modifiedPlayer));
+
         if (clanResponse.isSuccess()) {
             chatUtil.sendMessage(player, configurationSection.getString("have_you_accepted_the_request_to_join_the_clan"));
             chatUtil.sendMessage(Bukkit.getPlayer(senderPlayer), configurationSection.getString("the_player_accepted_the_request_to_join_the_clan"));
@@ -56,6 +59,7 @@ public class ClanAcceptCommand implements CommandHandler {
                 chatUtil.sendMessage(Bukkit.getPlayer(senderPlayer), clanResponse.getMessage());
             }
         }
+
 
         return true;
     }

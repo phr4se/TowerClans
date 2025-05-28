@@ -1,8 +1,10 @@
 package phrase.towerClans.clan;
 
+import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
+import phrase.towerClans.glow.Glow;
 import phrase.towerClans.gui.MenuType;
 
 import java.util.*;
@@ -17,6 +19,7 @@ public abstract class AbstractClan implements Clan {
     private int balance;
     private boolean pvp;
     private final Storage storage;
+    private Glow.LeatherColor color;
 
     public AbstractClan(String name) {
         this.name = name;
@@ -28,9 +31,20 @@ public abstract class AbstractClan implements Clan {
         balance = 0;
         pvp = false;
         storage = new Storage();
+        color = Glow.LeatherColor.RED;
     }
 
     public abstract void showMenu(ModifiedPlayer modifiedPlayer, MenuType menuType);
+
+    public abstract void glow(ModifiedPlayer modifiedPlayer, Plugin plugin);
+
+    public void setColor(Glow.LeatherColor color) {
+        this.color = color;
+    }
+
+    public Glow.LeatherColor getColor() {
+        return color;
+    }
 
     public String getName() {
         return name;

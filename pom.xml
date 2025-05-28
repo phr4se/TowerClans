@@ -6,7 +6,7 @@
 
     <groupId>phrase</groupId>
     <artifactId>TowerClans</artifactId>
-    <version>BETA-0.7A</version>
+    <version>BETA-0.8</version>
     <packaging>jar</packaging>
 
     <name>TowerClans</name>
@@ -78,6 +78,11 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.11.6</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>5.1.0</version>
         </dependency>
     </dependencies>
 </project>

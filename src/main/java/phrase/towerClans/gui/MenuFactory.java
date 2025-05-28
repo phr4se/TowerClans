@@ -10,6 +10,7 @@ public class MenuFactory {
             case MENU_CLAN_MEMBERS -> new MenuClanMembersProvider();
             case MENU_CLAN_LEVEL -> new MenuClanLevelProvider();
             case MENU_CLAN_STORAGE -> new MenuClanStorageProvider();
+            case MENU_CLAN_GLOW -> new MenuClanGlowProvider();
             default -> null;
         };
     }

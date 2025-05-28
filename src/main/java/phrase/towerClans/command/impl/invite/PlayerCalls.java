@@ -12,16 +12,16 @@ public class PlayerCalls {
         PLAYERS.put(targetPlayer, player);
     }
 
-    public static UUID removePlayers(UUID targetPlayer) {
+    public static UUID removePlayer(UUID targetPlayer) {
         if(!PLAYERS.containsKey(targetPlayer)) return null;
 
         return PLAYERS.remove(targetPlayer);
     }
 
-    public static void removeQuitPlayers(UUID player) {
+    public static void remove(UUID player) {
         for (Map.Entry<UUID, UUID> entry : PLAYERS.entrySet()) {
 
-            if(entry.getKey().equals(player) || entry.getValue().equals(player)) PlayerCalls.removePlayers(entry.getKey());
+            if(entry.getKey().equals(player) || entry.getValue().equals(player)) PlayerCalls.removePlayer(entry.getKey());
 
         }
     }

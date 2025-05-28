@@ -8,8 +8,10 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
@@ -21,6 +23,7 @@ import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.impl.invite.PlayerCalls;
 import phrase.towerClans.event.*;
+import phrase.towerClans.glow.Glow;
 import phrase.towerClans.gui.MenuFactory;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuType;
@@ -73,6 +76,9 @@ public class PlayerListener implements Listener {
 
         if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_STORAGE).getMenu(clan, plugin), event.getInventory()))
             pluginManager.callEvent(new ClickMenuClanStorageEvent(clan, player, event.getInventory(), event));
+
+        if(identical(MenuFactory.getProvider(MenuType.MENU_CLAN_GLOW).getMenu(clan, plugin), event.getInventory()))
+            pluginManager.callEvent(new ClickMenuClanGlowEvent(modifiedPlayer, event));
 
     }
 
@@ -182,17 +188,18 @@ public class PlayerListener implements Listener {
     public void onExit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         UUID playerUUID = player.getUniqueId();
-        PlayerCalls.removeQuitPlayers(playerUUID);
+        PlayerCalls.remove(playerUUID);
+
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         if (clan == null) return;
         Storage storage = clan.getStorage();
         if (storage.getPlayers().contains(playerUUID)) storage.getPlayers().remove(playerUUID);
-        if (storage.getIsUpdatedInventory().contains(playerUUID))
-            storage.getIsUpdatedInventory().remove(playerUUID);
+        if (storage.getIsUpdatedInventory().contains(playerUUID)) storage.getIsUpdatedInventory().remove(playerUUID);
+
         MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
-        if (menuClanMembersProvider.isRegistered(player.getUniqueId()))
-            menuClanMembersProvider.unRegister(player.getUniqueId());
+        if (menuClanMembersProvider.isRegistered(player.getUniqueId())) menuClanMembersProvider.unRegister(player.getUniqueId());
+
     }
 
     @EventHandler
@@ -203,6 +210,16 @@ public class PlayerListener implements Listener {
         if (Stats.PLAYERS.containsKey(player)) return;
 
         Stats.PLAYERS.put(player, new Stats(0, 0));
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        Glow.changeForPlayer(ModifiedPlayer.get(event.getPlayer()), true);
+    }
+
+    @EventHandler
+    public void onChangeWorld(PlayerChangedWorldEvent event) {
+        Glow.changeForPlayer(ModifiedPlayer.get(event.getPlayer()), true);
     }
 
 }

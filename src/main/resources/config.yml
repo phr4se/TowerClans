@@ -146,6 +146,10 @@ message:
     storage:
       you're_not_in_the_clan: "&cВы не в клане"
       you_have_opened_the_clan's_storage: "&fВы открыли хранилище клана"
+    glow:
+      you're_not_in_the_clan: "&cВы не в клане"
+      you_have_enabled_glow: "&fВы включили свечение"
+      you_have_disabled_glow: "&fВы выключили свечение"
 
 settings:
   the_cost_of_creating_a_clan: 10000
@@ -242,6 +246,13 @@ settings:
              - "&fНажмите, чтобы посмотреть уровень клана"
            actions_when_clicking: "MENU_CLAN_LEVEL"
          4:
+           material: leather_horse_armor
+           slot: 18
+           title: "&6Свечение"
+           lore:
+             - "&fНажмите, чтобы изменить свечение"
+           actions_when_clicking: "MENU_CLAN_GLOW"
+         5:
            material: spectral_arrow
            slot: 26
            title: "&cВыйти"
@@ -301,6 +312,39 @@ settings:
        item:
          material: red_stained_glass_pane
          title: "&cЗаблокировано"
+    menu_clan_glow:
+      size: 27
+      title: "Свечение"
+      items:
+        1:
+          material: red_dye
+          slot: 11
+          title: "&cКрасное свечение"
+          lore:
+            - "&fНажмите, чтобы сделать свечение красным"
+          actions_when_clicking: "RED"
+        2:
+          material: green_dye
+          slot: 13
+          title: "&aЗеленое свечение"
+          lore:
+            - "&fНажмите, чтобы сделать свечение зеленым"
+          actions_when_clicking: "GREEN"
+        3:
+          material: blue_dye
+          slot: 15
+          title: "&9Синее свечение"
+          lore:
+            - "&fНажмите, чтобы сделать свечение синим"
+          actions_when_clicking: "BLUE"
+        4:
+          material: spectral_arrow
+          slot: 26
+          title: "&cНазад"
+          lore:
+            - "&fНажмите, чтобы выйти"
+          actions_when_clicking: "MENU_CLAN_BACK"
+
 
 
 

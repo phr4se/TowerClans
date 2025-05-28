@@ -8,6 +8,7 @@ import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
+import phrase.towerClans.event.LeaveEvent;
 import phrase.towerClans.util.ChatUtil;
 
 public class ClanLeaveCommand implements CommandHandler {
@@ -42,6 +43,7 @@ public class ClanLeaveCommand implements CommandHandler {
 
         if (clanResponse.isSuccess()) {
             chatUtil.sendMessage(player, configurationSection.getString("you_have_left_the_clan"));
+            plugin.getServer().getPluginManager().callEvent(new LeaveEvent(clan, modifiedPlayer));
             return true;
         } else {
             if(clanResponse.getMessage() != null) {

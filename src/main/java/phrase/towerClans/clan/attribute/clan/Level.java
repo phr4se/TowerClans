@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Level {
 
-    private final static Map<Integer, Level> levels = new HashMap<>();
+    private final static Map<Integer, Level> LEVELS = new HashMap<>();
 
     private final int level;
     private final int xp;
@@ -45,18 +45,18 @@ public class Level {
     public int getAvailableSlots() { return availableSlots; }
 
     public static int getXpLevel(int level) {
-        return levels.get(level).getXp();
+        return LEVELS.get(level).getXp();
     }
 
     public static int getLevelMaximumBalance(int level) {
-        return levels.get(level).getMaximumBalance();
+        return LEVELS.get(level).getMaximumBalance();
     }
 
     public static int getLevelMaximumMembers(int level) {
-        return levels.get(level).getMaximumMembers();
+        return LEVELS.get(level).getMaximumMembers();
     }
 
-    public static int getAvailableSlots(int level) { return levels.get(level).getAvailableSlots(); }
+    public static int getAvailableSlots(int level) { return LEVELS.get(level).getAvailableSlots(); }
 
     public static int getXpForMurder() {
         return xpForMurder;
@@ -82,7 +82,7 @@ public class Level {
             int maximumBalance = configurationSection.getInt(key + ".maximum_balance");
             int maximumMembers = configurationSection.getInt(key + ".maximum_members");
             int availableSlots = configurationSection.getInt(key + ".available");
-            levels.put(level, new Level(countLevels, xp, maximumBalance, maximumMembers, availableSlots));
+            LEVELS.put(level, new Level(countLevels, xp, maximumBalance, maximumMembers, availableSlots));
             countLevels++;
 
         }
