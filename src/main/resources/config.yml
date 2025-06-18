@@ -17,10 +17,13 @@ message:
   - "&6/clan rank <игрок> <2 - заместитель, 3 - участник> - &fназначить ранг игроку"
   - "&6/clan top - &fпосмотреть топ кланов"
   - "&6/clan info <клан> - &fпосмотреть информаю о клане"
+  - "&6/clan stats <игрок> - &fпосмотреть информацию о игроке"
+  - "&6/clan storage - &fоткрыть хранилище клана"
+  - "&6/clan glow - &fвключить/выключить свечение"
   notification_of_a_level_increase: "&fУровень клана повышен"
   you_are_not_a_player: "&fВы не являетесь игроком!"
 
-  uknown_command: "&cКоманда не найдена"
+  unknown_command: "&cКоманда не найдена"
   no_permission: "&cУ вас нет прав"
   error: "&cНе найден обработчик для команды"
 
@@ -150,6 +153,13 @@ message:
       you're_not_in_the_clan: "&cВы не в клане"
       you_have_enabled_glow: "&fВы включили свечение"
       you_have_disabled_glow: "&fВы выключили свечение"
+    event:
+      usage_command: "&fИспользование: /clan event capture start|stop"
+      you_runned_event: "&fВы запустили клановый эвент"
+      you_stopped_event: "&fВы завершили клановый эвент"
+      event_already_running: "&fЭвент уже запущен"
+      event_not_running: "&fЭвент не запущен"
+      schematic_not_exist: "&fСхематика не существует"
 
 settings:
   the_cost_of_creating_a_clan: 10000
@@ -205,7 +215,28 @@ settings:
     leader: "Лидер"
     deputy: "Заместитель"
     member: "Участник"
-
+  event:
+    capture:
+      schematic_name: "event"
+      world: "world"
+      title: "&fКоординаты: &d%x% %y% %z% &7| &fЛидер: &6%clan_name%"
+      max_point: 200
+      xp_for_winning: 1000
+      point_per_zone: 100
+      time_start_event:
+        - "13:00:00"
+        - "15:00:00"
+        - "17:00:00"
+      width: 5
+      height: 5
+      length: 5
+      messages_start_event:
+        - "&cВнимание!"
+        - "&fЗапущен &6клановый эвент"
+      messages_end_event:
+          - "&cВнимание!"
+          - "&fКлановый эвент &6завершен"
+          - "&fПобедитель: &d%clan_name%"
   menu:
     item_per_page: 18
     previous:

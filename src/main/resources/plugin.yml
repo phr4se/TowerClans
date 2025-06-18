@@ -1,10 +1,12 @@
 name: TowerClans
-version: 'BETA-0.8'
+version: '1.0'
 main: phrase.towerClans.Plugin
 api-version: '1.18'
 depend:
   - Vault
   - ProtocolLib
+  - WorldEdit
+  - WorldGuard
 soft-depend:
   - PlaceholderAPI
 commands:

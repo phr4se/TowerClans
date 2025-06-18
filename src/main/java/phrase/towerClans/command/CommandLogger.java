@@ -7,6 +7,7 @@ import phrase.towerClans.command.impl.base.ClanSetBaseCommand;
 import phrase.towerClans.command.impl.chat.ClanChatCommand;
 import phrase.towerClans.command.impl.create.ClanCreateCommand;
 import phrase.towerClans.command.impl.disband.ClanDisbandCommand;
+import phrase.towerClans.command.impl.event.ClanEventCommand;
 import phrase.towerClans.command.impl.glow.ClanGlowCommand;
 import phrase.towerClans.command.impl.info.ClanInfoCommand;
 import phrase.towerClans.command.impl.invite.ClanAcceptCommand;
@@ -65,6 +66,7 @@ public class CommandLogger {
         COMMANDS.put("delbase", new CommandDescription("towerclans.delbase", new ClanDelBaseCommand(plugin)));
         COMMANDS.put("storage", new CommandDescription("towerclans.storage", new ClanStorageCommand(plugin)));
         COMMANDS.put("glow", new CommandDescription("towerclans.glow", new ClanGlowCommand(plugin)));
+        COMMANDS.put("event", new CommandDescription("towerclans.event", new ClanEventCommand(plugin)));
     }
 
 }

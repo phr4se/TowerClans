@@ -64,6 +64,7 @@ public class Glow {
 
     public static void changeForPlayer(ModifiedPlayer modifiedPlayer, boolean isReceiver) {
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+        if(clan == null) return;
         Map<ModifiedPlayer, String> players = clan.getMembers();
 
         if(!isReceiver) {

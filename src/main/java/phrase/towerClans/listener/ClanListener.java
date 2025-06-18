@@ -80,13 +80,13 @@ public class ClanListener implements Listener {
                     MenuPages menuPages = menuClanMembersProvider.getMenuPages(modifiedPlayer.getPlayerUUID());
                     if (!menuPages.hasPreviousPage()) return;
                     menuPages.setCurrentPage(menuPages.getCurrentPage() - 1);
-                    modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
+                    modifiedPlayer.getPlayer().openInventory(menuPages.getPage(menuPages.getCurrentPage()));
                 }
                 case MENU_CLAN_NEXT -> {
                     MenuPages menuPages = menuClanMembersProvider.getMenuPages(modifiedPlayer.getPlayerUUID());
                     if (!menuPages.hasNextPage()) return;
                     menuPages.setCurrentPage(menuPages.getCurrentPage() + 1);
-                    modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
+                    modifiedPlayer.getPlayer().openInventory(menuPages.getPage(menuPages.getCurrentPage()));
                 }
                 default -> clan.showMenu(modifiedPlayer, menu);
             }

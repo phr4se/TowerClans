@@ -2,6 +2,9 @@ package phrase.towerClans;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,6 +19,7 @@ import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.attribute.clan.Storage;
+import phrase.towerClans.clan.event.TimeChecker;
 import phrase.towerClans.command.CommandLogger;
 import phrase.towerClans.command.CommandMapper;
 import phrase.towerClans.command.CommandResult;
@@ -33,6 +37,8 @@ import phrase.towerClans.util.colorizer.ColorizerFactory;
 import phrase.towerClans.util.colorizer.ColorizerProvider;
 import phrase.towerClans.util.colorizer.ColorizerType;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -45,6 +51,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
     private static CommandMapper commandMapper;
     private static ChatUtil chatUtil;
     private static ColorizerProvider colorizerProvider;
+    private static String path;
 
     @Override
     public void onEnable() {
@@ -57,6 +64,14 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         if(!UpdateChecker.check().equals(getDescription().getVersion())) logger.severe("Вы используете устаревшую версию плагина");
 
         colorizerProvider = ColorizerFactory.getProvider(ColorizerType.HEX);
+
+        if(!pluginManager.isPluginEnabled("WorldEdit") && !pluginManager.isPluginEnabled("WorldGuard")) {
+            logger.severe("WorldEdit и WorldGuard не найден. Плагин будет выключен");
+            pluginManager.disablePlugin(this);
+            return;
+        }
+
+        setupSchematicPath();
 
         chatUtil = new ChatUtil(this);
         commandMapper = new CommandMapper(this);
@@ -81,7 +96,6 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         if (pluginManager.isPluginEnabled("PlaceholderAPI")) new Placeholder().register();
 
-
         pluginManager.registerEvents(new PlayerListener(this), this);
         pluginManager.registerEvents(new ClanListener(this), this);
 
@@ -91,6 +105,10 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
             return;
         }
         ProtocolLibrary.getProtocolManager().addPacketListener(new GlowPacketListener(this, PacketType.Play.Server.ENTITY_EQUIPMENT));
+
+        TimeChecker timeChecker = new TimeChecker(this);
+        timeChecker.start();
+
     }
 
     private boolean setupEconomy() {
@@ -108,12 +126,17 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         return getServer().getPluginManager().getPlugin("ProtocolLib") != null;
     }
 
+    private void setupSchematicPath() {
+        File schematicFolder = new File(getDataFolder() + "/schematics");
+        if(!schematicFolder.exists()) schematicFolder.mkdirs();
+        path = schematicFolder.getPath() + "/" + getConfig().getString("settings.event.capture.schematic_name") + ".schem";
+    }
+
     @Override
     public void onDisable() {
         configClans.save();
         configPlayers.save();
     }
-
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -156,4 +179,9 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
     public static ColorizerProvider getColorizerProvider() {
         return colorizerProvider;
     }
+
+    public static String getPath() {
+        return path;
+    }
+
 }

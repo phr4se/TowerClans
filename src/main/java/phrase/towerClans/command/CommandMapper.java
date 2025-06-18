@@ -16,7 +16,7 @@ public class CommandMapper {
 
         CommandDescription commandDescription = CommandLogger.getCommands().get(label.toLowerCase());
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message");
-        if(commandDescription == null) return new CommandResult(configurationSection.getString("uknown_command"), CommandResult.ResultStatus.UNKNOWN_COMMAND);
+        if(commandDescription == null) return new CommandResult(configurationSection.getString("unknown_command"), CommandResult.ResultStatus.UNKNOWN_COMMAND);
 
         if(!player.hasPermission(commandDescription.getPermission())) return new CommandResult(configurationSection.getString("no_permission"),CommandResult.ResultStatus.NO_PERMISSION);
 

@@ -1,10 +1,8 @@
 package phrase.towerClans.clan.impl;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.*;
 import phrase.towerClans.clan.attribute.clan.Level;
@@ -163,7 +161,7 @@ public class ClanImpl extends AbstractClan {
             Inventory menu = menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin);
             List<ItemStack> players = menuClanMembersProvider.getPlayers(((ClanImpl) modifiedPlayer.getClan()), plugin);
             MenuPages menuPages = menuClanMembersProvider.register(modifiedPlayer.getPlayerUUID(), new MenuPages(0, players, menu));
-            modifiedPlayer.getPlayer().openInventory(menuPages.get(menuPages.getCurrentPage()));
+            modifiedPlayer.getPlayer().openInventory(menuPages.getPage(menuPages.getCurrentPage()));
         } else modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin));
 
 

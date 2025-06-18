@@ -64,7 +64,7 @@ public class PlayerListener implements Listener {
 
         if (((MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS)).getMenuPages(player.getUniqueId()) != null) {
             MenuPages menuPages = ((MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS)).getMenuPages(player.getUniqueId());
-            if (identical(menuPages.get(menuPages.getCurrentPage()), event.getInventory()))
+            if (identical(menuPages.getPage(menuPages.getCurrentPage()), event.getInventory()))
                 pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
         }
 

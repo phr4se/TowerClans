@@ -32,7 +32,7 @@ public class MenuPages {
         this.menu = menu;
     }
 
-    public Inventory get(int page) {
+    public Inventory getPage(int page) {
 
         for(int i = 0; i <= menu.getSize() - 1; i++) {
             if(menu.getItem(i) == null) continue;
