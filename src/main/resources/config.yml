@@ -159,7 +159,7 @@ message:
       you_stopped_event: "&fВы завершили клановый эвент"
       event_already_running: "&fЭвент уже запущен"
       event_not_running: "&fЭвент не запущен"
-      schematic_not_exist: "&fСхематика не существует"
+      schematic_error: "&fСхематика не существует или повреждена"
 
 settings:
   the_cost_of_creating_a_clan: 10000

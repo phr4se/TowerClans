@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.event.Event;
 import phrase.towerClans.clan.event.exception.EventAlreadyRun;
+import phrase.towerClans.clan.event.exception.SchematicDamaged;
 import phrase.towerClans.clan.event.exception.SchematicNotExist;
 import phrase.towerClans.clan.event.impl.Capture;
 import phrase.towerClans.command.CommandHandler;
@@ -48,8 +49,8 @@ public class ClanEventCommand implements CommandHandler {
                     chatUtil.sendMessage(player, configurationSection.getString("event_already_running"));
                     plugin.getLogger().severe(e.getMessage());
                     return true;
-                } catch (SchematicNotExist e) {
-                    chatUtil.sendMessage(player, configurationSection.getString("schematic_not_exist"));
+                } catch (SchematicNotExist | SchematicDamaged e) {
+                    chatUtil.sendMessage(player, configurationSection.getString("schematic_error"));
                     Event.unRegister(Event.EventType.CAPTURE);
                     plugin.getLogger().severe(e.getMessage());
                     return true;

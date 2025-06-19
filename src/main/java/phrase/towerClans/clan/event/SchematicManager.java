@@ -95,4 +95,8 @@ public class SchematicManager {
         return file.exists();
     }
 
+    public static boolean schematicDamaged() {
+        return ClipboardFormats.findByFile(file) == null;
+    }
+
 }

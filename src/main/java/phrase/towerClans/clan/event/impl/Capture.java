@@ -21,6 +21,7 @@ import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.event.Event;
 import phrase.towerClans.clan.event.SchematicManager;
 import phrase.towerClans.clan.event.exception.EventAlreadyRun;
+import phrase.towerClans.clan.event.exception.SchematicDamaged;
 import phrase.towerClans.clan.event.exception.SchematicNotExist;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.event.LevelUpEvent;
@@ -49,66 +50,71 @@ public class Capture extends Event {
     }
 
     @Override
-    public void startEvent() throws EventAlreadyRun, SchematicNotExist {
+    public void startEvent() throws EventAlreadyRun, SchematicNotExist, SchematicDamaged {
 
         if (!Event.register(EventType.CAPTURE, this)) throw new EventAlreadyRun("Эвент уже запущен");
 
         if (!SchematicManager.existsSchematic()) throw new SchematicNotExist("Схематика не существует");
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
-        world = Bukkit.getWorld(configurationSection.getString("world"));
+        if(SchematicManager.schematicDamaged()) throw new SchematicDamaged("Схематика повреждена");
 
-        Random random = new Random();
-        int x = random.nextInt(1000);
-        int z = random.nextInt(1000);
+        new BukkitRunnable() {
 
-        int width = configurationSection.getInt("width") - 1;
-        int height = configurationSection.getInt("height") - 1;
-        int length = configurationSection.getInt("length") - 1;
+            @Override
+            public void run() {
 
-        int y = world.getHighestBlockYAt(x, z);
+                ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
+                world = Bukkit.getWorld(configurationSection.getString("world"));
 
-        RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world));
 
-        pos1 = new Location(world, x, y, z);
-        while(pos1.getBlock().getType() == Material.WATER || pos1.getBlock().getType() == Material.LAVA) pos1.setY(pos1.getY() + 2);
-        pos2 = new Location(world, pos1.getX() + width, pos1.getY() + height, pos1.getZ() + length);
+                int width = configurationSection.getInt("width") - 1;
+                int height = configurationSection.getInt("height") - 1;
+                int length = configurationSection.getInt("length") - 1;
 
-        boolean availableCoordinates = true;
-        while(availableCoordinates) {
-            if (!regionManager.getApplicableRegions(BlockVector3.at(pos1.getX(), pos1.getY(), pos1.getZ())).getRegions().isEmpty() && !regionManager.getApplicableRegions(BlockVector3.at(pos2.getX(), pos2.getY(), pos2.getZ())).getRegions().isEmpty()) {
+                RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world));
 
-                x = random.nextInt(1000);
-                z = random.nextInt(1000);
-                y = world.getHighestBlockYAt(x, z);
-                pos1 = new Location(world, x, y, z);
-                pos2 = new Location(world, x + width, y + height, z + length);
+                boolean availableCoordines;
+                Random random = new Random();
+                do {
+                    int x = random.nextInt(1000);
+                    int z = random.nextInt(1000);
+                    int y = world.getHighestBlockYAt(x, z);
 
-                continue;
+                    pos1 = new Location(world, x, y, z);
+                    while(pos1.getBlock().getType() == Material.WATER || pos1.getBlock().getType() == Material.LAVA) pos1.setY(pos1.getY() + 2);
+                    pos2 = new Location(world, pos1.getX() + width, pos1.getY() + height, pos1.getZ() + length);
+
+                    availableCoordines = regionManager.getApplicableRegions(BlockVector3.at(pos1.getX(), pos1.getY(), pos1.getZ())).getRegions().isEmpty() && regionManager.getApplicableRegions(BlockVector3.at(pos2.getX(), pos2.getY(), pos2.getZ())).getRegions().isEmpty();
+
+                } while (!availableCoordines);
+
+                minX = Math.min(pos1.getBlockX(), pos2.getBlockX());
+                maxX = Math.max(pos1.getBlockX(), pos2.getBlockX());
+                minY = Math.min(pos1.getBlockY(), pos2.getBlockY());
+                maxY = Math.max(pos1.getBlockY(), pos2.getBlockY());
+                minZ = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
+                maxZ = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
+
+                region = new ProtectedCuboidRegion(UUID.randomUUID().toString(), BlockVector3.at(minX, minY - 1, minZ), BlockVector3.at(maxX, maxY, maxZ));
+                region.setFlag(Flags.BUILD, StateFlag.State.DENY);
+                regionManager.addRegion(region);
+
+                new BukkitRunnable() {
+
+                    @Override
+                    public void run() {
+                        SchematicManager.setSchematic(world, minX, maxX, minY, maxY, minZ, maxZ);
+
+                        running = true;
+
+                        broadcastForPlayersAboutStartEvent();
+                        enableBossBarForPlayers(minX, minY, minZ);
+                        searchForPlayers();
+                    }
+                }.runTask(plugin);
+
             }
-
-            availableCoordinates = false;
-        }
-
-
-        minX = Math.min(pos1.getBlockX(), pos2.getBlockX());
-        maxX = Math.max(pos1.getBlockX(), pos2.getBlockX());
-        minY = Math.min(pos1.getBlockY(), pos2.getBlockY());
-        maxY = Math.max(pos1.getBlockY(), pos2.getBlockY());
-        minZ = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
-        maxZ = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
-
-        region = new ProtectedCuboidRegion(UUID.randomUUID().toString(), BlockVector3.at(minX, minY - 1, minZ), BlockVector3.at(maxX, maxY, maxZ));
-        region.setFlag(Flags.BUILD, StateFlag.State.DENY);
-        regionManager.addRegion(region);
-
-        SchematicManager.setSchematic(world, minX, maxX, minY, maxY, minZ, maxZ);
-
-        running = true;
-
-        broadcastForPlayersAboutStartEvent();
-        enableBossBarForPlayers(minX, minY, minZ);
-        searchForPlayers();
+        }.runTaskAsynchronously(plugin);
     }
 
     @Override
@@ -188,7 +194,7 @@ public class Capture extends Event {
 
 
             }
-        }.runTaskTimer(plugin, 0L,20L);
+        }.runTaskTimer(plugin, 0L,600L);
 
 
 
@@ -252,7 +258,7 @@ public class Capture extends Event {
             }
 
 
-        }.runTaskTimer(plugin, 0L, 1200L);
+        }.runTaskTimerAsynchronously(plugin, 0L, 1200L);
 
     }
 

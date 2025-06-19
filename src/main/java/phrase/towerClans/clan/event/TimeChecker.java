@@ -2,9 +2,9 @@ package phrase.towerClans.clan.event;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.checkerframework.checker.units.qual.C;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.event.exception.EventAlreadyRun;
+import phrase.towerClans.clan.event.exception.SchematicDamaged;
 import phrase.towerClans.clan.event.exception.SchematicNotExist;
 import phrase.towerClans.clan.event.impl.Capture;
 
@@ -45,7 +45,7 @@ public class TimeChecker {
                                 event.startEvent();
                             } catch (EventAlreadyRun e) {
                                 plugin.getLogger().severe(e.getMessage());
-                            } catch (SchematicNotExist e) {
+                            } catch (SchematicNotExist | SchematicDamaged e) {
                                 plugin.getLogger().severe(e.getMessage());
                                 Event.unRegister(Event.EventType.CAPTURE);
                             }
