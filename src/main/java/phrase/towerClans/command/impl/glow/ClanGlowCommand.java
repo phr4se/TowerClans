@@ -6,27 +6,25 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
-import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.config.Config;
+import phrase.towerClans.util.Utils;
 
 public class ClanGlowCommand implements CommandHandler {
 
     private final Plugin plugin;
-    private final ChatUtil chatUtil;
 
     public ClanGlowCommand(Plugin plugin) {
         this.plugin = plugin;
-        chatUtil = new ChatUtil(plugin);
     }
 
     @Override
     public boolean handler(Player player, String[] args) {
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.glow");
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 
 
         if(modifiedPlayer.getClan() == null) {
-            chatUtil.sendMessage(player, configurationSection.getString("you're_not_in_the_clan"));
+            Utils.sendMessage(player, Config.getCommandMessages().notInClan());
             return true;
         }
 

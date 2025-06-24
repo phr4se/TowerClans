@@ -6,34 +6,20 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
-import phrase.towerClans.util.ChatUtil;
-import phrase.towerClans.util.colorizer.ColorizerProvider;
+import phrase.towerClans.config.Config;
+import phrase.towerClans.util.Utils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ClanInfoCommand implements CommandHandler {
 
-    private final Plugin plugin;
-    private final ChatUtil chatUtil;
-    private final static ColorizerProvider colorizerProvider;
-
-    static  {
-        colorizerProvider = Plugin.getColorizerProvider();
-    }
-
-    public ClanInfoCommand(Plugin plugin) {
-        this.plugin = plugin;
-        chatUtil = new ChatUtil(plugin);
-    }
 
     @Override
     public boolean handler(Player player, String[] args) {
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.info");
 
         if(args.length < 2) {
-            chatUtil.sendMessage(player, configurationSection.getString("usage_command"));
+            Utils.sendMessage(player, Config.getCommandMessages().incorrectArguments());
             return false;
         }
 
@@ -41,11 +27,11 @@ public class ClanInfoCommand implements CommandHandler {
 
         ClanImpl clan = ClanImpl.getClans().get(name);
         if(clan == null) {
-            chatUtil.sendMessage(player, configurationSection.getString("there_is_no_such_clan"));
+            Utils.sendMessage(player, Config.getCommandMessages().clanNoExists());
             return true;
         }
 
-        List<String> list = configurationSection.getStringList("information_about_the_clan");
+        List<String> list = Config.getCommandMessages().informationClan();
 
         List<String> replacedList = list.stream().map(string -> {
             String replacedString = string
@@ -56,11 +42,11 @@ public class ClanInfoCommand implements CommandHandler {
                     .replace("%balance%", String.valueOf(clan.getBalance()))
                     .replace("%kills%", String.valueOf(Stats.getKillsMembers(clan.getMembers())))
                     .replace("%deaths%", String.valueOf(Stats.getDeathsMembers((clan.getMembers()))));
-            return colorizerProvider.colorize(replacedString);
-        }).collect(Collectors.toList());
+            return Utils.COLORIZER.colorize(replacedString);
+        }).toList();
 
         for(String string : replacedList) {
-            chatUtil.sendMessage(player, string);
+            Utils.sendMessage(player, string);
         }
 
         return true;

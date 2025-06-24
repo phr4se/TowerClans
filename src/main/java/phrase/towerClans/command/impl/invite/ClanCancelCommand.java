@@ -5,34 +5,25 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.command.CommandHandler;
-import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.config.Config;
+import phrase.towerClans.util.Utils;
 
 import java.util.UUID;
 
 public class ClanCancelCommand implements CommandHandler {
 
-    private final Plugin plugin;
-    private final ChatUtil chatUtil;
-
-    public ClanCancelCommand(Plugin plugin) {
-        this.plugin = plugin;
-        chatUtil = new ChatUtil(plugin);
-    }
-
     @Override
     public boolean handler(Player player, String[] args) {
-
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.invite.cancel");
 
         UUID senderPlayer = PlayerCalls.removePlayer(player.getUniqueId());
 
         if (senderPlayer == null) {
-            chatUtil.sendMessage(player, configurationSection.getString("has_anyone_sent_you_a_request_to_join_clan"));
+            Utils.sendMessage(player, Config.getCommandMessages().notInvited());
             return true;
         }
 
-        chatUtil.sendMessage(player, configurationSection.getString("you_rejected_the_request_to_join_the_clan"));
-        chatUtil.sendMessage(Bukkit.getPlayer(senderPlayer), configurationSection.getString("the_player_rejected_the_request_to_join_the_clan"));
+        Utils.sendMessage(player, Config.getCommandMessages().declineInvited());
+        Utils.sendMessage(Bukkit.getPlayer(senderPlayer), Config.getCommandMessages().playerDeclineInvited());
 
         return true;
     }

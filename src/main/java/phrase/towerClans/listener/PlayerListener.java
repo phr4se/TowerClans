@@ -28,26 +28,17 @@ import phrase.towerClans.gui.MenuFactory;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuType;
 import phrase.towerClans.gui.impl.MenuClanMembersProvider;
-import phrase.towerClans.util.ChatUtil;
-import phrase.towerClans.util.colorizer.ColorizerProvider;
 
 import java.util.*;
 
 public class PlayerListener implements Listener {
 
     private final Plugin plugin;
-    private final ChatUtil chatUtil;
     private final PluginManager pluginManager;
-    private final static ColorizerProvider colorizerProvider;
-
-    static {
-        colorizerProvider = Plugin.getColorizerProvider();
-    }
 
     public PlayerListener(Plugin plugin) {
         this.plugin = plugin;
         pluginManager = plugin.getServer().getPluginManager();
-        chatUtil = new ChatUtil(plugin);
     }
 
     @EventHandler
@@ -199,7 +190,6 @@ public class PlayerListener implements Listener {
 
         MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
         if (menuClanMembersProvider.isRegistered(player.getUniqueId())) menuClanMembersProvider.unRegister(player.getUniqueId());
-
     }
 
     @EventHandler

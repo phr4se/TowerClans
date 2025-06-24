@@ -12,6 +12,7 @@ import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.gui.ItemBuilder;
 import phrase.towerClans.gui.MenuService;
+import phrase.towerClans.util.Utils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,20 +26,20 @@ class MenuClanLevelService implements MenuService {
         int size = configurationSection.getInt("size");
         String titleMenu = configurationSection.getString("title");
 
-        Inventory menu = Bukkit.createInventory(null, size, colorizerProvider.colorize(titleMenu));
+        Inventory menu = Bukkit.createInventory(null, size, Utils.COLORIZER.colorize(titleMenu));
         int slot = configurationSection.getInt("slot");
 
         for (int level = 1; level <= Level.getCountLevels(); level++) {
             int finalLevel = level;
             if (clan.getLevel() < level) {
                 Material material = Material.matchMaterial(configurationSection.getString("not_received.material"));
-                String titleItem = colorizerProvider.colorize(configurationSection.getString("not_received.title").replace("%level%", String.valueOf(level)));
+                String titleItem = Utils.COLORIZER.colorize(configurationSection.getString("not_received.title").replace("%level%", String.valueOf(level)));
                 List<String> lore = configurationSection.getStringList("not_received.lore").stream().map(string -> {
                     String replacedString = string
                             .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(finalLevel)))
                             .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(finalLevel)))
                             .replace("%available%", String.valueOf(Level.getAvailableSlots(finalLevel)));
-                    return colorizerProvider.colorize(replacedString);
+                    return Utils.COLORIZER.colorize(replacedString);
                 }).collect(Collectors.toList());
 
                 ItemStack item = new ItemBuilder(material)
@@ -52,13 +53,13 @@ class MenuClanLevelService implements MenuService {
             }
 
             Material material = Material.matchMaterial(configurationSection.getString("received.material"));
-            String titleItem = (colorizerProvider.colorize(configurationSection.getString("received.title").replace("%level%", String.valueOf(level))));
+            String titleItem = (Utils.COLORIZER.colorize(configurationSection.getString("received.title").replace("%level%", String.valueOf(level))));
             List<String> lore = configurationSection.getStringList("received.lore").stream().map(string -> {
                 String replacedString = string
                         .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(finalLevel)))
                         .replace("%maximum_members%", String.valueOf(Level.getLevelMaximumMembers(finalLevel)))
                         .replace("%available%", String.valueOf(Level.getAvailableSlots(finalLevel)));
-                return colorizerProvider.colorize(replacedString);
+                return Utils.COLORIZER.colorize(replacedString);
             }).collect(Collectors.toList());
 
             ItemStack item = new ItemBuilder(material)
@@ -77,8 +78,8 @@ class MenuClanLevelService implements MenuService {
 
             Material material = Material.matchMaterial(configurationSection.getString(key + ".material"));
             slot = configurationSection.getInt(key + ".slot");
-            String titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
-            List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(colorizerProvider::colorize).toList();
+            String titleItem = Utils.COLORIZER.colorize(configurationSection.getString(key + ".title"));
+            List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(Utils.COLORIZER::colorize).toList();
 
             if(configurationSection.contains(key + ".actions_when_clicking")) {
 

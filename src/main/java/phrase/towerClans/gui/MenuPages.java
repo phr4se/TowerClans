@@ -7,7 +7,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import phrase.towerClans.Plugin;
-import phrase.towerClans.util.colorizer.ColorizerProvider;
+import phrase.towerClans.util.Utils;
 
 import java.util.List;
 
@@ -16,11 +16,6 @@ public class MenuPages {
     private static int itemPerPage;
     private static ItemStack prev;
     private static ItemStack next;
-    private final static ColorizerProvider colorizerProvider;
-
-    static {
-        colorizerProvider = Plugin.getColorizerProvider();
-    }
 
     private final List<ItemStack> contents;
     private int currentPage;
@@ -76,7 +71,7 @@ public class MenuPages {
         Material materialPrev = Material.matchMaterial(configurationSection.getString("material"));
         String titlePrev = configurationSection.getString("title");
         prev = new ItemBuilder(materialPrev)
-                .setName(colorizerProvider.colorize(titlePrev))
+                .setName(Utils.COLORIZER.colorize(titlePrev))
                 .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "MENU_CLAN_PREVIOUS")
                 .build();
         
@@ -84,7 +79,7 @@ public class MenuPages {
         Material materialNext = Material.matchMaterial(configurationSection.getString("material"));
         String titleNext = configurationSection.getString("title");
         next = new ItemBuilder(materialNext)
-                .setName(colorizerProvider.colorize(titleNext))
+                .setName(Utils.COLORIZER.colorize(titleNext))
                 .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "MENU_CLAN_NEXT")
                 .build();
     }

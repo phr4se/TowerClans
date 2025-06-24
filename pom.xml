@@ -6,7 +6,7 @@
 
     <groupId>phrase</groupId>
     <artifactId>TowerClans</artifactId>
-    <version>1.0b</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <name>TowerClans</name>
@@ -28,13 +28,23 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>schematics/event.schem</exclude>
-                </excludes>
                 <filtering>true</filtering>
             </resource>
         </resources>
@@ -90,6 +100,7 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>5.1.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
@@ -102,6 +113,17 @@
             <artifactId>worldguard-bukkit</artifactId>
             <version>7.0.7</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.34.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.1.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

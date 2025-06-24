@@ -1,33 +1,24 @@
 package phrase.towerClans.command.impl.chat;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
-import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.config.Config;
+import phrase.towerClans.util.Utils;
 
 import java.util.Map;
 
 public class ClanChatCommand implements CommandHandler {
 
-    private final Plugin plugin;
-    private final ChatUtil chatUtil;
-
-    public ClanChatCommand(Plugin plugin) {
-        this.plugin = plugin;
-        chatUtil = new ChatUtil(plugin);
-    }
 
     @Override
     public boolean handler(Player player, String[] args) {
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.chat");
-
         if (modifiedPlayer.getClan() == null) {
-            chatUtil.sendMessage(player, configurationSection.getString("you're_not_in_the_clan"));
+            Utils.sendMessage(player, Config.getCommandMessages().notInClan());
             return true;
         }
 
@@ -38,9 +29,9 @@ public class ClanChatCommand implements CommandHandler {
             stringBuilder.append(args[i]).append(" ");
         }
 
-        String string = configurationSection.getString("message_format").replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", clan.getMembers().get(modifiedPlayer)).replace("%message%", stringBuilder.toString());
+        String string = Config.getCommandMessages().messageFormat().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", clan.getMembers().get(modifiedPlayer)).replace("%message%", stringBuilder.toString());
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            chatUtil.sendMessage(entry.getKey().getPlayer(), string);
+            Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
         return true;

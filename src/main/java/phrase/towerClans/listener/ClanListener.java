@@ -12,30 +12,23 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.config.Config;
 import phrase.towerClans.event.*;
 import phrase.towerClans.glow.Glow;
 import phrase.towerClans.gui.MenuFactory;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuType;
 import phrase.towerClans.gui.impl.MenuClanMembersProvider;
-import phrase.towerClans.util.ChatUtil;
-import phrase.towerClans.util.colorizer.ColorizerProvider;
+import phrase.towerClans.util.Utils;
 
 import java.util.*;
 
 public class ClanListener implements Listener {
 
     private final Plugin plugin;
-    private final ChatUtil chatUtil;
-    private final static ColorizerProvider colorizerProvider;
-
-    static {
-        colorizerProvider = Plugin.getColorizerProvider();
-    }
 
     public ClanListener(Plugin plugin) {
         this.plugin = plugin;
-        chatUtil = new ChatUtil(plugin);
     }
 
     @EventHandler
@@ -169,11 +162,10 @@ public class ClanListener implements Listener {
     public void onLevelUp(LevelUpEvent event) {
 
         ClanImpl clan = (ClanImpl) event.getClan();
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message");
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = configurationSection.getString("notification_of_a_level_increase");
-            chatUtil.sendMessage(entry.getKey().getPlayer(), string);
+            String string = Config.getMessages().clanLevelUp();
+            Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
         int nextLevel = clan.getLevel() + 1;

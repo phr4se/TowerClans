@@ -13,6 +13,8 @@ import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.gui.ItemBuilder;
 import phrase.towerClans.gui.MenuService;
+import phrase.towerClans.util.Utils;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +27,7 @@ class MenuClanMainService implements MenuService {
 
         int size = configurationSection.getInt("size");
         String titleMenu = configurationSection.getString("title").replace("%clan_name%", clan.getName());
-        Inventory menu = Bukkit.createInventory(null, size, colorizerProvider.colorize(titleMenu));
+        Inventory menu = Bukkit.createInventory(null, size, Utils.COLORIZER.colorize(titleMenu));
 
         configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_main.items");
 
@@ -33,7 +35,7 @@ class MenuClanMainService implements MenuService {
 
             Material material = Material.matchMaterial(configurationSection.getString(key + ".material"));
             int slot = configurationSection.getInt(key + ".slot");
-            String titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
+            String titleItem = Utils.COLORIZER.colorize(configurationSection.getString(key + ".title"));
             List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(
                     string -> {
                         String replacedString = string
@@ -47,7 +49,7 @@ class MenuClanMainService implements MenuService {
                                 .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(clan.getLevel())))
                                 .replace("%kills%", String.valueOf(Stats.getKillsMembers(clan.getMembers())))
                                 .replace("%deaths%", String.valueOf(Stats.getDeathsMembers((clan.getMembers()))));
-                        return colorizerProvider.colorize(replacedString);
+                        return Utils.COLORIZER.colorize(replacedString);
                     }
             ).collect(Collectors.toList());
 

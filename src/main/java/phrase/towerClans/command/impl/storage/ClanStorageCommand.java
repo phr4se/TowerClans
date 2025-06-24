@@ -6,35 +6,27 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
+import phrase.towerClans.config.Config;
 import phrase.towerClans.gui.MenuType;
-import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.util.Utils;
 
 
 public class ClanStorageCommand implements CommandHandler {
 
-    private Plugin plugin;
-    private ChatUtil chatUtil;
-
-    public ClanStorageCommand(Plugin plugin) {
-        this.plugin = plugin;
-        chatUtil = new ChatUtil(plugin);
-    }
-
     @Override
     public boolean handler(Player player, String[] args) {
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.storage");
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
         if(clan == null) {
-            chatUtil.sendMessage(player, configurationSection.getString("you're_not_in_the_clan"));
+            Utils.sendMessage(player, Config.getCommandMessages().notInClan());
             return true;
         }
 
         clan.showMenu(modifiedPlayer, MenuType.MENU_CLAN_STORAGE);
-        chatUtil.sendMessage(player, configurationSection.getString("you_have_opened_the_clan's_storage"));
+        Utils.sendMessage(player, Config.getCommandMessages().openStorage());
         clan.getStorage().getPlayers().add(player.getUniqueId());
         return true;
     }

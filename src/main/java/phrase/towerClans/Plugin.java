@@ -2,15 +2,12 @@ package phrase.towerClans;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -24,34 +21,26 @@ import phrase.towerClans.command.CommandLogger;
 import phrase.towerClans.command.CommandMapper;
 import phrase.towerClans.command.CommandResult;
 import phrase.towerClans.config.Config;
-import phrase.towerClans.config.impl.ConfigClans;
-import phrase.towerClans.config.impl.ConfigPlayers;
+import phrase.towerClans.database.DatabaseMananger;
 import phrase.towerClans.glow.GlowPacketListener;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.listener.ClanListener;
 import phrase.towerClans.listener.PlayerListener;
 import phrase.towerClans.util.Placeholder;
-import phrase.towerClans.util.ChatUtil;
 import phrase.towerClans.util.UpdateChecker;
-import phrase.towerClans.util.colorizer.ColorizerFactory;
-import phrase.towerClans.util.colorizer.ColorizerProvider;
-import phrase.towerClans.util.colorizer.ColorizerType;
+import phrase.towerClans.util.Utils;
 
 import java.io.File;
-import java.io.InputStream;
-import java.util.List;
+import java.sql.SQLException;
 import java.util.logging.Logger;
 
 
 public final class Plugin extends JavaPlugin implements CommandExecutor {
 
-    private Config configClans;
-    private Config configPlayers;
-    public Economy economy;
-    private static CommandMapper commandMapper;
-    private static ChatUtil chatUtil;
-    private static ColorizerProvider colorizerProvider;
-    private static String path;
+    private CommandMapper commandMapper;
+    private Economy economy;
+    private String path;
+    private DatabaseMananger databaseMananger;
 
     @Override
     public void onEnable() {
@@ -63,20 +52,20 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         if(!UpdateChecker.check().equals(getDescription().getVersion())) logger.severe("Вы используете устаревшую версию плагина");
 
-        colorizerProvider = ColorizerFactory.getProvider(ColorizerType.HEX);
-
         if(!pluginManager.isPluginEnabled("WorldEdit") && !pluginManager.isPluginEnabled("WorldGuard")) {
             logger.severe("WorldEdit и WorldGuard не найден. Плагин будет выключен");
             pluginManager.disablePlugin(this);
             return;
         }
 
-        setupSchematicPath();
+        Config.setupMessages(YamlConfiguration.loadConfiguration(getMessagesFile()));
+        Config.setupSettings(getConfig());
 
-        chatUtil = new ChatUtil(this);
+        databaseMananger = new DatabaseMananger(Config.getSettings().databaseType(), this);
+
+        initializeSchematicPath();
         commandMapper = new CommandMapper(this);
-        configClans = new ConfigClans(this);
-        configPlayers = new ConfigPlayers(this);
+
         Level.initialize(this);
         Storage.initialize(this);
         Rank.initialize(this);
@@ -89,8 +78,8 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
             return;
         }
 
-        configClans.load();
-        configPlayers.load();
+        databaseMananger.getDatabase().loadClans();
+        databaseMananger.getDatabase().loadPlayers();
 
         getCommand("clan").setExecutor(this);
 
@@ -108,7 +97,6 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         TimeChecker timeChecker = new TimeChecker(this);
         timeChecker.start();
-
     }
 
     private boolean setupEconomy() {
@@ -126,23 +114,37 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         return getServer().getPluginManager().getPlugin("ProtocolLib") != null;
     }
 
-    private void setupSchematicPath() {
+    private void initializeSchematicPath() {
         File schematicFolder = new File(getDataFolder() + "/schematics");
         if(!schematicFolder.exists()) schematicFolder.mkdirs();
         path = schematicFolder.getPath() + "/" + getConfig().getString("settings.event.capture.schematic_name") + ".schem";
     }
 
+    private File getMessagesFile() {
+        File messagesFile = new File(getDataFolder(), "messages.yml");
+
+        if (!messagesFile.exists()) {
+            saveResource("messages.yml", false);
+        }
+
+        return messagesFile;
+    }
+
     @Override
     public void onDisable() {
-        configClans.save();
-        configPlayers.save();
+        databaseMananger.getDatabase().saveClans();
+        databaseMananger.getDatabase().savePlayers();
+        try {
+            databaseMananger.shutdown();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        ConfigurationSection configurationSection = this.getConfig().getConfigurationSection("message");
-        if(!(sender instanceof Player)) {
-            chatUtil.sendMessage(sender, configurationSection.getString("you_are_not_a_player"));
+        if (!(sender instanceof Player)) {
+            Utils.sendMessage(sender, Config.getMessages().notPlayer());
             return true;
         }
         Player player = (Player) sender;
@@ -151,13 +153,11 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         if (args.length < 1) {
 
             if (modifiedPlayer.getClan() == null) {
-                List<String> list = configurationSection.getStringList("a_player_without_a_clan");
-                list.forEach(string -> chatUtil.sendMessage(player, string));
+                Config.getMessages().notInClan().forEach(string -> Utils.sendMessage(player, string));
                 return true;
             }
 
-            List<String> list = configurationSection.getStringList("a_player_with_a_clan");
-            list.forEach(string -> chatUtil.sendMessage(player, string));
+            Config.getMessages().inClan().forEach(string -> Utils.sendMessage(player, string));
 
             return true;
 
@@ -167,7 +167,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         if (!(commandResult.getResultStatus().equals(CommandResult.ResultStatus.SUCCESS))) {
             if (commandResult.getMessage() != null) {
-                chatUtil.sendMessage(sender, commandResult.getMessage());
+                Utils.sendMessage(sender, commandResult.getMessage());
             }
             return true;
         }
@@ -176,12 +176,15 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
     }
 
-    public static ColorizerProvider getColorizerProvider() {
-        return colorizerProvider;
-    }
-
-    public static String getPath() {
+    public String getPath() {
         return path;
     }
 
+    public Economy getEconomy() {
+        return economy;
+    }
+
+    public DatabaseMananger getDatabaseMananger() {
+        return databaseMananger;
+    }
 }

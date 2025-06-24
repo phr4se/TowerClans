@@ -9,17 +9,16 @@ import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
+import phrase.towerClans.config.Config;
 import phrase.towerClans.event.LeaveEvent;
-import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.util.Utils;
 
 public class ClanKickCommand implements CommandHandler {
 
     private final Plugin plugin;
-    private final ChatUtil chatUtil;
 
     public ClanKickCommand(Plugin plugin) {
         this.plugin = plugin;
-        chatUtil = new ChatUtil(plugin);
     }
 
     @Override
@@ -29,19 +28,19 @@ public class ClanKickCommand implements CommandHandler {
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.kick");
 
         if (args.length < 2) {
-            chatUtil.sendMessage(player, configurationSection.getString("usage_command"));
+            Utils.sendMessage(player, Config.getCommandMessages().incorrectArguments());
             return false;
         }
 
         if (modifiedPlayer.getClan() == null) {
-            chatUtil.sendMessage(player, configurationSection.getString("you're_not_in_the_clan"));
+            Utils.sendMessage(player, Config.getCommandMessages().notInClan());
             return true;
         }
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
         if (!clan.getMembers().get(modifiedPlayer).equals(Rank.RankType.LEADER.getName()) && !clan.getMembers().get(modifiedPlayer).equals(Rank.RankType.DEPUTY.getName())) {
-            chatUtil.sendMessage(player, configurationSection.getString("you_don't_have_permission"));
+            Utils.sendMessage(player, Config.getCommandMessages().noPermission());
             return true;
         }
 
@@ -50,32 +49,32 @@ public class ClanKickCommand implements CommandHandler {
         Player targetPlayer = Bukkit.getPlayer(name);
 
         if (targetPlayer == null) {
-            chatUtil.sendMessage(player, configurationSection.getString("the_player_was_not_found"));
+            Utils.sendMessage(player, Config.getCommandMessages().playerNotFound());
             return true;
         }
 
         ModifiedPlayer targetModifiedPlayer = ModifiedPlayer.get(targetPlayer);
 
         if(player.getUniqueId().equals(targetPlayer.getUniqueId())) {
-            chatUtil.sendMessage(player, configurationSection.getString("you_can't_kick_yourself"));
+            Utils.sendMessage(player, Config.getCommandMessages().notKickYourself());
             return true;
         }
 
         if (clan.getMembers().get(targetModifiedPlayer).equals(Rank.RankType.LEADER.getName())) {
-            chatUtil.sendMessage(player, configurationSection.getString("you_cannot_leave_the_clan"));
+            Utils.sendMessage(player, Config.getCommandMessages().notLeaveWithClan());
             return true;
         }
 
         ClanResponse clanResponse = clan.kick(targetModifiedPlayer);
 
         if (clanResponse.isSuccess()) {
-            chatUtil.sendMessage(player, configurationSection.getString("you_kicked_a_player_from_the_clan"));
-            chatUtil.sendMessage(targetPlayer, configurationSection.getString("you_were_kicked_out_of_the_clan"));
+            Utils.sendMessage(player, Config.getCommandMessages().kickPlayerWithClan());
+            Utils.sendMessage(targetPlayer, Config.getCommandMessages().kickedWithClan());
             plugin.getServer().getPluginManager().callEvent(new LeaveEvent(clan, targetModifiedPlayer));
             return true;
         } else {
             if(clanResponse.getMessage() != null) {
-                chatUtil.sendMessage(player, clanResponse.getMessage());
+                Utils.sendMessage(player, clanResponse.getMessage());
             }
 
         }

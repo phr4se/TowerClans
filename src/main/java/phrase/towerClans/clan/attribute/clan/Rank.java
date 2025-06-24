@@ -3,14 +3,22 @@ package phrase.towerClans.clan.attribute.clan;
 import org.bukkit.configuration.ConfigurationSection;
 import phrase.towerClans.Plugin;
 
+import java.util.Arrays;
+
 public class Rank {
 
     public enum RankType {
-        LEADER,
-        DEPUTY,
-        MEMBER;
+        UNDEFINED(0),
+        LEADER(1),
+        DEPUTY(2),
+        MEMBER(3);
 
         private String name;
+        private final int id;
+
+        RankType(int id) {
+            this.id = id;
+        }
 
         public void setName(String name) {
             this.name = name;
@@ -18,6 +26,14 @@ public class Rank {
 
         public String getName() {
             return name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static RankType getRank(int id) {
+            return Arrays.stream(RankType.values()).filter(rank -> rank.getId() == id).findFirst().orElseGet(() -> RankType.UNDEFINED);
         }
     }
 

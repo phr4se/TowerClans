@@ -8,74 +8,66 @@ import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
 import phrase.towerClans.command.impl.base.Base;
-import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.config.Config;
+import phrase.towerClans.util.Utils;
 
 import java.util.List;
 
 public class ClanCreateCommand implements CommandHandler {
 
     private final Plugin plugin;
-    private final ChatUtil chatUtil;
 
     public ClanCreateCommand(Plugin plugin) {
         this.plugin = plugin;
-        chatUtil = new ChatUtil(plugin);
     }
 
     @Override
     public boolean handler(Player player, String[] args) {
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.create");
-
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 
         if (args.length < 2) {
-            chatUtil.sendMessage(player, configurationSection.getString("usage_command"));
+            Utils.sendMessage(player, Config.getCommandMessages().incorrectArguments());
             return false;
         }
 
         if (modifiedPlayer.getClan() != null) {
-            chatUtil.sendMessage(player, configurationSection.getString("you_are_in_a_clan"));
+            Utils.sendMessage(player, Config.getCommandMessages().inClan());
             return true;
         }
 
-        configurationSection = plugin.getConfig().getConfigurationSection("settings.clan_name");
-        int min = configurationSection.getInt("min");
-        int max = configurationSection.getInt("max");
+        int min = Config.getSettings().minSizeClanName();
+        int max = Config.getSettings().maxSizeClanName();
         String name = args[1];
         if(!(name.length() < max && name.length() > min)) {
-            chatUtil.sendMessage(player, (configurationSection.getString("message_about_exceeding_the_limits")).replace("%min%", String.valueOf(min)).replace("%max%", String.valueOf(max)));
+            Utils.sendMessage(player, Config.getMessages().clanNameLimit().replace("%min%", String.valueOf(min)).replace("%max%", String.valueOf(max)));
             return true;
         }
 
-        List<String> badWords = configurationSection.getStringList("bad_words");
+        List<String> badWords = Config.getSettings().badWords();
 
         for(String badWord : badWords) {
             if(!(badWord.equals(name))) continue;
 
-            chatUtil.sendMessage(player, configurationSection.getString("the_clan_name_is_on_the_list_of_bad_words"));
+            Utils.sendMessage(player, Config.getMessages().clanNameBadWord());
             return true;
         }
 
-
-        configurationSection = plugin.getConfig().getConfigurationSection("settings");
-        int amount = configurationSection.getInt("the_cost_of_creating_a_clan");
-
-        configurationSection = plugin.getConfig().getConfigurationSection("message.command.create");
+        int amount = Config.getSettings().costCreatingClan();
 
         if (ClanImpl.getClans().containsKey(name)) {
-            chatUtil.sendMessage(player, configurationSection.getString("a_clan_with_that_name_already_exists"));
+            Utils.sendMessage(player, Config.getCommandMessages().clanNameExists());
             return true;
         }
 
-        if (plugin.economy.getBalance(player) < amount) {
-            String string = configurationSection.getString("you_don't_have_enough").replace("%amount%", String.valueOf(amount - (int)plugin.economy.getBalance(player)));
-            chatUtil.sendMessage(player, string);
+        if (plugin.getEconomy().getBalance(player) < amount) {
+            String string = Config.getCommandMessages().notEnough().replace("%amount%", String.valueOf(amount - (int)plugin.getEconomy().getBalance(player)));
+            Utils.sendMessage(player, string);
             return true;
         }
 
 
-        plugin.economy.withdrawPlayer(player, amount);
+        plugin.getEconomy().withdrawPlayer(player, amount);
 
         ClanImpl clan = new ClanImpl(name, plugin);
         modifiedPlayer.setClan(clan);
@@ -83,7 +75,7 @@ public class ClanCreateCommand implements CommandHandler {
         ClanImpl.getClans().put(args[1], clan);
         Base.setBase(clan, null);
 
-        chatUtil.sendMessage(player, configurationSection.getString("you_have_created_a_clan"));
+        Utils.sendMessage(player, Config.getCommandMessages().creatingClan());
 
         return true;
     }

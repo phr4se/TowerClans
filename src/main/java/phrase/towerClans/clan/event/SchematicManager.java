@@ -25,13 +25,13 @@ public class SchematicManager {
 
     private static final Map<Location, Material> BLOCKS = new HashMap<>();
 
-    private static final File file;
+    private File file;
 
-    static {
-        file = new File(Plugin.getPath());
+    public SchematicManager(Plugin plugin) {
+        file = new File(plugin.getPath());
     }
 
-    public static void setSchematic(World world, int minX, int maxX, int minY, int maxY, int minZ, int maxZ){
+    public void setSchematic(World world, int minX, int maxX, int minY, int maxY, int minZ, int maxZ){
 
         saveBlocks(world, minX, maxX, minY, maxY, minZ, maxZ);
 
@@ -49,7 +49,7 @@ public class SchematicManager {
 
     }
 
-    private static void saveBlocks(World world, int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
+    private void saveBlocks(World world, int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
         BLOCKS.clear();
 
         for(int x = minX; x <= maxX; x++) {
@@ -72,7 +72,7 @@ public class SchematicManager {
 
     }
 
-    public static void regenerationBlocks(World world, int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
+    public void regenerationBlocks(World world, int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
 
         for(int x = minX; x <= maxX; x++) {
 
@@ -91,11 +91,11 @@ public class SchematicManager {
 
     }
 
-    public static boolean existsSchematic() {
+    public boolean existsSchematic() {
         return file.exists();
     }
 
-    public static boolean schematicDamaged() {
+    public boolean schematicDamaged() {
         return ClipboardFormats.findByFile(file) == null;
     }
 

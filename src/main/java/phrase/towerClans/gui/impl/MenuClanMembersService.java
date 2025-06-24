@@ -14,6 +14,7 @@ import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.gui.ItemBuilder;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuService;
+import phrase.towerClans.util.Utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ class MenuClanMembersService implements MenuService {
         int size = configurationSection.getInt("size");
         String titleMenu = configurationSection.getString("title_menu");
 
-        Inventory menu = Bukkit.createInventory(null, size, colorizerProvider.colorize(titleMenu));
+        Inventory menu = Bukkit.createInventory(null, size, Utils.COLORIZER.colorize(titleMenu));
 
         configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members.items");
 
@@ -37,8 +38,8 @@ class MenuClanMembersService implements MenuService {
 
             Material material = Material.matchMaterial(configurationSection.getString(key + ".material"));
             int slot = configurationSection.getInt(key + ".slot");
-            String titleItem = colorizerProvider.colorize(configurationSection.getString(key + ".title"));
-            List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(colorizerProvider::colorize).toList();
+            String titleItem = Utils.COLORIZER.colorize(configurationSection.getString(key + ".title"));
+            List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(Utils.COLORIZER::colorize).toList();
 
             if(configurationSection.contains(key + ".actions_when_clicking")) {
 
@@ -83,7 +84,7 @@ class MenuClanMembersService implements MenuService {
 
         for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             ModifiedPlayer modifiedPlayer = entry.getKey();
-            String currentTitle = colorizerProvider.colorize(titleItem.replace("%player_name%", modifiedPlayer.getPlayer().getName()));
+            String currentTitle = Utils.COLORIZER.colorize(titleItem.replace("%player_name%", modifiedPlayer.getPlayer().getName()));
             Stats playerStats = Stats.PLAYERS.get(modifiedPlayer.getPlayerUUID());
             List<String> currentLore = lore.stream().map(
                     string -> {
@@ -91,7 +92,7 @@ class MenuClanMembersService implements MenuService {
                                 .replace("%player_rank%", entry.getValue())
                                 .replace("%player_kills%", String.valueOf(playerStats.getKills()))
                                 .replace("%player_deaths%", String.valueOf(playerStats.getDeaths()));
-                        return colorizerProvider.colorize(replacedString);
+                        return Utils.COLORIZER.colorize(replacedString);
                     }
             ).collect(Collectors.toList());
 

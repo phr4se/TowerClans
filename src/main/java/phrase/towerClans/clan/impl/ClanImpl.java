@@ -8,13 +8,14 @@ import phrase.towerClans.clan.*;
 import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
+import phrase.towerClans.config.Config;
 import phrase.towerClans.glow.Glow;
 import phrase.towerClans.gui.MenuFactory;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuProvider;
 import phrase.towerClans.gui.MenuType;
 import phrase.towerClans.gui.impl.MenuClanMembersProvider;
-import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.util.Utils;
 
 import java.util.*;
 
@@ -22,27 +23,23 @@ public class ClanImpl extends AbstractClan {
 
     private static final Map<String, ClanImpl> CLANS = new HashMap<>();
     private final Plugin plugin;
-    private final ChatUtil chatUtil;
 
     public ClanImpl(String name, Plugin plugin) {
         super(name);
         this.plugin = plugin;
-        chatUtil = new ChatUtil(plugin);
     }
 
     @Override
     public ClanResponse invite(ModifiedPlayer modifiedPlayer) {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.invite.accept");
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if (clan.getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("you_are_in_a_clan"), ClanResponse.ResponseType.FAILURE);
+        if (clan.getMembers().containsKey(modifiedPlayer)) return new ClanResponse(Config.getCommandMessages().inClan(), ClanResponse.ResponseType.FAILURE);
         int maximumMembers = Level.getLevelMaximumMembers(clan.getLevel());
-        if ((clan.getMembers().size() + 1) > maximumMembers) return new ClanResponse(configurationSection.getString("there_is_no_place_in_the_clan"), ClanResponse.ResponseType.FAILURE);
-        configurationSection = plugin.getConfig().getConfigurationSection("message.command.invite");
+        if ((clan.getMembers().size() + 1) > maximumMembers) return new ClanResponse(Config.getCommandMessages().noPlaceInClan(), ClanResponse.ResponseType.FAILURE);
         clan.getMembers().put(modifiedPlayer, Rank.RankType.MEMBER.getName());
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = configurationSection.getString("notification_of_the_invitation").replace("%player%", modifiedPlayer.getPlayer().getName());
-            chatUtil.sendMessage(entry.getKey().getPlayer(), string);
+            String string = Config.getCommandMessages().notificationInvited().replace("%player%", modifiedPlayer.getPlayer().getName());
+            Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
@@ -50,14 +47,13 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse kick(ModifiedPlayer modifiedPlayer) {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.kick");
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if (!clan.getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("the_player_is_not_in_the_clan"), ClanResponse.ResponseType.FAILURE);
+        if (!clan.getMembers().containsKey(modifiedPlayer)) return new ClanResponse(Config.getCommandMessages().playerNotInYourselfClan(), ClanResponse.ResponseType.FAILURE);
         clan.getMembers().remove(modifiedPlayer);
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = configurationSection.getString("notification_of_exclusion").replace("%player%", modifiedPlayer.getPlayer().getName());
-            chatUtil.sendMessage(entry.getKey().getPlayer(), string);
+            String string = Config.getCommandMessages().notificationWithdraw().replace("%player%", modifiedPlayer.getPlayer().getName());
+            Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
@@ -65,17 +61,16 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse invest(ModifiedPlayer modifiedPlayer, int amount) {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.invest");
-        if (plugin.economy.getBalance(modifiedPlayer.getPlayer()) < amount) return new ClanResponse(configurationSection.getString("you_don't_have_enough"), ClanResponse.ResponseType.FAILURE);
+        if (plugin.getEconomy().getBalance(modifiedPlayer.getPlayer()) < amount) return new ClanResponse(Config.getCommandMessages().notEnough(), ClanResponse.ResponseType.FAILURE);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         int maximumBalance = Level.getLevelMaximumBalance(clan.getLevel());
-        if ((clan.getBalance() + amount) > maximumBalance) return new ClanResponse(configurationSection.getString("there_is_no_place_in_the_clan"), ClanResponse.ResponseType.FAILURE);
-        plugin.economy.withdrawPlayer(modifiedPlayer.getPlayer(), amount);
+        if ((clan.getBalance() + amount) > maximumBalance) return new ClanResponse(Config.getCommandMessages().noPlaceCurrencyInClan(), ClanResponse.ResponseType.FAILURE);
+        plugin.getEconomy().withdrawPlayer(modifiedPlayer.getPlayer(), amount);
         clan.setBalance(clan.getBalance() + amount);
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = configurationSection.getString("notification_of_investment").replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
-            chatUtil.sendMessage(entry.getKey().getPlayer(), string);
+            String string = Config.getCommandMessages().notificationPut().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
+            Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
@@ -83,16 +78,15 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse withdraw(ModifiedPlayer modifiedPlayer, int amount) {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.withdraw");
-        if (getBalance() < amount) return new ClanResponse(configurationSection.getString("not_in_the_clan"), ClanResponse.ResponseType.FAILURE);
+        if (getBalance() < amount) return new ClanResponse(Config.getCommandMessages().notInClan(), ClanResponse.ResponseType.FAILURE);
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        plugin.economy.depositPlayer(modifiedPlayer.getPlayer(), amount);
+        plugin.getEconomy().depositPlayer(modifiedPlayer.getPlayer(), amount);
         clan.setBalance(clan.getBalance() - amount);
 
         for (Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
-            String string = configurationSection.getString("notification_of_withdrawal").replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
-            chatUtil.sendMessage(entry.getKey().getPlayer(), string);
+            String string = Config.getCommandMessages().notificationWithdraw().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
+            Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
@@ -100,14 +94,13 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse leave(ModifiedPlayer modifiedPlayer) {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.leave");
-        if (!getMembers().containsKey(modifiedPlayer)) return new ClanResponse(configurationSection.getString("you're_not_in_the_clan)"), ClanResponse.ResponseType.FAILURE);
+        if (!getMembers().containsKey(modifiedPlayer)) return new ClanResponse(Config.getCommandMessages().notInClan(), ClanResponse.ResponseType.FAILURE);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         clan.getMembers().remove(modifiedPlayer);
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = configurationSection.getString("notification_of_exclusion").replace("%player%", modifiedPlayer.getPlayer().getName());
-            chatUtil.sendMessage(entry.getKey().getPlayer(), string);
+            String string = Config.getCommandMessages().notificationLeave().replace("%player%", modifiedPlayer.getPlayer().getName());
+            Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
@@ -115,18 +108,19 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse rank(ModifiedPlayer modifiedPlayer, int id) {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.rank");
-        if (id == 1) return new ClanResponse(configurationSection.getString("you_can't_give_out_a_leader_rank"), ClanResponse.ResponseType.FAILURE);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if (id == 2) clan.getMembers().replace(modifiedPlayer, getMembers().get(modifiedPlayer), Rank.RankType.DEPUTY.getName());
-        else if (id == 3)
-            clan.getMembers().replace(modifiedPlayer, getMembers().get(modifiedPlayer), Rank.RankType.MEMBER.getName());
-        else return new ClanResponse(configurationSection.getString("this_rank_does_not_exist"), ClanResponse.ResponseType.FAILURE);
-        ConfigurationSection configSection = plugin.getConfig().getConfigurationSection("message.command.rank");
+        switch (Rank.RankType.getRank(id)) {
+            case LEADER: return new ClanResponse(Config.getCommandMessages().notGiveRankLeader(), ClanResponse.ResponseType.FAILURE);
+            case DEPUTY: clan.getMembers().replace(modifiedPlayer, getMembers().get(modifiedPlayer), Rank.RankType.DEPUTY.getName());
+                        break;
+            case MEMBER: clan.getMembers().replace(modifiedPlayer, getMembers().get(modifiedPlayer), Rank.RankType.MEMBER.getName());
+                        break;
+            case UNDEFINED: return new ClanResponse(Config.getCommandMessages().rankNoExists(), ClanResponse.ResponseType.FAILURE);
+        }
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = configSection.getString("notification_of_rank").replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", (id == 2) ? Rank.RankType.DEPUTY.getName() : Rank.RankType.MEMBER.getName());
-            chatUtil.sendMessage(entry.getKey().getPlayer(), string);
+            String string = Config.getCommandMessages().notificationRank().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", (id == 2) ? Rank.RankType.DEPUTY.getName() : Rank.RankType.MEMBER.getName());
+            Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
@@ -134,14 +128,12 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse disband(ModifiedPlayer modifiedPlayer) {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.disband");
-        if (!getMembers().get(modifiedPlayer).equals(Rank.RankType.LEADER.getName())) return new ClanResponse(configurationSection.getString("you_are_not_a_leader"), ClanResponse.ResponseType.FAILURE);
+        if (!getMembers().get(modifiedPlayer).equals(Rank.RankType.LEADER.getName())) return new ClanResponse(Config.getCommandMessages().notLeader(), ClanResponse.ResponseType.FAILURE);
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             entry.getKey().setClan(null);
-
-            chatUtil.sendMessage(entry.getKey().getPlayer(), configurationSection.getString("notification_of_disband"));
+            Utils.sendMessage(entry.getKey().getPlayer(), Config.getCommandMessages().notificationDisband());
         }
 
         CLANS.remove(clan.getName());
@@ -170,16 +162,14 @@ public class ClanImpl extends AbstractClan {
     @Override
     public void glow(ModifiedPlayer modifiedPlayer, Plugin plugin) {
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.glow");
-
         if(!Glow.isEnableForPlayer(modifiedPlayer)) {
             Glow.enableForPlayer(modifiedPlayer);
-            chatUtil.sendMessage(modifiedPlayer.getPlayer(), configurationSection.getString("you_have_enabled_glow"));
+            Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().enableGlow());
             return;
         }
 
         Glow.disableForPlayer(modifiedPlayer);
-        chatUtil.sendMessage(modifiedPlayer.getPlayer(), configurationSection.getString("you_have_disabled_glow"));
+        Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().disableGlow());
 
     }
 

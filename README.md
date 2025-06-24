@@ -64,21 +64,21 @@ GUI настраиваются в конфигурационном файле.
 
 /clan reload - перезагрузить конфиг (Право: towerclans.reload)
 
-/clan info <имя> - посмотреть информацию об клане
+/clan info <имя> - посмотреть информацию об клане (Право: towerclans.info)
 
 Доступно всем
 
-/clan stats <игрок> - посмотреть информацию об игроке
+/clan stats <игрок> - посмотреть информацию об игроке (Право: towerclans.stats)
 
-/clan storage - открыть хранилище клана
-
-Доступно всем
-
-/clan glow - включить/выключить свечение
+/clan storage - открыть хранилище клана (Право: towerclans.storage)
 
 Доступно всем
 
-/clan event capture start|stop - запустить/завершить клановый эвент
+/clan glow - включить/выключить свечение (Право: towerclans.glow)
+
+Доступно всем
+
+/clan event capture start|stop - запустить/завершить клановый эвент (Право: towerclans.event)
 
 | Плейсхолдеры
 

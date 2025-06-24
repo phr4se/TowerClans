@@ -25,7 +25,7 @@ import phrase.towerClans.clan.event.exception.SchematicDamaged;
 import phrase.towerClans.clan.event.exception.SchematicNotExist;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.event.LevelUpEvent;
-import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.util.Utils;
 
 import java.util.*;
 
@@ -38,25 +38,26 @@ public class Capture extends Event {
     private Location pos1;
     private Location pos2;
     private ProtectedRegion region;
+    private SchematicManager schematicManager;
 
     private final static Map<String, Integer> PLAYERS = new HashMap<>();
     private final static Map<String, Integer> POINTS = new HashMap<>();
 
-    private final ChatUtil chatUtil;
 
     public Capture(Plugin plugin) {
         super(plugin);
-        chatUtil = new ChatUtil(plugin);
     }
 
     @Override
     public void startEvent() throws EventAlreadyRun, SchematicNotExist, SchematicDamaged {
 
+        schematicManager = new SchematicManager(plugin);
+
         if (!Event.register(EventType.CAPTURE, this)) throw new EventAlreadyRun("Эвент уже запущен");
 
-        if (!SchematicManager.existsSchematic()) throw new SchematicNotExist("Схематика не существует");
+        if (!schematicManager.existsSchematic()) throw new SchematicNotExist("Схематика не существует");
 
-        if(SchematicManager.schematicDamaged()) throw new SchematicDamaged("Схематика повреждена");
+        if(schematicManager.schematicDamaged()) throw new SchematicDamaged("Схематика повреждена");
 
         new BukkitRunnable() {
 
@@ -95,15 +96,16 @@ public class Capture extends Event {
                 minZ = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
                 maxZ = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
 
-                region = new ProtectedCuboidRegion(UUID.randomUUID().toString(), BlockVector3.at(minX, minY - 1, minZ), BlockVector3.at(maxX, maxY, maxZ));
-                region.setFlag(Flags.BUILD, StateFlag.State.DENY);
-                regionManager.addRegion(region);
-
                 new BukkitRunnable() {
 
                     @Override
                     public void run() {
-                        SchematicManager.setSchematic(world, minX, maxX, minY, maxY, minZ, maxZ);
+                        region = new ProtectedCuboidRegion(UUID.randomUUID().toString(), BlockVector3.at(minX, minY - 1, minZ), BlockVector3.at(maxX, maxY, maxZ));
+                        region.setFlag(Flags.BUILD, StateFlag.State.DENY);
+                        region.setFlag(Flags.PVP, StateFlag.State.ALLOW);
+                        regionManager.addRegion(region);
+
+                        schematicManager.setSchematic(world, minX, maxX, minY, maxY, minZ, maxZ);
 
                         running = true;
 
@@ -124,7 +126,7 @@ public class Capture extends Event {
 
         WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world)).removeRegion(region.getId());
         Event.unRegister(EventType.CAPTURE);
-        SchematicManager.regenerationBlocks(world, minX, maxX, minY, maxY, minZ, maxZ);
+        schematicManager.regenerationBlocks(world, minX, maxX, minY, maxY, minZ, maxZ);
 
         broadcastForPlayersAboutEndEvent("Нет");
         disableBossBarForPlayers();
@@ -140,7 +142,7 @@ public class Capture extends Event {
 
         WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world)).removeRegion(region.getId());
         Event.unRegister(EventType.CAPTURE);
-        SchematicManager.regenerationBlocks(world, minX, maxX, minY, maxY, minZ, maxZ);
+        schematicManager.regenerationBlocks(world, minX, maxX, minY, maxY, minZ, maxZ);
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
 
@@ -171,7 +173,7 @@ public class Capture extends Event {
         int maxPoint = configurationSection.getInt("max_point");
 
         String title = configurationSection.getString("title").replace("%x%", String.valueOf(x)).replace("%y%", String.valueOf(y)).replace("%z%", String.valueOf(z));
-        BossBar bossBar = server.createBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"), colorizerProvider.colorize(title), BarColor.RED, BarStyle.SOLID);
+        BossBar bossBar = server.createBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"), Utils.COLORIZER.colorize(title), BarColor.RED, BarStyle.SOLID);
 
         new BukkitRunnable() {
             @Override
@@ -182,7 +184,7 @@ public class Capture extends Event {
                 List<String> clansName = POINTS.keySet().stream().limit(1).toList();
                 String clanName = (clansName.isEmpty()) ? "&cНет" : clansName.get(0);
                 String newTitle = title.replace("%clan_name%", clanName);
-                bossBar.setTitle(colorizerProvider.colorize(newTitle));
+                bossBar.setTitle(Utils.COLORIZER.colorize(newTitle));
                 int point = (POINTS.get(clanName) == null) ? 0 : POINTS.get(clanName);
                 if((double) point / maxPoint <= 1.00) bossBar.setProgress((double) point / maxPoint);
                 for(Player player : server.getOnlinePlayers()) {
@@ -270,7 +272,7 @@ public class Capture extends Event {
 
         for(Player player : plugin.getServer().getOnlinePlayers()) {
             for(String message : messages) {
-                chatUtil.sendMessage(player, message);
+                Utils.sendMessage(player, Utils.COLORIZER.colorize(message));
             }
         }
 
@@ -284,7 +286,7 @@ public class Capture extends Event {
 
         for(Player player : plugin.getServer().getOnlinePlayers()) {
             for(String message : messages) {
-                chatUtil.sendMessage(player, message.replace("%clan_name%", clanName));
+                Utils.sendMessage(player, Utils.COLORIZER.colorize(message.replace("%clan_name%", clanName)));
             }
         }
 

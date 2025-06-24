@@ -2,6 +2,7 @@ package phrase.towerClans.clan.attribute.clan;
 
 import org.bukkit.configuration.ConfigurationSection;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.config.Config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,10 +70,9 @@ public class Level {
 
     public static void initialize(Plugin plugin) {
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings");
-        xpForMurder = configurationSection.getInt("xp_for_murder");
+        xpForMurder = Config.getSettings().xpForMurder();
 
-        configurationSection = plugin.getConfig().getConfigurationSection("settings.level");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.level");
 
         countLevels = 0;
 

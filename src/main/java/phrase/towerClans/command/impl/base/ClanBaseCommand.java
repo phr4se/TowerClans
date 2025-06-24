@@ -7,18 +7,11 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
-import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.config.Config;
+import phrase.towerClans.util.Utils;
 
 
 public class ClanBaseCommand implements CommandHandler {
-
-    private final Plugin plugin;
-    private final ChatUtil chatUtil;
-
-    public ClanBaseCommand(Plugin plugin) {
-        this.plugin = plugin;
-        chatUtil = new ChatUtil(plugin);
-    }
 
     @Override
     public boolean handler(Player player, String[] args) {
@@ -26,21 +19,20 @@ public class ClanBaseCommand implements CommandHandler {
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.base");
         if(clan == null) {
-            chatUtil.sendMessage(player, configurationSection.getString("you're_not_in_the_clan"));
+            Utils.sendMessage(player, Config.getCommandMessages().notInClan());
             return true;
         }
 
         Location location = Base.getBase(clan);
 
         if(location == null) {
-            chatUtil.sendMessage(player, configurationSection.getString("the_clan_doesn't_have_a_base"));
+            Utils.sendMessage(player, Config.getCommandMessages().noBase());
             return true;
         }
 
         player.teleport(location);
-        chatUtil.sendMessage(player, configurationSection.getString("you_have_been_teleported_to_the_clan_base"));
+        Utils.sendMessage(player, Config.getCommandMessages().teleportBase());
         return true;
     }
 

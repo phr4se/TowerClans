@@ -10,6 +10,7 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.gui.ItemBuilder;
 import phrase.towerClans.gui.MenuService;
+import phrase.towerClans.util.Utils;
 
 class MenuClanStorageService implements MenuService {
 
@@ -23,7 +24,7 @@ class MenuClanStorageService implements MenuService {
         Material material = Material.matchMaterial(materialName);
         String title = configurationSection.getString("title");
         ItemStack item = new ItemBuilder(material)
-                .setName(colorizerProvider.colorize(title))
+                .setName(Utils.COLORIZER.colorize(title))
                 .setPersistentDataContainer(NamespacedKey.fromString("no_available"), PersistentDataType.STRING, "no_available")
                 .build();
 

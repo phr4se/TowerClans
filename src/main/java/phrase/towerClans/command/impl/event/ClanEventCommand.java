@@ -9,25 +9,22 @@ import phrase.towerClans.clan.event.exception.SchematicDamaged;
 import phrase.towerClans.clan.event.exception.SchematicNotExist;
 import phrase.towerClans.clan.event.impl.Capture;
 import phrase.towerClans.command.CommandHandler;
-import phrase.towerClans.util.ChatUtil;
+import phrase.towerClans.config.Config;
+import phrase.towerClans.util.Utils;
 
 public class ClanEventCommand implements CommandHandler {
 
     private final Plugin plugin;
-    private final ChatUtil chatUtil;
 
     public ClanEventCommand(Plugin plugin) {
         this.plugin = plugin;
-        chatUtil = new ChatUtil(plugin);
     }
 
     @Override
     public boolean handler(Player player, String[] args) {
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.event");
-
         if (args.length < 3) {
-            chatUtil.sendMessage(player, configurationSection.getString("usage_command"));
+            Utils.sendMessage(player, Config.getCommandMessages().incorrectArguments());
             return false;
         }
 
@@ -35,7 +32,7 @@ public class ClanEventCommand implements CommandHandler {
         try {
             eventType = Event.EventType.valueOf(args[1].toUpperCase());
         } catch (IllegalArgumentException e) {
-            chatUtil.sendMessage(player, configurationSection.getString("usage_command"));
+            Utils.sendMessage(player, Config.getCommandMessages().incorrectArguments());
             return true;
         }
         String action = args[2];
@@ -46,29 +43,29 @@ public class ClanEventCommand implements CommandHandler {
                 try {
                     event.startEvent();
                 } catch (EventAlreadyRun e) {
-                    chatUtil.sendMessage(player, configurationSection.getString("event_already_running"));
+                    Utils.sendMessage(player, Config.getCommandMessages().alreadyRunning());
                     plugin.getLogger().severe(e.getMessage());
                     return true;
                 } catch (SchematicNotExist | SchematicDamaged e) {
-                    chatUtil.sendMessage(player, configurationSection.getString("schematic_error"));
+                    Utils.sendMessage(player, Config.getCommandMessages().schematicDamaged());
                     Event.unRegister(Event.EventType.CAPTURE);
                     plugin.getLogger().severe(e.getMessage());
                     return true;
                 }
-                chatUtil.sendMessage(player, configurationSection.getString("you_runned_event"));
+                Utils.sendMessage(player, Config.getCommandMessages().runnedEvent());
             } else if (action.equalsIgnoreCase("stop")) {
                 if (Event.isRunningEventType(Event.EventType.CAPTURE)) {
                     Event runningEvent = Event.getRunningEvent(Event.EventType.CAPTURE);
                     if (runningEvent == null) {
                         Event.unRegister(Event.EventType.CAPTURE);
-                        chatUtil.sendMessage(player, configurationSection.getString("you_stopped_event"));
+                        Utils.sendMessage(player, Config.getCommandMessages().stoppedEvent());
                         return true;
                     }
                     runningEvent.endEvent();
-                    chatUtil.sendMessage(player, configurationSection.getString("you_stopped_event"));
+                    Utils.sendMessage(player, Config.getCommandMessages().stoppedEvent());
                     return true;
                 }
-                chatUtil.sendMessage(player, configurationSection.getString("event_not_running"));
+                Utils.sendMessage(player, Config.getCommandMessages().notRunning());
             }
         }
 

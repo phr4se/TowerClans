@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class Storage {
 
-    private Inventory inventory;
+    private final Inventory inventory;
     private final Set<UUID> players;
     private final Set<UUID> isUpdatedInventory;
     private static int size;

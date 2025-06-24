@@ -2,7 +2,6 @@ package phrase.towerClans.clan.event;
 
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.impl.ClanImpl;
-import phrase.towerClans.util.colorizer.ColorizerProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +27,6 @@ public abstract class Event {
     private static final Map<EventType, Event> RUNNING_EVENTS = new HashMap<>();
 
     protected final Plugin plugin;
-    protected static final ColorizerProvider colorizerProvider;
-
-    static {
-        colorizerProvider = Plugin.getColorizerProvider();
-    }
 
     public Event(Plugin plugin) {
         this.plugin = plugin;
