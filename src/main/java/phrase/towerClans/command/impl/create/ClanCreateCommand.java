@@ -12,6 +12,9 @@ import phrase.towerClans.config.Config;
 import phrase.towerClans.util.Utils;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ClanCreateCommand implements CommandHandler {
 
@@ -44,14 +47,12 @@ public class ClanCreateCommand implements CommandHandler {
             return true;
         }
 
-        List<String> badWords = Config.getSettings().badWords();
 
-        for(String badWord : badWords) {
-            if(!(badWord.equals(name))) continue;
-
+        if(checkClanName(name, Config.getSettings().badWords())) {
             Utils.sendMessage(player, Config.getMessages().clanNameBadWord());
             return true;
         }
+
 
         int amount = Config.getSettings().costCreatingClan();
 
@@ -78,5 +79,23 @@ public class ClanCreateCommand implements CommandHandler {
         Utils.sendMessage(player, Config.getCommandMessages().creatingClan());
 
         return true;
+    }
+
+    private boolean checkClanName(String clanName, List<String> badWords) {
+
+        if(badWords == null || badWords.isEmpty()) {
+            return false;
+        }
+
+        String regex = badWords.stream()
+                .map(Pattern::quote)
+                .map(word -> "\\b" + word + "\\b")
+                .collect(Collectors.joining("|"));
+
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+
+        Matcher matcher = pattern.matcher(clanName);
+
+        return matcher.find();
     }
 }

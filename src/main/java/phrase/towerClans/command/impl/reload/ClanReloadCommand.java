@@ -1,6 +1,7 @@
 package phrase.towerClans.command.impl.reload;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.command.CommandHandler;
@@ -18,6 +19,8 @@ public class ClanReloadCommand implements CommandHandler {
     @Override
     public boolean handler(Player player, String[] args) {
         plugin.reloadConfig();
+        Config.setupSettings(plugin.getConfig());
+        Config.setupMessages(YamlConfiguration.loadConfiguration(plugin.getMessagesFile()));
         Utils.sendMessage(player, Config.getCommandMessages().reloadConfig());
         return true;
     }

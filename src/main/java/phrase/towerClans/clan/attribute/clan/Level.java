@@ -7,57 +7,28 @@ import phrase.towerClans.config.Config;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Level {
+public record Level(int level, int xp, int maximumBalance, int maximumMembers, int availableSlots) {
 
-    private final static Map<Integer, Level> LEVELS = new HashMap<>();
+    private static Map<Integer, Level> LEVELS;
 
-    private final int level;
-    private final int xp;
-    private final int maximumBalance;
-    private final int maximumMembers;
-    private final int availableSlots;
     private static int xpForMurder;
     private static int countLevels;
 
-    public Level(int level, int xp, int maximumBalance, int maximumMembers, int availableSlots) {
-        this.level = level;
-        this.xp = xp;
-        this.maximumBalance = maximumBalance;
-        this.maximumMembers = maximumMembers;
-        this.availableSlots = availableSlots;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public int getXp() {
-        return xp;
-    }
-
-    public int getMaximumBalance() {
-        return maximumBalance;
-    }
-
-    public int getMaximumMembers() {
-        return maximumMembers;
-    }
-
-    public int getAvailableSlots() { return availableSlots; }
-
     public static int getXpLevel(int level) {
-        return LEVELS.get(level).getXp();
+        return LEVELS.get(level).xp();
     }
 
     public static int getLevelMaximumBalance(int level) {
-        return LEVELS.get(level).getMaximumBalance();
+        return LEVELS.get(level).maximumBalance();
     }
 
     public static int getLevelMaximumMembers(int level) {
-        return LEVELS.get(level).getMaximumMembers();
+        return LEVELS.get(level).maximumMembers();
     }
 
-    public static int getAvailableSlots(int level) { return LEVELS.get(level).getAvailableSlots(); }
+    public static int getAvailableSlots(int level) {
+        return LEVELS.get(level).availableSlots();
+    }
 
     public static int getXpForMurder() {
         return xpForMurder;
@@ -69,14 +40,14 @@ public class Level {
     }
 
     public static void initialize(Plugin plugin) {
-
+        LEVELS = new HashMap<>();
         xpForMurder = Config.getSettings().xpForMurder();
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.level");
 
         countLevels = 0;
 
-        for(String key : configurationSection.getKeys(false)) {
+        for (String key : configurationSection.getKeys(false)) {
 
             int level = configurationSection.getInt(key + ".level");
             int xp = configurationSection.getInt(key + ".xp");

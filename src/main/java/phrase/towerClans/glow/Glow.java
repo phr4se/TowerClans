@@ -44,6 +44,16 @@ public class Glow {
             return b;
         }
 
+        public static LeatherColor getLeaherColor(int r, int g, int b) {
+
+            for(LeatherColor leatherColor : LeatherColor.values()) {
+                if((leatherColor.getR() - r + leatherColor.getG() - g + leatherColor.getB() - b) == 0) return leatherColor;
+            }
+
+            return null;
+
+        }
+
     }
 
     private final static Set<UUID> PLAYERS = new HashSet<>();

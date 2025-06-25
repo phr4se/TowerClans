@@ -1,6 +1,7 @@
 package phrase.towerClans.database.impl;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
@@ -13,6 +14,7 @@ import phrase.towerClans.command.impl.base.Base;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.database.Database;
 import phrase.towerClans.database.DatabaseMananger;
+import phrase.towerClans.glow.Glow;
 import phrase.towerClans.serializable.InventorySerializable;
 import phrase.towerClans.serializable.ListStringSerializable;
 import phrase.towerClans.serializable.StatsSerializable;
@@ -34,8 +36,8 @@ public class SQLite implements Database {
     @Override
     public void initTable() {
         int max = Config.getSettings().maxSizeClanName();
-        String sqlClans = "CREATE TABLE IF NOT EXISTS clans (name VARCHAR(" + max + ") PRIMARY KEY, level INTEGER, xp INTEGER, balance INTEGER, x DOUBLE, y DOUBLE, z DOUBLE, world VARCHAR(255), storage TEXT, members TEXT)";
-        String sqlPlayers = "CREATE TABLE IF NOT EXISTS players (name VARCHAR(16) PRIMARY KEY, stats TEXT)";
+        String sqlClans = "CREATE TABLE IF NOT EXISTS clans (name VARCHAR(" + max + ") PRIMARY KEY, level INTEGER, xp INTEGER, balance INTEGER, x DOUBLE, y DOUBLE, z DOUBLE, world VARCHAR(255), storage TEXT, members TEXT, pvp INTEGER, r INTEGER DEFAULT 255, g INTEGER DEFAULT 0, b INTEGER DEFAULT 0);";
+        String sqlPlayers = "CREATE TABLE IF NOT EXISTS players (name VARCHAR(16) PRIMARY KEY, stats TEXT);";
         try(Connection connection = databaseMananger.getConnection();
             Statement statement = connection.createStatement()) {
             statement.executeUpdate(sqlClans);
@@ -47,11 +49,9 @@ public class SQLite implements Database {
 
     @Override
     public void saveClans() {
-
-
         String check = "SELECT * FROM clans";
-        String save = "INSERT INTO clans (name, level, xp, balance, x, y, z, world, storage, members) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String update = "UPDATE clans SET level = ?, xp = ?, balance = ?, x = ?, y = ?, z = ?, world = ?, storage = ?, members = ? WHERE name = ?";
+        String save = "INSERT INTO clans (name, level, xp, balance, x, y, z, world, storage, members, pvp, r, g, b) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String update = "UPDATE clans SET level = ?, xp = ?, balance = ?, x = ?, y = ?, z = ?, world = ?, storage = ?, members = ?, pvp = ?, r = ?, g = ?, b = ? WHERE name = ?";
         String delete = "DELETE FROM clans WHERE name = ?";
         try (Connection connection = databaseMananger.getConnection();
              Statement statementCheck = connection.createStatement();
@@ -87,6 +87,10 @@ public class SQLite implements Database {
                     }
                     preparedStatementSave.setString(9, InventorySerializable.inventoryToBase64(clan.getStorage().getInventory()));
                     preparedStatementSave.setString(10, ListStringSerializable.listToString(ClanDataConverter.mapToList(clan.getMembers())));
+                    preparedStatementSave.setBoolean(11, clan.isPvp());
+                    preparedStatementSave.setInt(12, clan.getColor().getR());
+                    preparedStatementSave.setInt(12, clan.getColor().getG());
+                    preparedStatementSave.setInt(12, clan.getColor().getB());
                     preparedStatementSave.addBatch();
                 } else {
                     preparedStatementUpdate.setInt(1, clan.getLevel());
@@ -106,7 +110,11 @@ public class SQLite implements Database {
                     }
                     preparedStatementUpdate.setString(8, InventorySerializable.inventoryToBase64(clan.getStorage().getInventory()));
                     preparedStatementUpdate.setString(9, ListStringSerializable.listToString(ClanDataConverter.mapToList(clan.getMembers())));
-                    preparedStatementUpdate.setString(10, clan.getName());
+                    preparedStatementUpdate.setBoolean(10, clan.isPvp());
+                    preparedStatementUpdate.setInt(11, clan.getColor().getR());
+                    preparedStatementUpdate.setInt(12, clan.getColor().getG());
+                    preparedStatementSave.setInt(13, clan.getColor().getB());
+                    preparedStatementUpdate.setString(14, clan.getName());
                     preparedStatementUpdate.addBatch();
                 }
             }
@@ -122,7 +130,6 @@ public class SQLite implements Database {
 
     @Override
     public void loadClans() {
-
 
         String sql = "SELECT * FROM clans";
         try (Connection connection = databaseMananger.getConnection();
@@ -152,6 +159,12 @@ public class SQLite implements Database {
                     Location location = new Location(world, x, y, z);
                     Base.setBase(clan, location);
                 }
+                boolean pvp = resultSet.getBoolean(11);
+                clan.setPvp(pvp);
+                int r = resultSet.getInt(12);
+                int g = resultSet.getInt(13);
+                int b = resultSet.getInt(14);
+                clan.setColor(Glow.LeatherColor.getLeaherColor(r, g, b));
                 Inventory storage = InventorySerializable.base64ToInventory(resultSet.getString(9));
                 clan.getStorage().getInventory().setContents(storage.getContents());
                 Map<ModifiedPlayer, String> members = ClanDataConverter.listToMap(ListStringSerializable.stringToList(resultSet.getString(10)), clan);

@@ -120,7 +120,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         path = schematicFolder.getPath() + "/" + getConfig().getString("settings.event.capture.schematic_name") + ".schem";
     }
 
-    private File getMessagesFile() {
+    public File getMessagesFile() {
         File messagesFile = new File(getDataFolder(), "messages.yml");
 
         if (!messagesFile.exists()) {

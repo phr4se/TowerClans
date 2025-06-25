@@ -1,3 +1,4 @@
+
 settings:
   database: SQLITE
   cost-creating-level: 10000

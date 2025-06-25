@@ -8,7 +8,6 @@ import phrase.towerClans.config.data.Settings;
 import phrase.towerClans.database.DatabaseType;
 import phrase.towerClans.util.Utils;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
 public class Config {
