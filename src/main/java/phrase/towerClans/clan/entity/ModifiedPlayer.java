@@ -1,6 +1,7 @@
 package phrase.towerClans.clan.entity;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import phrase.towerClans.clan.Clan;
 import phrase.towerClans.clan.impl.ClanImpl;
@@ -40,6 +41,26 @@ public class ModifiedPlayer {
 
 
         return new ModifiedPlayer(player.getUniqueId(), null);
+
+    }
+
+    public static ModifiedPlayer get(OfflinePlayer offlinePlayer) {
+        if (offlinePlayer == null) return null;
+
+        for (Map.Entry<String, ClanImpl> clan : ClanImpl.getClans().entrySet()) {
+
+            for (Map.Entry<ModifiedPlayer, String> entry : clan.getValue().getMembers().entrySet()) {
+
+                if (!entry.getKey().getPlayerUUID().equals(offlinePlayer.getUniqueId())) continue;
+
+                return new ModifiedPlayer(offlinePlayer.getUniqueId(), clan.getValue());
+
+            }
+
+        }
+
+
+        return new ModifiedPlayer(offlinePlayer.getUniqueId(), null);
 
     }
 

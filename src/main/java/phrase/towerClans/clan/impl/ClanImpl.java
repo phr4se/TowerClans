@@ -1,5 +1,6 @@
 package phrase.towerClans.clan.impl;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +40,7 @@ public class ClanImpl extends AbstractClan {
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             String string = Config.getCommandMessages().notificationInvited().replace("%player%", modifiedPlayer.getPlayer().getName());
+            if(entry.getKey().getPlayer() == null) continue;
             Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
@@ -48,13 +50,17 @@ public class ClanImpl extends AbstractClan {
     @Override
     public ClanResponse kick(ModifiedPlayer modifiedPlayer) {
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if (!clan.getMembers().containsKey(modifiedPlayer)) return new ClanResponse(Config.getCommandMessages().playerNotInYourselfClan(), ClanResponse.ResponseType.FAILURE);
+        if (!clan.getMembers().containsKey(modifiedPlayer))
+            return new ClanResponse(Config.getCommandMessages().playerNotInYourselfClan(), ClanResponse.ResponseType.FAILURE);
         clan.getMembers().remove(modifiedPlayer);
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = Config.getCommandMessages().notificationWithdraw().replace("%player%", modifiedPlayer.getPlayer().getName());
+            String name = (modifiedPlayer.getPlayer() == null) ? Bukkit.getOfflinePlayer(modifiedPlayer.getPlayerUUID()).getName() : modifiedPlayer.getPlayer().getName();
+            String string = Config.getCommandMessages().notificationKicked().replace("%player%", name);
+            if (entry.getKey().getPlayer() == null) continue;
             Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
+
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
@@ -70,6 +76,7 @@ public class ClanImpl extends AbstractClan {
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             String string = Config.getCommandMessages().notificationPut().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
+            if(entry.getKey().getPlayer() == null) continue;
             Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
@@ -78,7 +85,7 @@ public class ClanImpl extends AbstractClan {
 
     @Override
     public ClanResponse withdraw(ModifiedPlayer modifiedPlayer, int amount) {
-        if (getBalance() < amount) return new ClanResponse(Config.getCommandMessages().notInClan(), ClanResponse.ResponseType.FAILURE);
+        if (getBalance() < amount) return new ClanResponse(Config.getCommandMessages().notCurrencyInClan(), ClanResponse.ResponseType.FAILURE);
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         plugin.getEconomy().depositPlayer(modifiedPlayer.getPlayer(), amount);
@@ -86,6 +93,7 @@ public class ClanImpl extends AbstractClan {
 
         for (Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
             String string = Config.getCommandMessages().notificationWithdraw().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
+            if(entry.getKey().getPlayer() == null) continue;
             Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
@@ -100,6 +108,7 @@ public class ClanImpl extends AbstractClan {
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             String string = Config.getCommandMessages().notificationLeave().replace("%player%", modifiedPlayer.getPlayer().getName());
+            if(entry.getKey().getPlayer() == null) continue;
             Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
@@ -120,6 +129,7 @@ public class ClanImpl extends AbstractClan {
 
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             String string = Config.getCommandMessages().notificationRank().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", (id == 2) ? Rank.RankType.DEPUTY.getName() : Rank.RankType.MEMBER.getName());
+            if(entry.getKey().getPlayer() == null) continue;
             Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
@@ -133,6 +143,8 @@ public class ClanImpl extends AbstractClan {
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             entry.getKey().setClan(null);
+            if(entry.getKey().getPlayer() == null) continue;
+            if(Glow.isEnableForPlayer(entry.getKey())) Glow.disableForPlayer(entry.getKey());
             Utils.sendMessage(entry.getKey().getPlayer(), Config.getCommandMessages().notificationDisband());
         }
 

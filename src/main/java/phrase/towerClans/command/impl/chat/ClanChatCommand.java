@@ -31,6 +31,7 @@ public class ClanChatCommand implements CommandHandler {
 
         String string = Config.getCommandMessages().messageFormat().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", clan.getMembers().get(modifiedPlayer)).replace("%message%", stringBuilder.toString());
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
+            if(entry.getKey().getPlayer() == null) continue;
             Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 

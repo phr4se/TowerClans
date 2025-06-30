@@ -84,7 +84,7 @@ class MenuClanMembersService implements MenuService {
 
         for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             ModifiedPlayer modifiedPlayer = entry.getKey();
-            String currentTitle = Utils.COLORIZER.colorize(titleItem.replace("%player_name%", modifiedPlayer.getPlayer().getName()));
+            String currentTitle = Utils.COLORIZER.colorize(titleItem.replace("%player_name%", (modifiedPlayer.getPlayer() == null) ? Bukkit.getOfflinePlayer(modifiedPlayer.getPlayerUUID()).getName() : modifiedPlayer.getPlayer().getName()));
             Stats playerStats = Stats.PLAYERS.get(modifiedPlayer.getPlayerUUID());
             List<String> currentLore = lore.stream().map(
                     string -> {

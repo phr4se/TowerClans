@@ -50,9 +50,10 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         saveDefaultConfig();
 
-        if(!UpdateChecker.check().equals(getDescription().getVersion())) logger.severe("Вы используете устаревшую версию плагина");
+        if (!UpdateChecker.check().equals(getDescription().getVersion()))
+            logger.severe("Вы используете устаревшую версию плагина");
 
-        if(!pluginManager.isPluginEnabled("WorldEdit") && !pluginManager.isPluginEnabled("WorldGuard")) {
+        if (!pluginManager.isPluginEnabled("WorldEdit") && !pluginManager.isPluginEnabled("WorldGuard")) {
             logger.severe("WorldEdit и WorldGuard не найден. Плагин будет выключен");
             pluginManager.disablePlugin(this);
             return;
@@ -88,7 +89,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         pluginManager.registerEvents(new PlayerListener(this), this);
         pluginManager.registerEvents(new ClanListener(this), this);
 
-        if(!setupProtocolLib()) {
+        if (!setupProtocolLib()) {
             logger.severe("ProtocolLib не найден. Плагин будет выключен");
             pluginManager.disablePlugin(this);
             return;
@@ -116,7 +117,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
     private void initializeSchematicPath() {
         File schematicFolder = new File(getDataFolder() + "/schematics");
-        if(!schematicFolder.exists()) schematicFolder.mkdirs();
+        if (!schematicFolder.exists()) schematicFolder.mkdirs();
         path = schematicFolder.getPath() + "/" + getConfig().getString("settings.event.capture.schematic_name") + ".schem";
     }
 

@@ -1,6 +1,7 @@
 package phrase.towerClans.command.impl.kick;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
@@ -25,8 +26,6 @@ public class ClanKickCommand implements CommandHandler {
     public boolean handler(Player player, String[] args) {
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("message.command.kick");
-
         if (args.length < 2) {
             Utils.sendMessage(player, Config.getCommandMessages().incorrectArguments());
             return false;
@@ -49,7 +48,31 @@ public class ClanKickCommand implements CommandHandler {
         Player targetPlayer = Bukkit.getPlayer(name);
 
         if (targetPlayer == null) {
-            Utils.sendMessage(player, Config.getCommandMessages().playerNotFound());
+            OfflinePlayer targetOfflinePlayer = Bukkit.getOfflinePlayer(name);
+
+            ModifiedPlayer targetModifiedPlayer = ModifiedPlayer.get(targetOfflinePlayer);
+
+            if(!clan.getMembers().containsKey(targetModifiedPlayer)) {
+                Utils.sendMessage(player, Config.getCommandMessages().playerNotInYourselfClan());
+                return true;
+            }
+
+            if (clan.getMembers().get(targetModifiedPlayer).equals(Rank.RankType.LEADER.getName())) {
+                Utils.sendMessage(player, Config.getCommandMessages().notLeaveWithClan());
+                return true;
+            }
+
+            ClanResponse clanResponse = clan.kick(targetModifiedPlayer);
+
+            if (clanResponse.isSuccess()) {
+                Utils.sendMessage(player, Config.getCommandMessages().kickPlayerWithClan());
+                return true;
+            } else {
+                if(clanResponse.getMessage() != null) {
+                    Utils.sendMessage(player, clanResponse.getMessage());
+                }
+
+            }
             return true;
         }
 

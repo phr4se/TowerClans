@@ -18,18 +18,24 @@ public class Glow {
 
     public enum LeatherColor {
 
-        RED(255, 0, 0),
-        GREEN(0, 255, 0),
-        BLUE(0, 0, 255);
+        RED(0, 255, 0, 0),
+        GREEN(1, 0, 255, 0),
+        BLUE(2, 0, 0, 255);
 
+        private final int id;
         private final int r;
         private final int g;
         private final int b;
 
-        LeatherColor(int r, int g, int b) {
+        LeatherColor(int id, int r, int g, int b) {
+            this.id = id;
             this.r = r;
             this.g = g;
             this.b = b;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public int getR() {
@@ -44,10 +50,10 @@ public class Glow {
             return b;
         }
 
-        public static LeatherColor getLeaherColor(int r, int g, int b) {
+        public static LeatherColor getLeaherColor(int id) {
 
             for(LeatherColor leatherColor : LeatherColor.values()) {
-                if((leatherColor.getR() - r + leatherColor.getG() - g + leatherColor.getB() - b) == 0) return leatherColor;
+                if(leatherColor.getId() == id) return leatherColor;
             }
 
             return null;
@@ -80,6 +86,8 @@ public class Glow {
         if(!isReceiver) {
 
             Player sender = modifiedPlayer.getPlayer();
+
+            if(sender == null) return;
 
             ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
             PacketContainer container = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
@@ -114,6 +122,8 @@ public class Glow {
 
             Player sender = key.getPlayer();
 
+            if(sender == null) return;
+
             ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
             PacketContainer container = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
             container.getIntegers().write(0, sender.getEntityId());
@@ -145,6 +155,8 @@ public class Glow {
         if(!isReceiver) {
 
             Player sender = modifiedPlayer.getPlayer();
+
+            if(sender == null) return;
 
             ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
             PacketContainer packetContainer = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
@@ -178,6 +190,8 @@ public class Glow {
             ModifiedPlayer key = entry.getKey();
 
             Player sender = key.getPlayer();
+
+            if(sender == null) return;
 
             ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
             PacketContainer packetContainer = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
