@@ -1,5 +1,7 @@
 package phrase.towerClans.listener;
 
+import org.bukkit.NamespacedKey;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,6 +22,7 @@ import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.attribute.clan.Storage;
+import phrase.towerClans.clan.event.Event;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.impl.invite.PlayerCalls;
 import phrase.towerClans.event.*;
@@ -28,6 +31,7 @@ import phrase.towerClans.gui.MenuFactory;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuType;
 import phrase.towerClans.gui.impl.MenuClanMembersProvider;
+import phrase.towerClans.util.Utils;
 
 import java.util.*;
 
@@ -154,8 +158,10 @@ public class PlayerListener implements Listener {
         clan.setXp(clan.getXp() + Level.getXpForMurder());
 
         int nextLevel = clan.getLevel() + 1;
-        int xp = Level.getXpLevel(nextLevel);
-        if (clan.getXp() >= xp) pluginManager.callEvent(new LevelUpEvent(clan));
+        if(!(Level.getXpLevel(nextLevel) == -1)) {
+            int xp = Level.getXpLevel(nextLevel);
+            if (clan.getXp() >= xp) pluginManager.callEvent(new LevelUpEvent(clan));
+        }
 
     }
 
@@ -183,23 +189,43 @@ public class PlayerListener implements Listener {
 
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if (clan == null) return;
-        Storage storage = clan.getStorage();
-        if (storage.getPlayers().contains(playerUUID)) storage.getPlayers().remove(playerUUID);
-        if (storage.getIsUpdatedInventory().contains(playerUUID)) storage.getIsUpdatedInventory().remove(playerUUID);
+        if (clan != null) {
+            Storage storage = clan.getStorage();
+            if (storage.getPlayers().contains(playerUUID)) storage.getPlayers().remove(playerUUID);
+            if (storage.getIsUpdatedInventory().contains(playerUUID))
+                storage.getIsUpdatedInventory().remove(playerUUID);
+        }
 
         MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
         if (menuClanMembersProvider.isRegistered(player.getUniqueId())) menuClanMembersProvider.unRegister(player.getUniqueId());
+
+        BossBar bossBar = plugin.getServer().getBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"));
+        if(bossBar != null) {
+            if(bossBar.getPlayers().contains(player)) bossBar.removePlayer(player);
+        }
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+
+        if(event.getPlayer().isOp()) sendOperatorMessage(event.getPlayer());
 
         UUID player = event.getPlayer().getUniqueId();
 
         if (Stats.PLAYERS.containsKey(player)) return;
 
         Stats.PLAYERS.put(player, new Stats(0, 0));
+
+        if(Event.isRunningEvent()) {
+            BossBar bossBar = plugin.getServer().getBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"));
+            if(bossBar != null) {
+                if(bossBar.getPlayers().contains(player)) bossBar.addPlayer(event.getPlayer());
+            }
+        }
+    }
+
+    private void sendOperatorMessage(Player player) {
+        Utils.sendMessage(player, Utils.COLORIZER.colorize("&2[TowerClans] &7Telegram-канал разработчика: &d@tower_phr4se"));
     }
 
     @EventHandler

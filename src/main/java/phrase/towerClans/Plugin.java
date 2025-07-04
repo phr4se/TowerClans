@@ -16,6 +16,7 @@ import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.attribute.clan.Storage;
+import phrase.towerClans.clan.event.Event;
 import phrase.towerClans.clan.event.TimeChecker;
 import phrase.towerClans.command.CommandLogger;
 import phrase.towerClans.command.CommandMapper;
@@ -140,6 +141,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        if(Event.isRunningEvent()) Event.getRunningEvent(Event.EventType.CAPTURE).endEvent();
     }
 
     @Override

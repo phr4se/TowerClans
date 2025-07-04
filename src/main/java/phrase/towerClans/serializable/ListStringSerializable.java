@@ -1,6 +1,5 @@
 package phrase.towerClans.serializable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

@@ -15,6 +15,7 @@ public record Level(int level, int xp, int maximumBalance, int maximumMembers, i
     private static int countLevels;
 
     public static int getXpLevel(int level) {
+        if(!LEVELS.containsKey(level)) return -1;
         return LEVELS.get(level).xp();
     }
 

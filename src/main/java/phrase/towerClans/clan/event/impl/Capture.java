@@ -149,8 +149,10 @@ public class Capture extends Event {
         int plusXp = configurationSection.getInt("xp_for_winning");
         clan.setXp(plusXp);
         int nextLevel = clan.getLevel() + 1;
-        int xp = Level.getXpLevel(nextLevel);
-        if (clan.getXp() >= xp) plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(clan));
+        if(!(Level.getXpLevel(nextLevel) == -1)) {
+            int xp = Level.getXpLevel(nextLevel);
+            if (clan.getXp() >= xp) plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(clan));
+        }
 
         broadcastForPlayersAboutEndEvent(clan.getName());
         disableBossBarForPlayers();
@@ -172,8 +174,11 @@ public class Capture extends Event {
 
         int maxPoint = configurationSection.getInt("max_point");
 
+        configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture.bossbar");
+
         String title = configurationSection.getString("title").replace("%x%", String.valueOf(x)).replace("%y%", String.valueOf(y)).replace("%z%", String.valueOf(z));
-        BossBar bossBar = server.createBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"), Utils.COLORIZER.colorize(title), BarColor.RED, BarStyle.SOLID);
+        BossBar bossBar = server.createBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"), Utils.COLORIZER.colorize(title), BarColor.valueOf(configurationSection.getString("bar_color")), BarStyle.valueOf(configurationSection.getString("bar_style")));
+        long updateBossBar = configurationSection.getLong("update_bossbar");
 
         new BukkitRunnable() {
             @Override
@@ -196,8 +201,7 @@ public class Capture extends Event {
 
 
             }
-        }.runTaskTimer(plugin, 0L,600L);
-
+        }.runTaskTimer(plugin, 0L, updateBossBar);
 
 
     }
@@ -214,6 +218,7 @@ public class Capture extends Event {
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
         int pointPerZone = configurationSection.getInt("point_per_zone");
+        long searchForPlayers = configurationSection.getLong("search_for_players");
 
         new BukkitRunnable() {
 
@@ -260,7 +265,7 @@ public class Capture extends Event {
             }
 
 
-        }.runTaskTimerAsynchronously(plugin, 0L, 1200L);
+        }.runTaskTimerAsynchronously(plugin, 0L, searchForPlayers);
 
     }
 

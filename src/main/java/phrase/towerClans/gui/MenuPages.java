@@ -40,7 +40,6 @@ public class MenuPages {
 
         for(int i = start; i < end; i++) {
             menu.setItem(i - start, contents.get(i));
-
         }
 
         currentPage = page;

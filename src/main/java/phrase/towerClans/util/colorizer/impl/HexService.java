@@ -9,6 +9,7 @@ class HexService implements ColorizerService {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([a-fA-F\\d]{6})");
 
+    @Override
     public String colorize(String message) {
         if (message == null || message.isEmpty()) {
             return message;

@@ -52,7 +52,6 @@ settings:
     capture:
       schematic_name: "event"
       world: "world"
-      title: "&fКоординаты: &d%x% %y% %z% &7| &fЛидер: &6%clan_name%"
       max_point: 200
       xp_for_winning: 1000
       point_per_zone: 100
@@ -70,6 +69,12 @@ settings:
           - "&cВнимание!"
           - "&fКлановый эвент &6завершен"
           - "&fПобедитель: &d%clan_name%"
+      bossbar:
+        title: "&fКоординаты: &d%x% %y% %z% &7| &fЛидер: &6%clan_name%"
+        bar_color: RED
+        bar_style: SOLID
+        update_bossbar: 20
+      search_for_players: 1200
   menu:
     item_per_page: 18
     previous:
