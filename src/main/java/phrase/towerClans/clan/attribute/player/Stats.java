@@ -24,8 +24,8 @@ public class Stats {
 
         for(Map.Entry<ModifiedPlayer, String> entry : members.entrySet()) {
 
-           Stats playerStats = PLAYERS.get(entry.getKey().getPlayerUUID());
-           kills += playerStats.getKills();
+            Stats playerStats = PLAYERS.computeIfAbsent(entry.getKey().getPlayerUUID(), k -> new Stats(0, 0));
+            kills += playerStats.getKills();
 
         }
 
@@ -39,7 +39,7 @@ public class Stats {
 
         for(Map.Entry<ModifiedPlayer, String> entry : members.entrySet()) {
 
-            Stats playerStats = PLAYERS.get(entry.getKey().getPlayerUUID());
+            Stats playerStats = PLAYERS.computeIfAbsent(entry.getKey().getPlayerUUID(), k -> new Stats(0, 0));
             deaths += playerStats.getDeaths();
 
 

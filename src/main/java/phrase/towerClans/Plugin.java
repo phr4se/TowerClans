@@ -22,7 +22,7 @@ import phrase.towerClans.command.CommandLogger;
 import phrase.towerClans.command.CommandMapper;
 import phrase.towerClans.command.CommandResult;
 import phrase.towerClans.config.Config;
-import phrase.towerClans.database.DatabaseMananger;
+import phrase.towerClans.database.DatabaseManager;
 import phrase.towerClans.glow.GlowPacketListener;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.listener.ClanListener;
@@ -41,7 +41,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
     private CommandMapper commandMapper;
     private Economy economy;
     private String path;
-    private DatabaseMananger databaseMananger;
+    private DatabaseManager databaseMananger;
 
     @Override
     public void onEnable() {
@@ -63,7 +63,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         Config.setupMessages(YamlConfiguration.loadConfiguration(getMessagesFile()));
         Config.setupSettings(getConfig());
 
-        databaseMananger = new DatabaseMananger(Config.getSettings().databaseType(), this);
+        databaseMananger = new DatabaseManager(Config.getSettings().databaseType(), this);
 
         initializeSchematicPath();
         commandMapper = new CommandMapper(this);
@@ -187,7 +187,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         return economy;
     }
 
-    public DatabaseMananger getDatabaseMananger() {
+    public DatabaseManager getDatabaseMananger() {
         return databaseMananger;
     }
 }

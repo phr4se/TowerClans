@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DatabaseMananger {
+public class DatabaseManager {
 
     private HikariDataSource hikariDataSource;
     private Database database;
 
-    public DatabaseMananger(DatabaseType databaseType, Plugin plugin) {
+    public DatabaseManager(DatabaseType databaseType, Plugin plugin) {
         switch (databaseType) {
             case SQLITE -> {
                 HikariConfig hikariConfig = new HikariConfig();

@@ -52,9 +52,8 @@ settings:
     capture:
       schematic_name: "event"
       world: "world"
-      max_point: 200
-      xp_for_winning: 1000
-      point_per_zone: 100
+      max_point: 1000
+      point_per_zone: 10
       time_start_event:
         - "13:00:00"
         - "15:00:00"
@@ -74,7 +73,7 @@ settings:
         bar_color: RED
         bar_style: SOLID
         update_bossbar: 20
-      search_for_players: 1200
+      search_for_players: 20
   menu:
     item_per_page: 18
     previous:

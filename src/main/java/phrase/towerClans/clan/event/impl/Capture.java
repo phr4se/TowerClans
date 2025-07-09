@@ -186,8 +186,10 @@ public class Capture extends Event {
 
                 if(!isRunning()) cancel();
 
-                List<String> clansName = POINTS.keySet().stream().limit(1).toList();
-                String clanName = (clansName.isEmpty()) ? "&cНет" : clansName.get(0);
+                String clanName = POINTS.entrySet().stream()
+                                    .max(Map.Entry.comparingByValue())
+                                    .map(Map.Entry::getKey)
+                                    .orElse("&cНет");
                 String newTitle = title.replace("%clan_name%", clanName);
                 bossBar.setTitle(Utils.COLORIZER.colorize(newTitle));
                 int point = (POINTS.get(clanName) == null) ? 0 : POINTS.get(clanName);
@@ -212,6 +214,7 @@ public class Capture extends Event {
         BossBar bossBar = server.getBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"));
 
         bossBar.setVisible(false);
+        bossBar.removeAll();
     }
 
     private void searchForPlayers() {

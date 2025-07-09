@@ -1,7 +1,6 @@
 package phrase.towerClans.database.impl;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
@@ -13,7 +12,7 @@ import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.impl.base.Base;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.database.Database;
-import phrase.towerClans.database.DatabaseMananger;
+import phrase.towerClans.database.DatabaseManager;
 import phrase.towerClans.glow.Glow;
 import phrase.towerClans.serializable.InventorySerializable;
 import phrase.towerClans.serializable.ListStringSerializable;
@@ -25,10 +24,10 @@ import java.util.*;
 
 public class SQLite implements Database {
 
-    private final DatabaseMananger databaseMananger;
+    private final DatabaseManager databaseMananger;
     private final Plugin plugin;
 
-    public SQLite(DatabaseMananger databaseMananger, Plugin plugin) {
+    public SQLite(DatabaseManager databaseMananger, Plugin plugin) {
         this.databaseMananger = databaseMananger;
         this.plugin = plugin;
     }
