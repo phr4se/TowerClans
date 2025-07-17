@@ -52,6 +52,7 @@ settings:
     capture:
       schematic_name: "event"
       world: "world"
+      xp_for_winning: 1000
       max_point: 1000
       point_per_zone: 10
       time_start_event:
