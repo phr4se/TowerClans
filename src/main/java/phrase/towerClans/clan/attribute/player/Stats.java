@@ -1,5 +1,7 @@
 package phrase.towerClans.clan.attribute.player;
 
+import org.bukkit.Bukkit;
+import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 
 import java.util.HashMap;

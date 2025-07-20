@@ -111,7 +111,7 @@ public class SQLite implements Database {
                     preparedStatementUpdate.setString(9, ListStringSerializable.listToString(ClanDataConverter.mapToList(clan.getMembers())));
                     preparedStatementUpdate.setBoolean(10, clan.isPvp());
                     preparedStatementUpdate.setInt(11, clan.getColor().getId());
-                    preparedStatementUpdate.setString(14, clan.getName());
+                    preparedStatementUpdate.setString(12, clan.getName());
                     preparedStatementUpdate.addBatch();
                 }
             }
@@ -211,7 +211,6 @@ public class SQLite implements Database {
     @Override
     public void loadPlayers() {
 
-
         String sql = "SELECT * FROM players";
         try (Connection connection = databaseMananger.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -225,6 +224,6 @@ public class SQLite implements Database {
             throw new RuntimeException(e);
         }
 
-
     }
+
 }

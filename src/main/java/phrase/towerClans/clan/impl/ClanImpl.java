@@ -61,7 +61,6 @@ public class ClanImpl extends AbstractClan {
             Utils.sendMessage(entry.getKey().getPlayer(), string);
         }
 
-
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 

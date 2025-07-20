@@ -7,17 +7,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.event.Event;
-import phrase.towerClans.clan.event.TimeChecker;
 import phrase.towerClans.command.CommandLogger;
 import phrase.towerClans.command.CommandMapper;
 import phrase.towerClans.command.CommandResult;
@@ -97,8 +98,14 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         }
         ProtocolLibrary.getProtocolManager().addPacketListener(new GlowPacketListener(this, PacketType.Play.Server.ENTITY_EQUIPMENT));
 
-        TimeChecker timeChecker = new TimeChecker(this);
-        timeChecker.start();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                databaseMananger.getDatabase().saveClans();
+                databaseMananger.getDatabase().savePlayers();
+            }
+        }.runTaskTimerAsynchronously(this, 0L, 1200L);
+
     }
 
     private boolean setupEconomy() {
@@ -147,9 +154,14 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
+            if(sender instanceof ConsoleCommandSender) {
+                commandMapper.mapCommand(sender, args[0], args);
+                return true;
+            }
             Utils.sendMessage(sender, Config.getMessages().notPlayer());
             return true;
         }
+
         Player player = (Player) sender;
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 

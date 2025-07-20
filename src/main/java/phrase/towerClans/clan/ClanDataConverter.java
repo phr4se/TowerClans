@@ -15,7 +15,7 @@ public class ClanDataConverter {
 
         List<String> list = new ArrayList<>();
 
-        for(Map.Entry<ModifiedPlayer, String> entry : map.entrySet()) list.add((Bukkit.getPlayer(entry.getKey().getPlayerUUID()) == null) ? Bukkit.getOfflinePlayer(entry.getKey().getPlayerUUID()).getName() : Bukkit.getPlayer(entry.getKey().getPlayerUUID()).getName() + ":" + entry.getValue());
+        for(Map.Entry<ModifiedPlayer, String> entry : map.entrySet()) list.add((Bukkit.getPlayer(entry.getKey().getPlayerUUID()) == null) ? Bukkit.getOfflinePlayer(entry.getKey().getPlayerUUID()).getName() + ":" + entry.getValue() : Bukkit.getPlayer(entry.getKey().getPlayerUUID()).getName() + ":" + entry.getValue());
 
         return list;
 

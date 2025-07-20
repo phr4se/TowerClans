@@ -48,7 +48,7 @@ class MenuClanMainService implements MenuService {
                                 .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
                                 .replace("%maximum_balance%", String.valueOf(Level.getLevelMaximumBalance(clan.getLevel())))
                                 .replace("%kills%", String.valueOf(Stats.getKillsMembers(clan.getMembers())))
-                                .replace("%deaths%", String.valueOf(Stats.getDeathsMembers((clan.getMembers()))));
+                                .replace("%deaths%", String.valueOf(Stats.getDeathsMembers(clan.getMembers())));
                         return Utils.COLORIZER.colorize(replacedString);
                     }
             ).collect(Collectors.toList());

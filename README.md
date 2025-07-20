@@ -78,7 +78,7 @@ GUI настраиваются в конфигурационном файле.
 
 Доступно всем
 
-/clan event capture start|stop - запустить/завершить клановый эвент (Право: towerclans.event)
+/clan event capture start|stop - запустить/завершить клановый ивент (Право: towerclans.event)
 
 | Плейсхолдеры
 

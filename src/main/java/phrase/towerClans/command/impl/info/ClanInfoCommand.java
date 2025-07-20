@@ -13,7 +13,6 @@ import java.util.List;
 
 public class ClanInfoCommand implements CommandHandler {
 
-
     @Override
     public boolean handler(Player player, String[] args) {
 
@@ -41,7 +40,7 @@ public class ClanInfoCommand implements CommandHandler {
                     .replace("%xp%", String.valueOf(clan.getXp()))
                     .replace("%balance%", String.valueOf(clan.getBalance()))
                     .replace("%kills%", String.valueOf(Stats.getKillsMembers(clan.getMembers())))
-                    .replace("%deaths%", String.valueOf(Stats.getDeathsMembers((clan.getMembers()))));
+                    .replace("%deaths%", String.valueOf(Stats.getDeathsMembers(clan.getMembers())));
             return Utils.COLORIZER.colorize(replacedString);
         }).toList();
 

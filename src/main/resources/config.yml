@@ -55,19 +55,15 @@ settings:
       xp_for_winning: 1000
       max_point: 1000
       point_per_zone: 10
-      time_start_event:
-        - "13:00:00"
-        - "15:00:00"
-        - "17:00:00"
       width: 5
       height: 5
       length: 5
       messages_start_event:
         - "&cВнимание!"
-        - "&fЗапущен &6клановый эвент"
+        - "&fЗапущен &6клановый ивент"
       messages_end_event:
           - "&cВнимание!"
-          - "&fКлановый эвент &6завершен"
+          - "&fКлановый ивент &6завершен"
           - "&fПобедитель: &d%clan_name%"
       bossbar:
         title: "&fКоординаты: &d%x% %y% %z% &7| &fЛидер: &6%clan_name%"

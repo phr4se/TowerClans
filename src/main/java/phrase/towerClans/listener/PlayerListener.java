@@ -212,13 +212,17 @@ public class PlayerListener implements Listener {
 
         UUID player = event.getPlayer().getUniqueId();
 
-        if (!Stats.PLAYERS.containsKey(player)) Stats.PLAYERS.put(player, new Stats(0, 0));
+        if (!Stats.PLAYERS.containsKey(player)) {
+            Stats stats = new Stats(0, 0);
+            Stats.PLAYERS.put(player, stats);
+        }
 
-        if(Event.isRunningEvent()) {
-            BossBar bossBar = plugin.getServer().getBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"));
-            if(bossBar != null) {
-                if(bossBar.getPlayers().contains(player)) bossBar.addPlayer(event.getPlayer());
-            }
+        BossBar bossBar = plugin.getServer().getBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"));
+        if(!Event.isRunningEvent()) {
+            if(bossBar != null)
+                if(bossBar.getPlayers().contains(player)) bossBar.removePlayer(event.getPlayer());
+        } else {
+            if(bossBar != null) bossBar.addPlayer(event.getPlayer());
         }
     }
 

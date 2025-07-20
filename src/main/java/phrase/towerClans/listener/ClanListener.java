@@ -2,7 +2,6 @@ package phrase.towerClans.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -129,6 +128,7 @@ public class ClanListener implements Listener {
             try {
                 Glow.LeatherColor color = Glow.LeatherColor.valueOf(action);
                 clan.setColor(color);
+                for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) if(Glow.isEnableForPlayer(entry.getKey())) Glow.changeForPlayer(entry.getKey(), true);
             } catch (IllegalArgumentException e) {
                 MenuType menuType = MenuType.valueOf(action);
                 clan.showMenu(modifiedPlayer, menuType);
@@ -170,7 +170,6 @@ public class ClanListener implements Listener {
 
         int nextLevel = clan.getLevel() + 1;
         clan.setLevel(nextLevel);
-        
     }
 
     @EventHandler

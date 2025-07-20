@@ -1,5 +1,6 @@
 package phrase.towerClans.command.impl.event;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
@@ -11,6 +12,8 @@ import phrase.towerClans.clan.event.impl.Capture;
 import phrase.towerClans.command.CommandHandler;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.util.Utils;
+
+import java.util.logging.Logger;
 
 public class ClanEventCommand implements CommandHandler {
 
@@ -66,6 +69,57 @@ public class ClanEventCommand implements CommandHandler {
                     return true;
                 }
                 Utils.sendMessage(player, Config.getCommandMessages().notRunning());
+            }
+        }
+
+        return true;
+    }
+
+    public boolean handler(CommandSender commandSender, String[] args) {
+
+        Logger logger = plugin.getLogger();
+
+        if (args.length < 3) {
+            logger.severe(Config.getCommandMessages().incorrectArguments());
+            return false;
+        }
+
+        Event.EventType eventType;
+        try {
+            eventType = Event.EventType.valueOf(args[1].toUpperCase());
+        } catch (IllegalArgumentException e) {
+            logger.severe(Config.getCommandMessages().incorrectArguments());
+            return true;
+        }
+        String action = args[2];
+
+        if (eventType == Event.EventType.CAPTURE) {
+            if (action.equalsIgnoreCase("start")) {
+                Event event = new Capture(plugin);
+                try {
+                    event.startEvent();
+                } catch (EventAlreadyRun e) {
+                    logger.severe(e.getMessage());
+                    return true;
+                } catch (SchematicNotExist | SchematicDamaged e) {
+                    Event.unRegister(Event.EventType.CAPTURE);
+                    logger.severe(e.getMessage());
+                    return true;
+                }
+                logger.info(Config.getCommandMessages().runnedEvent());
+            } else if (action.equalsIgnoreCase("stop")) {
+                if (Event.isRunningEventType(Event.EventType.CAPTURE)) {
+                    Event runningEvent = Event.getRunningEvent(Event.EventType.CAPTURE);
+                    if (runningEvent == null) {
+                        Event.unRegister(Event.EventType.CAPTURE);
+                        logger.info(Config.getCommandMessages().stoppedEvent());
+                        return true;
+                    }
+                    runningEvent.endEvent();
+                    logger.info(Config.getCommandMessages().stoppedEvent());
+                    return true;
+                }
+                logger.severe(Config.getCommandMessages().notRunning());
             }
         }
 

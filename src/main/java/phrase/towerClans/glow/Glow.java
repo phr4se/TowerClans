@@ -122,7 +122,7 @@ public class Glow {
 
             Player sender = key.getPlayer();
 
-            if(sender == null) return;
+            if(sender == null) continue;
 
             ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
             PacketContainer container = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
@@ -191,7 +191,7 @@ public class Glow {
 
             Player sender = key.getPlayer();
 
-            if(sender == null) return;
+            if(sender == null) continue;
 
             ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
             PacketContainer packetContainer = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
