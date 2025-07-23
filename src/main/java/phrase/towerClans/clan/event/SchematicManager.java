@@ -26,9 +26,11 @@ public class SchematicManager {
     private static final Map<Location, Material> BLOCKS = new HashMap<>();
 
     private File file;
+    private final Plugin plugin;
 
     public SchematicManager(Plugin plugin) {
         file = new File(plugin.getPath());
+        this.plugin = plugin;
     }
 
     public void setSchematic(World world, int minX, int maxX, int minY, int maxY, int minZ, int maxZ){

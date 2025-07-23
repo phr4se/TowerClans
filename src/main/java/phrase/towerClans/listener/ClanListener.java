@@ -163,9 +163,10 @@ public class ClanListener implements Listener {
 
         ClanImpl clan = (ClanImpl) event.getClan();
 
+        String message = Config.getMessages().clanLevelUp();
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = Config.getMessages().clanLevelUp();
-            Utils.sendMessage(entry.getKey().getPlayer(), string);
+            if(entry.getKey() == null) continue;
+            Utils.sendMessage(entry.getKey().getPlayer(), message);
         }
 
         int nextLevel = clan.getLevel() + 1;

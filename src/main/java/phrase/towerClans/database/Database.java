@@ -8,4 +8,5 @@ public interface Database {
     void savePlayers();
     void loadPlayers();
 
+
 }

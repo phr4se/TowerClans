@@ -132,9 +132,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
     public File getMessagesFile() {
         File messagesFile = new File(getDataFolder(), "messages.yml");
 
-        if (!messagesFile.exists()) {
-            saveResource("messages.yml", false);
-        }
+        if (!messagesFile.exists()) saveResource("messages.yml", false);
 
         return messagesFile;
     }
