@@ -7,7 +7,6 @@ depend:
   - ProtocolLib
   - WorldEdit
   - WorldGuard
-soft-depend:
   - PlaceholderAPI
 commands:
   clan: {}
