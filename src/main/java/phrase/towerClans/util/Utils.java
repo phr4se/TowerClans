@@ -19,6 +19,7 @@ public class Utils {
     }
 
     public static void sendMessage(Player player, String message) {
+        if(player == null || message == null) return;
         player.sendMessage(message);
     }
 

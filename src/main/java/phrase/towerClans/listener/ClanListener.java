@@ -165,7 +165,7 @@ public class ClanListener implements Listener {
 
         String message = Config.getMessages().clanLevelUp();
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            if(entry.getKey() == null) continue;
+            if(entry.getKey().getPlayer() == null) continue;
             Utils.sendMessage(entry.getKey().getPlayer(), message);
         }
 
