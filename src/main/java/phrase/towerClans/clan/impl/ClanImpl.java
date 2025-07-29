@@ -119,9 +119,9 @@ public class ClanImpl extends AbstractClan {
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         switch (Rank.RankType.getRank(id)) {
             case LEADER: return new ClanResponse(Config.getCommandMessages().notGiveRankLeader(), ClanResponse.ResponseType.FAILURE);
-            case DEPUTY: clan.getMembers().replace(modifiedPlayer, getMembers().get(modifiedPlayer), Rank.RankType.DEPUTY.getName());
+            case DEPUTY: clan.getMembers().compute(modifiedPlayer, (k, v) -> Rank.RankType.DEPUTY.getName());
                         break;
-            case MEMBER: clan.getMembers().replace(modifiedPlayer, getMembers().get(modifiedPlayer), Rank.RankType.MEMBER.getName());
+            case MEMBER: clan.getMembers().compute(modifiedPlayer, (k, v) -> Rank.RankType.MEMBER.getName());
                         break;
             case UNDEFINED: return new ClanResponse(Config.getCommandMessages().rankNoExists(), ClanResponse.ResponseType.FAILURE);
         }

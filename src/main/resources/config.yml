@@ -1,7 +1,7 @@
 
 settings:
   database: SQLITE
-  cost-creating-level: 10000
+  cost-creating-clan: 10000
   xp-for-murder: 2
   min-size-clan-name: 2
   max-size-clan-name: 10

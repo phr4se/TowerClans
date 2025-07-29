@@ -1,9 +1,7 @@
 package phrase.towerClans.command.impl.rank;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
@@ -45,6 +43,19 @@ public class ClanRankCommand implements CommandHandler {
         }
 
         ModifiedPlayer targetModifierPlayer = ModifiedPlayer.get(targetPlayer);
+
+        if(targetModifierPlayer.getClan() == null) {
+            Utils.sendMessage(player, Config.getCommandMessages().playerNotInClan());
+            return true;
+        }
+
+        ClanImpl targetClan = (ClanImpl) targetModifierPlayer.getClan();
+
+        if(!clan.getName().equals(targetClan.getName())) {
+            Utils.sendMessage(player, Config.getCommandMessages().playerNotInYourselfClan());
+            return true;
+        }
+
 
         int id;
         try {

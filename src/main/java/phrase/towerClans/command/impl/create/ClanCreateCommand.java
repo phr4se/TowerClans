@@ -54,7 +54,7 @@ public class ClanCreateCommand implements CommandHandler {
         }
 
 
-        int amount = Config.getSettings().costCreatingClan();
+        double amount = Config.getSettings().costCreatingClan();
 
         if (ClanImpl.getClans().containsKey(name)) {
             Utils.sendMessage(player, Config.getCommandMessages().clanNameExists());
@@ -62,11 +62,10 @@ public class ClanCreateCommand implements CommandHandler {
         }
 
         if (plugin.getEconomy().getBalance(player) < amount) {
-            String string = Config.getCommandMessages().notEnough().replace("%amount%", String.valueOf(amount - (int)plugin.getEconomy().getBalance(player)));
+            String string = Config.getCommandMessages().notEnough().replace("%amount%", String.valueOf( (int) amount - (int) plugin.getEconomy().getBalance(player)));
             Utils.sendMessage(player, string);
             return true;
         }
-
 
         plugin.getEconomy().withdrawPlayer(player, amount);
 
