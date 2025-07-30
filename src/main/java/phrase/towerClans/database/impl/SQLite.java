@@ -37,7 +37,7 @@ public class SQLite implements Database {
     public void initTable() {
         int max = Config.getSettings().maxSizeClanName();
         String sqlClans = "CREATE TABLE IF NOT EXISTS clans (name VARCHAR(" + max + ") PRIMARY KEY, level INTEGER, xp INTEGER, balance INTEGER, x DOUBLE, y DOUBLE, z DOUBLE, world VARCHAR(255), storage TEXT, members TEXT, pvp INTEGER, id INTEGER);";
-        String sqlPlayers = "CREATE TABLE IF NOT EXISTS players (name VARCHAR(16) PRIMARY KEY, stats TEXT);";
+        String sqlPlayers = "CREATE TABLE IF NOT EXISTS players (name VARCHAR(36) PRIMARY KEY, stats TEXT);";
         try(Connection connection = databaseMananger.getConnection();
             Statement statement = connection.createStatement()) {
             statement.executeUpdate(sqlClans);
@@ -49,7 +49,7 @@ public class SQLite implements Database {
 
     @Override
     public void saveClans() {
-        String check = "SELECT * FROM clans";
+        String check = "SELECT name FROM clans";
         String save = "INSERT INTO clans (name, level, xp, balance, x, y, z, world, storage, members, pvp, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String update = "UPDATE clans SET level = ?, xp = ?, balance = ?, x = ?, y = ?, z = ?, world = ?, storage = ?, members = ?, pvp = ?, id = ? WHERE name = ?";
         String delete = "DELETE FROM clans WHERE name = ?";
@@ -177,7 +177,7 @@ public class SQLite implements Database {
     @Override
     public void savePlayers() {
 
-        String check = "SELECT * FROM players";
+        String check = "SELECT name FROM players";
         String save = "INSERT INTO players (name, stats) VALUES (?, ?)";
         String update = "UPDATE players SET stats = ? WHERE name = ?";
         try (Connection connection = databaseMananger.getConnection();
@@ -188,15 +188,15 @@ public class SQLite implements Database {
             List<String> existingPlayerNames = new ArrayList<>();
             while (resultSet.next()) existingPlayerNames.add(resultSet.getString(1));
             for (Map.Entry<UUID, Stats> entry : Stats.PLAYERS.entrySet()) {
-                String name = (Bukkit.getPlayer(entry.getKey()) == null) ? Bukkit.getOfflinePlayer(entry.getKey()).getName() : Bukkit.getPlayer(entry.getKey()).getName();
-                boolean exists = existingPlayerNames.contains(name);
+                String uuid = entry.getKey().toString();
+                boolean exists = existingPlayerNames.contains(uuid);
                 if (!exists) {
-                    preparedStatementSave.setString(1, name);
+                    preparedStatementSave.setString(1, uuid);
                     preparedStatementSave.setString(2, StatsSerializable.statsToString(entry.getValue()));
                     preparedStatementSave.addBatch();
                 } else {
                     preparedStatementUpdate.setString(1, StatsSerializable.statsToString(entry.getValue()));
-                    preparedStatementUpdate.setString(2, name);
+                    preparedStatementUpdate.setString(2, uuid);
                     preparedStatementUpdate.addBatch();
                 }
             }
@@ -217,7 +217,7 @@ public class SQLite implements Database {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                UUID uuid = Bukkit.getOfflinePlayer(resultSet.getString(1)).getUniqueId();
+                UUID uuid = UUID.fromString(resultSet.getString(1));
                 Stats stats = StatsSerializable.stringToStats(resultSet.getString(2));
                 Stats.PLAYERS.put(uuid, stats);
             }

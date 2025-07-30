@@ -4,10 +4,7 @@ import org.bukkit.Bukkit;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ClanDataConverter {
 
@@ -15,7 +12,7 @@ public class ClanDataConverter {
 
         List<String> list = new ArrayList<>();
 
-        for(Map.Entry<ModifiedPlayer, String> entry : map.entrySet()) list.add((Bukkit.getPlayer(entry.getKey().getPlayerUUID()) == null) ? Bukkit.getOfflinePlayer(entry.getKey().getPlayerUUID()).getName() + ":" + entry.getValue() : Bukkit.getPlayer(entry.getKey().getPlayerUUID()).getName() + ":" + entry.getValue());
+        for(Map.Entry<ModifiedPlayer, String> entry : map.entrySet()) list.add((entry.getKey().getPlayerUUID().toString() + ":" + entry.getValue()));
 
         return list;
 
@@ -26,7 +23,8 @@ public class ClanDataConverter {
 
         data.forEach(string -> {
             String[] strings = string.split(":");
-            ModifiedPlayer modifiedPlayer = new ModifiedPlayer(Bukkit.getOfflinePlayer(strings[0]).getUniqueId(), clan);
+            UUID uuid = UUID.fromString(strings[0]);
+            ModifiedPlayer modifiedPlayer = new ModifiedPlayer(uuid, clan);
             map.put(modifiedPlayer, strings[1]);
         });
 
