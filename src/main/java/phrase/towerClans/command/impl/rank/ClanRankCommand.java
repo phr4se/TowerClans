@@ -34,10 +34,8 @@ public class ClanRankCommand implements CommandHandler {
         }
 
         String name = args[1];
-        Player targetPlayer;
-        try {
-            targetPlayer = Bukkit.getPlayer(name);
-        } catch (NullPointerException e) {
+        Player targetPlayer = Bukkit.getPlayer(name);
+        if(targetPlayer == null) {
             Utils.sendMessage(player, Config.getCommandMessages().playerOffline());
             return true;
         }
