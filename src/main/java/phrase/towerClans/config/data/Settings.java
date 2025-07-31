@@ -9,6 +9,7 @@ public record Settings(DatabaseType databaseType,
                        int xpForMurder,
                        int minSizeClanName,
                        int maxSizeClanName,
-                       List<String> badWords
+                       List<String> badWords,
+                       String unknownClan
                        ){
 }

@@ -110,7 +110,8 @@ public class Config {
                 configurationSectionSettings.getInt("xp-for-murder"),
                 configurationSectionSettings.getInt("min-size-clan-name"),
                 configurationSectionSettings.getInt("max-size-clan-name"),
-                getMessagePrefixed(configurationSectionSettings.getStringList("bad-words"), prefix)
+                getMessagePrefixed(configurationSectionSettings.getStringList("bad-words"), prefix),
+                configurationSectionSettings.getString("unknown-clan")
         );
     }
 

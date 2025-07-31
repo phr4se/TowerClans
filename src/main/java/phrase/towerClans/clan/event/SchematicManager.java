@@ -13,6 +13,10 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import phrase.towerClans.Plugin;
 
 import java.io.File;
@@ -54,9 +58,11 @@ public class SchematicManager {
     private void saveBlocks(World world, int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
         BLOCKS.clear();
 
+        int height = maxY - minY;
+
         for(int x = minX; x <= maxX; x++) {
 
-            for(int y = minY - 1; y <= maxY; y++) {
+            for(int y = minY - height; y <= maxY; y++) {
 
                 for (int z = minZ; z <= maxZ; z++) {
 
@@ -76,12 +82,27 @@ public class SchematicManager {
 
     public void regenerationBlocks(World world, int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
 
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
+
+        boolean teleport = configurationSection.getBoolean("teleport");
+
+        int height = maxY - minY;
+
         for(int x = minX; x <= maxX; x++) {
 
-            for(int y = minY - 1; y <= maxY; y++) {
+            for(int y = minY - height; y <= maxY; y++) {
 
                 for (int z = minZ; z <= maxZ; z++) {
                     Location location = new Location(world, x, y, z);
+
+                    if(teleport && !(location.getNearbyPlayers(1).isEmpty())) {
+                        for(Player player : location.getNearbyPlayers(1)) {
+                            player.teleport(new Location(world, x, maxY + 3, z));
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 100, 0));
+                        }
+
+                    }
+
                     Material material = BLOCKS.get(location);
                     location.getBlock().setType(material);
                 }

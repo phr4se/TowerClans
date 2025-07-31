@@ -7,6 +7,7 @@ settings:
   max-size-clan-name: 10
   bad-words:
     - "Admin"
+  unknown-clan: "Нет"
   level:
     1:
      level: 1
@@ -60,6 +61,7 @@ settings:
       length: 5
       x_range: 1000
       z_range: 1000
+      teleport: true
       messages_start_event:
         - "&cВнимание!"
         - "&fЗапущен &6клановый ивент"

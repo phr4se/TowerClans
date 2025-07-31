@@ -35,6 +35,7 @@ public class Capture extends Event {
 
     private World world;
     private int minX, maxX, minY, maxY, minZ, maxZ;
+    private int width, height, length;
     private Location pos1;
     private Location pos2;
     private ProtectedRegion region;
@@ -68,9 +69,9 @@ public class Capture extends Event {
                 world = Bukkit.getWorld(configurationSection.getString("world"));
 
 
-                int width = configurationSection.getInt("width") - 1;
-                int height = configurationSection.getInt("height") - 1;
-                int length = configurationSection.getInt("length") - 1;
+                width = configurationSection.getInt("width") - 1;
+                height = configurationSection.getInt("height") - 1;
+                length = configurationSection.getInt("length") - 1;
 
                 RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world));
 
@@ -244,7 +245,9 @@ public class Capture extends Event {
                     int y = location.getBlockY();
                     int z = location.getBlockZ();
 
-                    if(x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ) {
+                    int bottomAndTopY = (minY - height);
+
+                    if(x >= minX && x <= maxX && y >= bottomAndTopY && y <= maxY && z >= minZ && z <= maxZ) {
                         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
                         if (modifiedPlayer.getClan() == null) continue;
 
