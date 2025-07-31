@@ -58,6 +58,8 @@ settings:
       width: 5
       height: 5
       length: 5
+      x_range: 1000
+      z_range: 1000
       messages_start_event:
         - "&cВнимание!"
         - "&fЗапущен &6клановый ивент"

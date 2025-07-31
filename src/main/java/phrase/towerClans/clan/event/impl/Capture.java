@@ -53,7 +53,7 @@ public class Capture extends Event {
 
         schematicManager = new SchematicManager(plugin);
 
-        if (!Event.register(EventType.CAPTURE, this)) throw new EventAlreadyRun("Эвент уже запущен");
+        if (!Event.register(EventType.CAPTURE, this)) throw new EventAlreadyRun("Ивент уже запущен");
 
         if (!schematicManager.existsSchematic()) throw new SchematicNotExist("Схематика не существует");
 
@@ -76,9 +76,12 @@ public class Capture extends Event {
 
                 boolean availableCoordines;
                 Random random = new Random();
+
+                int xRange = configurationSection.getInt("x_range");
+                int zRange = configurationSection.getInt("z_range");
                 do {
-                    int x = random.nextInt(1000);
-                    int z = random.nextInt(1000);
+                    int x = random.nextInt(xRange);
+                    int z = random.nextInt(zRange);
                     int y = world.getHighestBlockYAt(x, z);
 
                     pos1 = new Location(world, x, y, z);
@@ -100,7 +103,7 @@ public class Capture extends Event {
 
                     @Override
                     public void run() {
-                        region = new ProtectedCuboidRegion(UUID.randomUUID().toString(), BlockVector3.at(minX, minY - 1, minZ), BlockVector3.at(maxX, maxY, maxZ));
+                        region = new ProtectedCuboidRegion(UUID.randomUUID().toString(), BlockVector3.at(minX, minY - height, minZ), BlockVector3.at(maxX, maxY, maxZ));
                         region.setFlag(Flags.BUILD, StateFlag.State.DENY);
                         region.setFlag(Flags.PVP, StateFlag.State.ALLOW);
                         regionManager.addRegion(region);

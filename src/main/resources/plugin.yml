@@ -1,7 +1,7 @@
 name: TowerClans
-version: '1.2b'
+version: '1.2c'
 main: phrase.towerClans.Plugin
-api-version: '1.18'
+api-version: '1.16'
 depend:
   - Vault
   - ProtocolLib
