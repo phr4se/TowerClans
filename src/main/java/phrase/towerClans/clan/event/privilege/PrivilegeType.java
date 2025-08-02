@@ -1,5 +1,8 @@
 package phrase.towerClans.clan.event.privilege;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum PrivilegeType {
 
     FLY,
@@ -26,7 +29,7 @@ public enum PrivilegeType {
             }
         }
 
-    };
+    }
 
     public PrivilegeChecker getPrivilegeChecker() {
         return privilegeChecker;

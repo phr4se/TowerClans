@@ -9,6 +9,10 @@ settings:
     - "Admin"
   unknown-clan: "Нет"
   type: "Essentials"
+  disable-privilege-type:
+    - "FLY"
+    - "GOD"
+    - "VANISH"
   level:
     1:
      level: 1

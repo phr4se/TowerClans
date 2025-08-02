@@ -14,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -95,10 +96,14 @@ public class SchematicManager {
                 for (int z = minZ; z <= maxZ; z++) {
                     Location location = new Location(world, x, y, z);
 
-                    if(teleport && !world.getNearbyPlayers(location, 1).isEmpty()) {
-                        for(Player player : world.getNearbyPlayers(location, 1)) {
-                            player.teleport(new Location(world, x, maxY + 3, z));
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 100, 0));
+                    if(teleport && !world.getNearbyEntities(location, 1, 1, 1).isEmpty()) {
+                        for(Entity entity : world.getNearbyEntities(location, 1, 1, 1)) {
+
+                            if(entity instanceof Player player) {
+                                player.teleport(new Location(world, x, maxY + 3, z));
+                                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 100, 0));
+                            }
+
                         }
 
                     }

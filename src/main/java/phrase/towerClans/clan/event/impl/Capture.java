@@ -252,10 +252,11 @@ public class Capture extends Event {
 
                 for (Player player : world.getPlayers()) {
                     if(playerAtEvent(player)) {
+
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                if(PrivilegeManager.hasPrivilege(player)) PrivilegeManager.disablePrivilege(player);
+                                if(PrivilegeManager.hasPrivilege(player, Config.getSettings().disablePrivilegeType())) PrivilegeManager.disablePrivilege(player, Config.getSettings().disablePrivilegeType());
                             }
                         }.runTask(plugin);
 

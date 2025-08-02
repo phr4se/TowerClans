@@ -2,6 +2,7 @@ package phrase.towerClans.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import phrase.towerClans.clan.event.privilege.PrivilegeManager;
 import phrase.towerClans.config.data.CommandMessages;
 import phrase.towerClans.config.data.Messages;
 import phrase.towerClans.config.data.Settings;
@@ -113,7 +114,8 @@ public class Config {
                 configurationSectionSettings.getInt("max-size-clan-name"),
                 getMessagePrefixed(configurationSectionSettings.getStringList("bad-words"), prefix),
                 configurationSectionSettings.getString("unknown-clan"),
-                configurationSectionSettings.getString("type")
+                configurationSectionSettings.getString("type"),
+                PrivilegeManager.transformation(configurationSectionSettings.getStringList("disable-privilege-type"))
         );
     }
 
