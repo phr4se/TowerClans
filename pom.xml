@@ -6,7 +6,7 @@
 
     <groupId>phrase</groupId>
     <artifactId>TowerClans</artifactId>
-    <version>1.2d</version>
+    <version>1.3</version>
     <packaging>jar</packaging>
 
     <name>TowerClans</name>
@@ -75,6 +75,10 @@
             <id>enginehub-maven</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
+        <repository>
+            <id>essentials-releases</id>
+            <url>https://repo.essentialsx.net/releases/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -124,6 +128,12 @@
             <artifactId>HikariCP</artifactId>
             <version>5.1.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.essentialsx</groupId>
+            <artifactId>EssentialsX</artifactId>
+            <version>2.20.1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

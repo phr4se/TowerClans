@@ -95,8 +95,8 @@ public class SchematicManager {
                 for (int z = minZ; z <= maxZ; z++) {
                     Location location = new Location(world, x, y, z);
 
-                    if(teleport && !(location.getNearbyPlayers(1).isEmpty())) {
-                        for(Player player : location.getNearbyPlayers(1)) {
+                    if(teleport && !world.getNearbyPlayers(location, 1).isEmpty()) {
+                        for(Player player : world.getNearbyPlayers(location, 1)) {
                             player.teleport(new Location(world, x, maxY + 3, z));
                             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 100, 0));
                         }

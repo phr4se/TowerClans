@@ -12,6 +12,7 @@ public record Messages(String noPermission,
                        String clanNameLimit,
                        String clanNameBadWord,
                        String noClan,
-                       String placeFormat
+                       String placeFormat,
+                       String useBlockedCommand
                        ){
 }

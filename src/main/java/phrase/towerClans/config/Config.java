@@ -32,7 +32,8 @@ public class Config {
                 getMessagePrefixed(configurationSectionMessages.getString("clan-name-limit"), prefix),
                 getMessagePrefixed(configurationSectionMessages.getString("clan-name-bad-word"), prefix),
                 getMessagePrefixed(configurationSectionMessages.getString("no-clan"), prefix),
-                getMessagePrefixed(configurationSectionMessages.getString("place-format"), prefix)
+                getMessagePrefixed(configurationSectionMessages.getString("place-format"), prefix),
+                getMessagePrefixed(configurationSectionMessages.getString("use-blocked-command"), prefix)
                 );
 
         ConfigurationSection configurationSectionCommandMessages = fileConfiguration.getConfigurationSection("messages.command");
@@ -111,7 +112,8 @@ public class Config {
                 configurationSectionSettings.getInt("min-size-clan-name"),
                 configurationSectionSettings.getInt("max-size-clan-name"),
                 getMessagePrefixed(configurationSectionSettings.getStringList("bad-words"), prefix),
-                configurationSectionSettings.getString("unknown-clan")
+                configurationSectionSettings.getString("unknown-clan"),
+                configurationSectionSettings.getString("type")
         );
     }
 

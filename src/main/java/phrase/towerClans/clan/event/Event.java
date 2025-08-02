@@ -1,6 +1,7 @@
 package phrase.towerClans.clan.event;
 
 import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.event.privilege.PrivilegeManager;
 import phrase.towerClans.clan.impl.ClanImpl;
 
 import java.util.HashMap;

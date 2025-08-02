@@ -2,6 +2,7 @@ package phrase.towerClans.listener;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,10 +11,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
@@ -23,8 +21,11 @@ import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.event.Event;
+import phrase.towerClans.clan.event.impl.Capture;
+import phrase.towerClans.clan.event.privilege.PrivilegeManager;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.impl.invite.PlayerCalls;
+import phrase.towerClans.config.Config;
 import phrase.towerClans.event.*;
 import phrase.towerClans.glow.Glow;
 import phrase.towerClans.gui.MenuFactory;
@@ -42,7 +43,7 @@ public class PlayerListener implements Listener {
 
     public PlayerListener(Plugin plugin) {
         this.plugin = plugin;
-        pluginManager = plugin.getServer().getPluginManager();
+        this.pluginManager = plugin.getServer().getPluginManager();
     }
 
     @EventHandler
@@ -238,6 +239,25 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onChangeWorld(PlayerChangedWorldEvent event) {
         Glow.changeForPlayer(ModifiedPlayer.get(event.getPlayer()), true);
+    }
+
+    @EventHandler
+    public void onCommandPreprocessCommand(PlayerCommandPreprocessEvent event) {
+
+        if(!Event.isRunningEventType(Event.EventType.CAPTURE)) return;
+
+        Capture capture = (Capture) Event.getRunningEvent(Event.EventType.CAPTURE);
+
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
+        List<String> blockedCommands = configurationSection.getStringList("blocked_commands");
+
+        String command = event.getMessage().split(" ")[0].replaceFirst("/", "");
+        Player player = event.getPlayer();
+        if(capture.playerAtEvent(player) && blockedCommands.contains(command)) {
+            Utils.sendMessage(player, Config.getMessages().useBlockedCommand().replace("%command%", command));
+            event.setCancelled(true);
+        }
+
     }
 
 }

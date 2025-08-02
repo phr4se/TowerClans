@@ -3,8 +3,6 @@ package phrase.towerClans.clan.event.impl;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -19,11 +17,14 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.event.Event;
+import phrase.towerClans.clan.event.RegionFlag;
 import phrase.towerClans.clan.event.SchematicManager;
 import phrase.towerClans.clan.event.exception.EventAlreadyRun;
 import phrase.towerClans.clan.event.exception.SchematicDamaged;
 import phrase.towerClans.clan.event.exception.SchematicNotExist;
+import phrase.towerClans.clan.event.privilege.PrivilegeManager;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.config.Config;
 import phrase.towerClans.event.LevelUpEvent;
 import phrase.towerClans.util.Utils;
 
@@ -105,8 +106,8 @@ public class Capture extends Event {
                     @Override
                     public void run() {
                         region = new ProtectedCuboidRegion(UUID.randomUUID().toString(), BlockVector3.at(minX, minY - height, minZ), BlockVector3.at(maxX, maxY, maxZ));
-                        region.setFlag(Flags.BUILD, StateFlag.State.DENY);
-                        region.setFlag(Flags.PVP, StateFlag.State.ALLOW);
+                        RegionFlag.setRegionFlags(region, configurationSection.getStringList("region_flags"));
+
                         regionManager.addRegion(region);
 
                         schematicManager.setSchematic(world, minX, maxX, minY, maxY, minZ, maxZ);
@@ -193,7 +194,7 @@ public class Capture extends Event {
                 String clanName = POINTS.entrySet().stream()
                                     .max(Map.Entry.comparingByValue())
                                     .map(Map.Entry::getKey)
-                                    .orElse("&cНет");
+                                    .orElse(Config.getSettings().unknownClan());
                 String newTitle = title.replace("%clan_name%", clanName);
                 bossBar.setTitle(Utils.COLORIZER.colorize(newTitle));
                 int point = (POINTS.get(clanName) == null) ? 0 : POINTS.get(clanName);
@@ -221,6 +222,16 @@ public class Capture extends Event {
         bossBar.removeAll();
     }
 
+    public boolean playerAtEvent(Player player) {
+        Location location = player.getLocation();
+        int x = location.getBlockX();
+        int y = location.getBlockY();
+        int z = location.getBlockZ();
+        int bottomAndTopY = (minY - height);
+
+        return (x >= minX && x <= maxX && y >= bottomAndTopY && y <= maxY && z >= minZ && z <= maxZ);
+    }
+
     private void searchForPlayers() {
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
@@ -239,15 +250,15 @@ public class Capture extends Event {
 
                 PLAYERS.clear();
 
-                for (Player player : plugin.getServer().getOnlinePlayers()) {
-                    Location location = player.getLocation();
-                    int x = location.getBlockX();
-                    int y = location.getBlockY();
-                    int z = location.getBlockZ();
+                for (Player player : world.getPlayers()) {
+                    if(playerAtEvent(player)) {
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                if(PrivilegeManager.hasPrivilege(player)) PrivilegeManager.disablePrivilege(player);
+                            }
+                        }.runTask(plugin);
 
-                    int bottomAndTopY = (minY - height);
-
-                    if(x >= minX && x <= maxX && y >= bottomAndTopY && y <= maxY && z >= minZ && z <= maxZ) {
                         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
                         if (modifiedPlayer.getClan() == null) continue;
 

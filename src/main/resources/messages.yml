@@ -29,6 +29,7 @@ messages:
   clan-name-bad-word: "&cНазвание клана входит в список плохих слов"
   no-clan: "&cНет кланов"
   place-format: "&6%place%. &e%clan_name%: &6%xp% &fXP"
+  use-blocked-command: "&6%command% &fнельзя использовать на ивенте"
 
   command:
     no-permission: "&cУ вас должен быть выше ранг"

@@ -19,6 +19,7 @@ import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.event.Event;
+import phrase.towerClans.clan.event.privilege.PrivilegeManager;
 import phrase.towerClans.command.CommandLogger;
 import phrase.towerClans.command.CommandMapper;
 import phrase.towerClans.command.CommandResult;
@@ -29,7 +30,6 @@ import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.listener.ClanListener;
 import phrase.towerClans.listener.PlayerListener;
 import phrase.towerClans.util.Placeholder;
-import phrase.towerClans.util.UpdateChecker;
 import phrase.towerClans.util.Utils;
 
 import java.io.File;
@@ -43,6 +43,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
     private Economy economy;
     private String path;
     private DatabaseManager databaseMananger;
+    private PrivilegeManager privilegeManager;
 
     @Override
     public void onEnable() {
@@ -51,9 +52,6 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
         saveDefaultConfig();
-
-        if (!UpdateChecker.check().equals(getDescription().getVersion()))
-            logger.severe("Вы используете устаревшую версию плагина");
 
         if (!pluginManager.isPluginEnabled("WorldEdit") && !pluginManager.isPluginEnabled("WorldGuard")) {
             logger.severe("WorldEdit и WorldGuard не найден. Плагин будет выключен");
@@ -96,7 +94,10 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
             pluginManager.disablePlugin(this);
             return;
         }
+
         ProtocolLibrary.getProtocolManager().addPacketListener(new GlowPacketListener(this, PacketType.Play.Server.ENTITY_EQUIPMENT));
+
+        PrivilegeManager.setPrivilege(Config.getSettings().type(), this);
 
         new BukkitRunnable() {
             @Override
@@ -199,5 +200,9 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
     public DatabaseManager getDatabaseMananger() {
         return databaseMananger;
+    }
+
+    public PrivilegeManager getPrivilegeManager() {
+        return privilegeManager;
     }
 }

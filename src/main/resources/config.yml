@@ -8,6 +8,7 @@ settings:
   bad-words:
     - "Admin"
   unknown-clan: "Нет"
+  type: "Essentials"
   level:
     1:
      level: 1
@@ -75,6 +76,13 @@ settings:
         bar_style: SOLID
         update_bossbar: 20
       search_for_players: 20
+      blocked_commands:
+        - "fly"
+        - "god"
+        - "vanish"
+      region_flags:
+        - "PVP: ALLOW"
+        - "BUILD: DENY"
   menu:
     item_per_page: 18
     previous:
