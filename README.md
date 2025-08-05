@@ -1,86 +1,114 @@
-Плагин TowerClans добавляет кланы.
+The plugin adds clans
 
-| Уровень клана
+Clan Leveling: Expand Your Reach!
 
-Улучшая уровень клана, вы увеличиваете лимит баланса.
-Убивая мобов, вы получаете XP.
-Выигрывая клановый эвент, вы получаете XP.
+| Increase your clan level to unlock:
+| Larger Clan Storage Capacity
+| Higher Clan Treasury Limit
+| Increased Clan Member Capacity
 
-| Топ кланов
+Ways to Earn Clan XP:
 
-Чем выше уровень клана, тем выше в топе.
+| Monster Slayer: Defeat mobs to earn valuable Clan XP.
+| Event Domination: Secure victory in Clan Events to gain significant XP boosts.
 
-| GUI 
+Rise to the Top!
 
-GUI настраиваются в конфигурационном файле.
+| Clans are ranked by their level on the leaderboard.
+| Increase your clan level to climb the ranks and prove your dominance!
 
-| Команды и право
+Customizable GUIs:
 
-/clan create <имя> - создать клан (Право: towerclans.create)
+| Personalize your Clan experience with customizable GUIs!
+| All GUI configurations are easily managed within the dedicated configuration file.
 
-/clan disband - удалить клан (Право: towerclans.disband)
+️Placeholder:
 
-Доступно только лидеру
+| %towerclans_clan_name%: Displays the name of the clan a player is currently a member of. Use it in chat, signs, or anywhere placeholders are supported!
 
-/clan menu - открыть меню клана (Право: towerclans.menu)
+Clan Commands & Permissions
 
-Доступно всем
+Here's a comprehensive overview of all available clan commands and their associated permissions. Remember to grant players the correct permissions for optimal gameplay!
 
-/clan invite <игрок> - отправить приглашение в клан (Право: towerclans.invite)
+Clan Commands & Permissions
 
-Доступно лидеру и заместителю
+Here's a comprehensive overview of all available clan commands and their associated permissions. Remember to grant players the correct permissions for optimal gameplay!
 
-/clan accept - принять приглашение в клан (Право: towerclans.accept)
+Clan Command List
 
-/clan cancel - отклонить приглашение в клан (Право: towerclans.cancel)
+| /clan create <name> - Create a new clan.
+    * Permission: towerclans.create
+    * All
 
-/clan kick <игрок> - исключить игрока из клана (Право: towerclans.kick)
+| /clan disband - Disband your clan.
+    * Permission: towerclans.disband
+    * Leader Only
 
-Доступно лидеру и заместителю
+| /clan menu - Open the clan menu.
+    * Permission: towerclans.menu
+    * All
 
-/clan leave - покинуть клан (Право: towerclans.leave)
+| /clan invite <player> - Invite a player to your clan.
+    * Permission: towerclans.invite
+    * Leader, Deputy
 
-Доступно всем кроме лидера
+| /clan accept - Accept a clan invitation.
+    * Permission: towerclans.accept
+    * All
 
-/clan invest <сумма> - положить в клан (Право: towerclans.invest)
+| /clan cancel - Decline a clan invitation.
+    * Permission: towerclans.cancel
+    * All
 
-Доступно всем
+| /clan kick <player> - Kick a player from the clan.
+    * Permission: towerclans.kick
+    * Leader, Deputy
 
-/clan withdraw <сумма> - снять с клана (Право: towerclans.withdraw)
+| /clan leave - Leave your current clan.
+    * Permission: towerclans.leave
+    * Member (excluding Leader)
 
-Доступно лидеру и заместителю
+| /clan invest <amount> - Deposit funds into the clan treasury.
+    * Permission: towerclans.invest
+    * All
 
-/clan pvp - включить/выключить PVP-режим в клане (Право: towerclans.pvp)
+| /clan withdraw <amount> - Withdraw funds from the clan treasury.
+    * Permission: towerclans.withdraw
+    * Leader, Deputy
 
-Доступно лидеру и заместителю
+| /clan pvp - Toggle clan-wide PVP mode (on/off).
+    * Permission: towerclans.pvp
+    * Leader, Deputy
 
-/clan chat <сообщение> - отправить сообщение в чат клана (Право: towerclans.chat)
+| /clan chat <message> - Send a message to the clan chat.
+    * Permission: towerclans.chat
+    * All
 
-Доступно всем
+| /clan rank <player> <2-Deputy, 3-Member> - Assign a rank to a player within the clan.
+    * Permission: towerclans.rank
+    * Leader Only
 
-/clan rank <игрок> <2 - заместитель, 3 - участник> - назначить ранг игроку (Право: towerclans.rank)
+| /clan info <clan name> - View information about a clan.
+    * Permission: towerclans.info
+    * All
 
-Доступно только лидеру
+| /clan stats <player> - View statistics for a player.
+    * Permission: towerclans.stats
+    * All
 
-/clan reload - перезагрузить конфиг (Право: towerclans.reload)
+| /clan storage - Open the clan storage.
+    * Permission: towerclans.storage
+    * All
 
-/clan info <имя> - посмотреть информацию об клане (Право: towerclans.info)
+| /clan glow - Toggle clan glow effect (on/off).
+    * Permission: towerclans.glow
+    * All
 
-Доступно всем
+| /clan event capture start|stop - Start or stop a clan capture event.
+    * Permission: towerclans.event
+    * All
 
-/clan stats <игрок> - посмотреть информацию об игроке (Право: towerclans.stats)
-
-/clan storage - открыть хранилище клана (Право: towerclans.storage)
-
-Доступно всем
-
-/clan glow - включить/выключить свечение (Право: towerclans.glow)
-
-Доступно всем
-
-/clan event capture start|stop - запустить/завершить клановый ивент (Право: towerclans.event)
-
-| Плейсхолдеры
-
-%towerclans_clan_name% - название клана в котором состоит игрок
+| /clan reload - Reload the clan configuration file.
+    * Permission: towerclans.reload
+    * All
 

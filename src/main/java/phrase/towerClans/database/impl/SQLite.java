@@ -2,7 +2,6 @@ package phrase.towerClans.database.impl;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
 import phrase.towerClans.Plugin;
