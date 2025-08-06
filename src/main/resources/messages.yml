@@ -1,6 +1,6 @@
 
 messages:
-  prefix: "&#FF00FF[⚔] "
+  prefix: "&#FF00FF[⚔]"
   no-permission: "&cУ вас нет прав"
   not-in-clan:
     - "%prefix% &6/clan create - &fсоздать клан"

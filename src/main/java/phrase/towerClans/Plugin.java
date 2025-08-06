@@ -23,6 +23,7 @@ import phrase.towerClans.clan.event.privilege.PrivilegeManager;
 import phrase.towerClans.command.CommandLogger;
 import phrase.towerClans.command.CommandMapper;
 import phrase.towerClans.command.CommandResult;
+import phrase.towerClans.command.impl.ClanTabCompleter;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.database.DatabaseManager;
 import phrase.towerClans.glow.GlowPacketListener;
@@ -83,6 +84,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         databaseMananger.getDatabase().loadPlayers();
 
         getCommand("clan").setExecutor(this);
+        getCommand("clan").setTabCompleter(new ClanTabCompleter(this));
 
         if (pluginManager.isPluginEnabled("PlaceholderAPI")) new Placeholder().register();
 
