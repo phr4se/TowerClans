@@ -44,29 +44,29 @@ public class CommandLogger {
     }
 
     private void intialize() {
-        COMMANDS.put("create", new CommandDescription("towerclans.create", new ClanCreateCommand(plugin)));
-        COMMANDS.put("disband", new CommandDescription("towerclans.disband", new ClanDisbandCommand()));
-        COMMANDS.put("invest", new CommandDescription("towerclans.invest", new ClanInvestCommand()));
-        COMMANDS.put("withdraw", new CommandDescription("towerclans.withdraw", new ClanWithdrawCommand()));
-        COMMANDS.put("invite", new CommandDescription("towerclans.invite", new ClanInviteCommand(plugin)));
-        COMMANDS.put("kick", new CommandDescription("towerclans.kick", new ClanKickCommand(plugin)));
-        COMMANDS.put("accept", new CommandDescription("towerclans.accept", new ClanAcceptCommand(plugin)));
-        COMMANDS.put("cancel", new CommandDescription("towerclans.cancel", new ClanCancelCommand()));
-        COMMANDS.put("reload", new CommandDescription("towerclans.reload", new ClanReloadCommand(plugin)));
-        COMMANDS.put("leave", new CommandDescription("towerclans.leave", new ClanLeaveCommand(plugin)));
-        COMMANDS.put("chat", new CommandDescription("towerclans.disband", new ClanChatCommand()));
-        COMMANDS.put("menu", new CommandDescription("towerclans.menu", new ClanMenuCommand()));
-        COMMANDS.put("pvp", new CommandDescription("towerclans.pvp", new ClanPvpCommand()));
-        COMMANDS.put("rank", new CommandDescription("towerclans.rank", new ClanRankCommand()));
-        COMMANDS.put("stats", new CommandDescription("towerclans.stats", new ClanStatsCommand()));
-        COMMANDS.put("info", new CommandDescription("towerclans.info", new ClanInfoCommand()));
-        COMMANDS.put("top", new CommandDescription("towerclans.top", new ClanTopCommand()));
-        COMMANDS.put("base", new CommandDescription("towerclans.base", new ClanBaseCommand()));
-        COMMANDS.put("setbase", new CommandDescription("towerclans.setbase", new ClanSetBaseCommand()));
-        COMMANDS.put("delbase", new CommandDescription("towerclans.delbase", new ClanDelBaseCommand()));
-        COMMANDS.put("storage", new CommandDescription("towerclans.storage", new ClanStorageCommand()));
-        COMMANDS.put("glow", new CommandDescription("towerclans.glow", new ClanGlowCommand(plugin)));
-        COMMANDS.put("event", new CommandDescription("towerclans.event", new ClanEventCommand(plugin)));
+        COMMANDS.put("create", new CommandDescription("towerclans.create", new ClanCreateCommand(plugin), CommandDescription.CommandType.WITHOUT_CLAN));
+        COMMANDS.put("disband", new CommandDescription("towerclans.disband", new ClanDisbandCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("invest", new CommandDescription("towerclans.invest", new ClanInvestCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("withdraw", new CommandDescription("towerclans.withdraw", new ClanWithdrawCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("invite", new CommandDescription("towerclans.invite", new ClanInviteCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("kick", new CommandDescription("towerclans.kick", new ClanKickCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("accept", new CommandDescription("towerclans.accept", new ClanAcceptCommand(plugin), CommandDescription.CommandType.WITHOUT_CLAN));
+        COMMANDS.put("cancel", new CommandDescription("towerclans.cancel", new ClanCancelCommand(), CommandDescription.CommandType.WITHOUT_CLAN));
+        COMMANDS.put("reload", new CommandDescription("towerclans.reload", new ClanReloadCommand(plugin), CommandDescription.CommandType.ADMIN));
+        COMMANDS.put("leave", new CommandDescription("towerclans.leave", new ClanLeaveCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("chat", new CommandDescription("towerclans.disband", new ClanChatCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("menu", new CommandDescription("towerclans.menu", new ClanMenuCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("pvp", new CommandDescription("towerclans.pvp", new ClanPvpCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("rank", new CommandDescription("towerclans.rank", new ClanRankCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("stats", new CommandDescription("towerclans.stats", new ClanStatsCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("info", new CommandDescription("towerclans.info", new ClanInfoCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("top", new CommandDescription("towerclans.top", new ClanTopCommand(), CommandDescription.CommandType.WITHOUT_CLAN));
+        COMMANDS.put("base", new CommandDescription("towerclans.base", new ClanBaseCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("setbase", new CommandDescription("towerclans.setbase", new ClanSetBaseCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("delbase", new CommandDescription("towerclans.delbase", new ClanDelBaseCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("storage", new CommandDescription("towerclans.storage", new ClanStorageCommand(), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("glow", new CommandDescription("towerclans.glow", new ClanGlowCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
+        COMMANDS.put("event", new CommandDescription("towerclans.event", new ClanEventCommand(plugin), CommandDescription.CommandType.ADMIN));
     }
 
 }
