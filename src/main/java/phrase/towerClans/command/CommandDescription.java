@@ -7,6 +7,7 @@ public class CommandDescription {
 
         WITH_CLAN,
         WITHOUT_CLAN,
+        AND,
         ADMIN
 
     }

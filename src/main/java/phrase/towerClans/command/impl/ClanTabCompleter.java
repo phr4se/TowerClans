@@ -34,7 +34,7 @@ public class ClanTabCompleter implements TabCompleter {
 
             if(modifiedPlayer.getClan() == null) {
 
-                if (args.length == 1) return new ArrayList<>(CommandLogger.getCommands().entrySet().stream().filter(entry -> player.hasPermission(entry.getValue().getPermission()) && (entry.getValue().getCommandType() == CommandDescription.CommandType.WITHOUT_CLAN || entry.getValue().getCommandType() == CommandDescription.CommandType.ADMIN)).map(Map.Entry::getKey).toList());
+                if (args.length == 1) return new ArrayList<>(CommandLogger.getCommands().entrySet().stream().filter(entry -> player.hasPermission(entry.getValue().getPermission()) && (entry.getValue().getCommandType() == CommandDescription.CommandType.WITHOUT_CLAN || entry.getValue().getCommandType() == CommandDescription.CommandType.AND ||entry.getValue().getCommandType() == CommandDescription.CommandType.ADMIN)).map(Map.Entry::getKey).toList());
                 if(args[0].equals("event") && player.hasPermission(CommandLogger.getCommands().get("event").getPermission())) {
                     if(args.length == 2) return List.of("capture");
                     if(args.length == 3) return List.of("start",
@@ -45,7 +45,7 @@ public class ClanTabCompleter implements TabCompleter {
 
                 ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-                if (args.length == 1) return new ArrayList<>(CommandLogger.getCommands().entrySet().stream().filter(entry -> player.hasPermission(entry.getValue().getPermission()) && (entry.getValue().getCommandType() == CommandDescription.CommandType.WITH_CLAN || entry.getValue().getCommandType() == CommandDescription.CommandType.ADMIN) || entry.getKey().equals("top")).map(Map.Entry::getKey).toList());
+                if (args.length == 1) return new ArrayList<>(CommandLogger.getCommands().entrySet().stream().filter(entry -> player.hasPermission(entry.getValue().getPermission()) && (entry.getValue().getCommandType() == CommandDescription.CommandType.WITH_CLAN || entry.getValue().getCommandType() == CommandDescription.CommandType.AND || entry.getValue().getCommandType() == CommandDescription.CommandType.ADMIN)).map(Map.Entry::getKey).toList());
 
                 if(args[0].equals("invite")) return new ArrayList<>(plugin.getServer().getOnlinePlayers().stream().filter(p -> ModifiedPlayer.get(p).getClan() == null).map(Player::getName).toList());
                 if(args[0].equals("kick")) return new ArrayList<>(clan.getMembers().keySet().stream().map(o1 -> (o1.getPlayer() == null) ? Bukkit.getOfflinePlayer(o1.getPlayerUUID()).getName() : o1.getPlayer().getName()).toList());

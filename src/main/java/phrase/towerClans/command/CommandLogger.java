@@ -60,7 +60,7 @@ public class CommandLogger {
         COMMANDS.put("rank", new CommandDescription("towerclans.rank", new ClanRankCommand(), CommandDescription.CommandType.WITH_CLAN));
         COMMANDS.put("stats", new CommandDescription("towerclans.stats", new ClanStatsCommand(), CommandDescription.CommandType.WITH_CLAN));
         COMMANDS.put("info", new CommandDescription("towerclans.info", new ClanInfoCommand(), CommandDescription.CommandType.WITH_CLAN));
-        COMMANDS.put("top", new CommandDescription("towerclans.top", new ClanTopCommand(), CommandDescription.CommandType.WITHOUT_CLAN));
+        COMMANDS.put("top", new CommandDescription("towerclans.top", new ClanTopCommand(), CommandDescription.CommandType.AND));
         COMMANDS.put("base", new CommandDescription("towerclans.base", new ClanBaseCommand(), CommandDescription.CommandType.WITH_CLAN));
         COMMANDS.put("setbase", new CommandDescription("towerclans.setbase", new ClanSetBaseCommand(), CommandDescription.CommandType.WITH_CLAN));
         COMMANDS.put("delbase", new CommandDescription("towerclans.delbase", new ClanDelBaseCommand(), CommandDescription.CommandType.WITH_CLAN));
