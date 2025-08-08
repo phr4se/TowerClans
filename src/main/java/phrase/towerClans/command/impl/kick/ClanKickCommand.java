@@ -83,6 +83,11 @@ public class ClanKickCommand implements CommandHandler {
             return true;
         }
 
+        if(!clan.getMembers().containsKey(targetModifiedPlayer)) {
+            Utils.sendMessage(player, Config.getCommandMessages().playerNotInYourselfClan());
+            return true;
+        }
+
         if (clan.getMembers().get(targetModifiedPlayer).equals(Rank.RankType.LEADER.getName())) {
             Utils.sendMessage(player, Config.getCommandMessages().notLeaveWithClan());
             return true;
