@@ -4,9 +4,13 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.AbstractClan;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.config.Config;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class Placeholder extends PlaceholderExpansion {
 
@@ -22,7 +26,7 @@ public class Placeholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.4b";
+        return "1.5";
     }
 
     @Override
@@ -40,6 +44,25 @@ public class Placeholder extends PlaceholderExpansion {
             return clan.getName();
         }
 
+        if(identifier.startsWith("top_")) {
+
+            if(identifier.split("_").length != 2) return Config.getSettings().unknownClan();
+
+            int num = Integer.parseInt(identifier.split("_")[1]);
+
+            if(num < 0) return Config.getSettings().unknownClan();
+
+
+            List<ClanImpl> clanList = ClanImpl.getClans().values().stream().sorted((o, o1) -> Integer.compare(o1.getXp(), o.getXp())).limit(10).toList();
+
+            if (num >= clanList.size()) return Config.getSettings().unknownClan();
+
+
+            return clanList.get(num).getName();
+
+        }
+
         return null;
+
     }
 }

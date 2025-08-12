@@ -18,7 +18,7 @@ public class ClanTopCommand implements CommandHandler {
     @Override
     public boolean handler(Player player, String[] args) {
 
-        List<ClanImpl> clanList = ClanImpl.getClans().values().stream().sorted((o, o1) -> Integer.compare(o1.getXp(), o.getXp())).limit(10).collect(Collectors.toList());
+        List<ClanImpl> clanList = ClanImpl.getClans().values().stream().sorted((o, o1) -> Integer.compare(o1.getXp(), o.getXp())).limit(10).toList();
         int place = 1;
         String format = Config.getMessages().placeFormat();
         List<String> list = new ArrayList<>();
