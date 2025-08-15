@@ -9,6 +9,8 @@ import phrase.towerClans.clan.ClanDataConverter;
 import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.clan.permission.Permission;
+import phrase.towerClans.clan.permission.PermissionType;
 import phrase.towerClans.command.impl.base.Base;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.database.Database;
@@ -16,6 +18,7 @@ import phrase.towerClans.database.DatabaseManager;
 import phrase.towerClans.glow.Glow;
 import phrase.towerClans.serializable.InventorySerializable;
 import phrase.towerClans.serializable.ListStringSerializable;
+import phrase.towerClans.serializable.PermissionSerializable;
 import phrase.towerClans.serializable.StatsSerializable;
 
 import java.io.IOException;
@@ -37,10 +40,12 @@ public class SQLite implements Database {
         int max = Config.getSettings().maxSizeClanName();
         String sqlClans = "CREATE TABLE IF NOT EXISTS clans (name VARCHAR(" + max + ") PRIMARY KEY, level INTEGER, xp INTEGER, balance INTEGER, x DOUBLE, y DOUBLE, z DOUBLE, world VARCHAR(255), storage TEXT, members TEXT, pvp INTEGER, id INTEGER);";
         String sqlPlayers = "CREATE TABLE IF NOT EXISTS players (name VARCHAR(36) PRIMARY KEY, stats TEXT);";
+        String sqlPermissions = "CREATE TABLE IF NOT EXISTS permissions (name VARCHAR(36) PRIMARY KEY, permission TEXT)";
         try(Connection connection = databaseMananger.getConnection();
             Statement statement = connection.createStatement()) {
             statement.executeUpdate(sqlClans);
             statement.executeUpdate(sqlPlayers);
+            statement.executeUpdate(sqlPermissions);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -219,6 +224,58 @@ public class SQLite implements Database {
                 UUID uuid = UUID.fromString(resultSet.getString(1));
                 Stats stats = StatsSerializable.stringToStats(resultSet.getString(2));
                 Stats.PLAYERS.put(uuid, stats);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void savePermissions() {
+
+        String check = "SELECT * FROM permissions";
+        String save = "INSERT INTO permissions (name, permission) VALUES(?,?)";
+        String update = "UPDATE permissions SET permission = ? WHERE name = ?";
+        try (Connection connection = databaseMananger.getConnection();
+             PreparedStatement preparedStatementSave = connection.prepareStatement(save);
+             Statement statementCheck = connection.createStatement();
+             PreparedStatement preparedStatementUpdate = connection.prepareStatement(update)) {
+            ResultSet resultSet = statementCheck.executeQuery(check);
+            List<String> existingPlayerNames = new ArrayList<>();
+            while (resultSet.next()) existingPlayerNames.add(resultSet.getString(1));
+            for (Map.Entry<ModifiedPlayer, Permission> entry : Permission.PLAYERS.entrySet()) {
+                String uuid = entry.getKey().getPlayerUUID().toString();
+                boolean exists = existingPlayerNames.contains(uuid);
+                if (!exists) {
+                    preparedStatementSave.setString(1, uuid);
+                    preparedStatementSave.setString(2, PermissionSerializable.permissionToString(entry.getValue()));
+                    preparedStatementSave.addBatch();
+                } else {
+                    preparedStatementUpdate.setString(1, PermissionSerializable.permissionToString(entry.getValue()));
+                    preparedStatementUpdate.setString(2, uuid);
+                    preparedStatementUpdate.addBatch();
+                }
+            }
+            preparedStatementSave.executeBatch();
+            preparedStatementUpdate.executeBatch();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void loadPermissions() {
+
+        String sql = "SELECT * FROM permissions";
+        try (Connection connection = databaseMananger.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                UUID uuid = UUID.fromString(resultSet.getString(1));
+                List<PermissionType> permissionTypes = PermissionSerializable.stringToPermission(resultSet.getString(2));
+                Permission.PLAYERS.put(ModifiedPlayer.get((Bukkit.getPlayer(uuid) == null) ? Bukkit.getOfflinePlayer(uuid) : Bukkit.getPlayer(uuid)), new Permission(permissionTypes, 0));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

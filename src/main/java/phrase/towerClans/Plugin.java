@@ -82,6 +82,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
 
         databaseMananger.getDatabase().loadClans();
         databaseMananger.getDatabase().loadPlayers();
+        databaseMananger.getDatabase().loadPermissions();
 
         getCommand("clan").setExecutor(this);
         getCommand("clan").setTabCompleter(new ClanTabCompleter(this));
@@ -106,6 +107,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
             public void run() {
                 databaseMananger.getDatabase().saveClans();
                 databaseMananger.getDatabase().savePlayers();
+                databaseMananger.getDatabase().savePermissions();
             }
         }.runTaskTimerAsynchronously(this, 0L, 1200L);
 
@@ -144,6 +146,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
     public void onDisable() {
         databaseMananger.getDatabase().saveClans();
         databaseMananger.getDatabase().savePlayers();
+        databaseMananger.getDatabase().savePermissions();
         try {
             databaseMananger.shutdown();
         } catch (SQLException e) {

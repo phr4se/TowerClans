@@ -5,6 +5,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import phrase.towerClans.clan.Clan;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.clan.permission.Permission;
+import phrase.towerClans.clan.permission.PermissionType;
 
 import java.util.Map;
 import java.util.Objects;
@@ -74,6 +76,10 @@ public class ModifiedPlayer {
 
     public UUID getPlayerUUID() {
         return playerUUID;
+    }
+
+    public boolean hasPermission(PermissionType permissionType) {
+        return Permission.getPermissionsPlayer(this).getPermissionTypes().contains(permissionType);
     }
 
     @Override

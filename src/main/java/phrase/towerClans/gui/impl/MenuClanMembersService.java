@@ -11,6 +11,8 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.clan.permission.Permission;
+import phrase.towerClans.clan.permission.PermissionType;
 import phrase.towerClans.gui.ItemBuilder;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuService;
@@ -24,7 +26,7 @@ class MenuClanMembersService implements MenuService {
     private final static Map<UUID, MenuPages> PLAYERS = new HashMap<>();
 
     @Override
-    public Inventory create(ClanImpl clan, Plugin plugin) {
+    public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members");
         int size = configurationSection.getInt("size");
@@ -69,7 +71,7 @@ class MenuClanMembersService implements MenuService {
 
     }
 
-    public List<ItemStack> getPlayers(ClanImpl clan, Plugin plugin) {
+    public List<ItemStack> getPlayers(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
 
         List<ItemStack> players = new ArrayList<>();
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members");
@@ -77,21 +79,44 @@ class MenuClanMembersService implements MenuService {
         Material material;
         String titleItem;
         List<String> lore;
+        List<String> permission;
+        String cursor;
+        String isAvailable;
+        String notAvailable;
 
         material = Material.matchMaterial(configurationSection.getString("material"));
         titleItem = configurationSection.getString("title_item");
         lore = configurationSection.getStringList("lore");
 
+        if(Permission.permissionRowIndex != -1) Permission.permissionRowIndex = lore.size();
+        permission = configurationSection.getStringList("permission");
+        int currentPermission = Permission.getPermissionsPlayer(modifiedPlayer).getCurrentPermission();
+        cursor = configurationSection.getString("cursor");
+        permission.set(currentPermission, permission.get(currentPermission).replace("%cursor%", cursor));
+        lore.addAll(permission);
+
+        isAvailable = configurationSection.getString("permission_is_available");
+        notAvailable = configurationSection.getString("permission_not_available");
+
         for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            ModifiedPlayer modifiedPlayer = entry.getKey();
-            String currentTitle = Utils.COLORIZER.colorize(titleItem.replace("%player_name%", (modifiedPlayer.getPlayer() == null) ? Bukkit.getOfflinePlayer(modifiedPlayer.getPlayerUUID()).getName() : modifiedPlayer.getPlayer().getName()));
-            Stats playerStats = Stats.PLAYERS.get(modifiedPlayer.getPlayerUUID());
+            ModifiedPlayer key = entry.getKey();
+            String currentTitle = Utils.COLORIZER.colorize(titleItem.replace("%player_name%", (key.getPlayer() == null) ? Bukkit.getOfflinePlayer(key.getPlayerUUID()).getName() : key.getPlayer().getName()));
+            Stats playerStats = Stats.PLAYERS.get(key.getPlayerUUID());
             List<String> currentLore = lore.stream().map(
                     string -> {
                         String replacedString = string
                                 .replace("%player_rank%", entry.getValue())
                                 .replace("%player_kills%", String.valueOf(playerStats.getKills()))
-                                .replace("%player_deaths%", String.valueOf(playerStats.getDeaths()));
+                                .replace("%player_deaths%", String.valueOf(playerStats.getDeaths()))
+                                .replace("%base%", (key.hasPermission(PermissionType.BASE) ? isAvailable : notAvailable))
+                                .replace("%glow%", (key.hasPermission(PermissionType.GLOW) ? isAvailable : notAvailable))
+                                .replace("%invite%", (key.hasPermission(PermissionType.INVITE) ? isAvailable : notAvailable))
+                                .replace("%kick%", (key.hasPermission(PermissionType.KICK) ? isAvailable : notAvailable))
+                                .replace("%pvp%", (key.hasPermission(PermissionType.PVP) ? isAvailable : notAvailable))
+                                .replace("%storage%", (key.hasPermission(PermissionType.STORAGE) ? isAvailable : notAvailable))
+                                .replace("%withdraw%", (key.hasPermission(PermissionType.WITHDRAW) ? isAvailable : notAvailable))
+                                .replace("%permission%", (key.hasPermission(PermissionType.PERMISSION) ? isAvailable : notAvailable))
+                                .replace("%cursor%", "");
                         return Utils.COLORIZER.colorize(replacedString);
                     }
             ).collect(Collectors.toList());
@@ -99,7 +124,7 @@ class MenuClanMembersService implements MenuService {
             ItemStack item = new ItemBuilder(material)
                     .setName(currentTitle)
                     .setLore(currentLore)
-                    .setPersistentDataContainer(NamespacedKey.fromString("player"), PersistentDataType.STRING, "player")
+                    .setPersistentDataContainer(NamespacedKey.fromString("player"), PersistentDataType.STRING, key.getPlayerUUID().toString())
                     .build();
 
             players.add(item);

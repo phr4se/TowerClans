@@ -7,6 +7,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.gui.ItemBuilder;
 import phrase.towerClans.gui.MenuService;
@@ -15,7 +16,7 @@ import phrase.towerClans.util.Utils;
 class MenuClanStorageService implements MenuService {
 
     @Override
-    public Inventory create(ClanImpl clan, Plugin plugin) {
+    public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
 
         Inventory menu = clan.getStorage().getInventory();
         int availableSlots = clan.getAvailableSlots() - 1;

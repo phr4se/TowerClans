@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Level;
+import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.gui.ItemBuilder;
 import phrase.towerClans.gui.MenuService;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 class MenuClanLevelService implements MenuService {
 
     @Override
-    public Inventory create(ClanImpl clan, Plugin plugin) {
+    public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_level");
         int size = configurationSection.getInt("size");

@@ -9,6 +9,7 @@ import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.clan.permission.PermissionType;
 import phrase.towerClans.command.CommandHandler;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.event.LeaveEvent;
@@ -26,6 +27,11 @@ public class ClanKickCommand implements CommandHandler {
     public boolean handler(Player player, String[] args) {
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
 
+        if(!modifiedPlayer.hasPermission(PermissionType.KICK)) {
+            Utils.sendMessage(player, Config.getCommandMessages().noPermission());
+            return true;
+        }
+
         if (args.length < 2) {
             Utils.sendMessage(player, Config.getCommandMessages().incorrectArguments());
             return false;
@@ -37,11 +43,6 @@ public class ClanKickCommand implements CommandHandler {
         }
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-
-        if (!clan.getMembers().get(modifiedPlayer).equals(Rank.RankType.LEADER.getName()) && !clan.getMembers().get(modifiedPlayer).equals(Rank.RankType.DEPUTY.getName())) {
-            Utils.sendMessage(player, Config.getCommandMessages().noPermission());
-            return true;
-        }
 
         String name = args[1];
 

@@ -3,6 +3,7 @@ package phrase.towerClans.gui.impl;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuProvider;
@@ -17,12 +18,12 @@ public class MenuClanMembersProvider extends MenuProvider {
     }
 
     @Override
-    public Inventory getMenu(ClanImpl clan, Plugin plugin) {
-        return getMenuService().create(clan, plugin);
+    public Inventory getMenu(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
+        return getMenuService().create(modifiedPlayer, clan, plugin);
     }
 
-    public List<ItemStack> getPlayers(ClanImpl clan, Plugin plugin) {
-        return ((MenuClanMembersService) getMenuService()).getPlayers(clan, plugin);
+    public List<ItemStack> getPlayers(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
+        return ((MenuClanMembersService) getMenuService()).getPlayers(modifiedPlayer, clan, plugin);
     }
 
     public MenuPages register(UUID player, MenuPages menuPages) {

@@ -7,6 +7,7 @@ public interface Database {
     void loadClans();
     void savePlayers();
     void loadPlayers();
-
+    void savePermissions();
+    void loadPermissions();
 
 }

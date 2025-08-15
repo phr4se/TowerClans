@@ -149,6 +149,19 @@ settings:
          - "&fРанг: &6%player_rank%"
          - "&fУбийств: &a%player_kills%"
          - "&fСмертей: &c%player_deaths%"
+         - ""
+         - "&6ЛКМ &7- &fвниз | &cПКМ &7- &fизменить"
+       permission:
+         - "%cursor% &fУстанавливать/удалять базу клана: &6%base%"
+         - "%cursor% &fМенять подсветку брони клана: &6%glow%"
+         - "%cursor% &fПриглашать игроков в клан: &6%invite%"
+         - "%cursor% &fКикать игроков из клана: &6%kick%"
+         - "%cursor% &fМенять PvP-режим клана: &6%pvp%"
+         - "%cursor% &fОткрывать хранилище клана: &6%storage%"
+         - "%cursor% &fСнимать с баланса клана: &6%withdraw%"
+       cursor: "&6>"
+       permission_is_available: "&aЕсть"
+       permission_not_available: "&cНет"
        items:
          1:
            material: spectral_arrow

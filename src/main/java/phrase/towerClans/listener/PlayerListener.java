@@ -55,7 +55,7 @@ public class PlayerListener implements Listener {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MAIN).getMenu(clan, plugin), event.getInventory()))
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MAIN).getMenu(modifiedPlayer, clan, plugin), event.getInventory()))
             pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
 
         if (((MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS)).getMenuPages(player.getUniqueId()) != null) {
@@ -64,16 +64,16 @@ public class PlayerListener implements Listener {
                 pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
         }
 
-        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS).getMenu(clan, plugin), event.getInventory()))
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS).getMenu(modifiedPlayer, clan, plugin), event.getInventory()))
             pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
 
-        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_LEVEL).getMenu(clan, plugin), event.getInventory()))
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_LEVEL).getMenu(modifiedPlayer, clan, plugin), event.getInventory()))
             pluginManager.callEvent(new ClickMenuClanLevelEvent(modifiedPlayer, event));
 
-        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_STORAGE).getMenu(clan, plugin), event.getInventory()))
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_STORAGE).getMenu(modifiedPlayer, clan, plugin), event.getInventory()))
             pluginManager.callEvent(new ClickMenuClanStorageEvent(clan, player, event.getInventory(), event));
 
-        if(identical(MenuFactory.getProvider(MenuType.MENU_CLAN_GLOW).getMenu(clan, plugin), event.getInventory()))
+        if(identical(MenuFactory.getProvider(MenuType.MENU_CLAN_GLOW).getMenu(modifiedPlayer, clan, plugin), event.getInventory()))
             pluginManager.callEvent(new ClickMenuClanGlowEvent(modifiedPlayer, event));
 
     }

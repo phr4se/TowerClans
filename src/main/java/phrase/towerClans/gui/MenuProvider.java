@@ -2,6 +2,7 @@ package phrase.towerClans.gui;
 
 import org.bukkit.inventory.Inventory;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 
 public abstract class MenuProvider {
@@ -12,7 +13,7 @@ public abstract class MenuProvider {
         this.menuService = menuService;
     }
 
-    public abstract Inventory getMenu(ClanImpl clan, Plugin plugin);
+    public abstract Inventory getMenu(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin);
 
     protected MenuService getMenuService() {
         return menuService;

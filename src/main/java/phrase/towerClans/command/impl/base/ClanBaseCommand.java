@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.clan.permission.PermissionType;
 import phrase.towerClans.command.CommandHandler;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.util.Utils;
@@ -17,6 +18,7 @@ public class ClanBaseCommand implements CommandHandler {
     public boolean handler(Player player, String[] args) {
 
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
+
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
         if(clan == null) {

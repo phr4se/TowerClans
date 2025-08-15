@@ -6,6 +6,8 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.clan.permission.Permission;
+import phrase.towerClans.clan.permission.PermissionType;
 import phrase.towerClans.command.CommandHandler;
 import phrase.towerClans.command.impl.base.Base;
 import phrase.towerClans.config.Config;
@@ -76,6 +78,7 @@ public class ClanCreateCommand implements CommandHandler {
         clan.getMembers().put(modifiedPlayer, Rank.RankType.LEADER.getName());
         ClanImpl.getClans().put(args[1], clan);
         Base.setBase(clan, null);
+        Permission.getPermissionsPlayer(modifiedPlayer).setPermissionsPlayer(PermissionType.PERMISSION, PermissionType.WITHDRAW, PermissionType.STORAGE, PermissionType.BASE, PermissionType.KICK, PermissionType.PVP, PermissionType.GLOW, PermissionType.INVITE);
 
         Utils.sendMessage(player, Config.getCommandMessages().creatingClan());
 

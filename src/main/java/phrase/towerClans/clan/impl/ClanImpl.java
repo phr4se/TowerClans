@@ -1,7 +1,6 @@
 package phrase.towerClans.clan.impl;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import phrase.towerClans.Plugin;
@@ -9,6 +8,8 @@ import phrase.towerClans.clan.*;
 import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
+import phrase.towerClans.clan.permission.Permission;
+import phrase.towerClans.clan.permission.PermissionType;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.glow.Glow;
 import phrase.towerClans.gui.MenuFactory;
@@ -119,9 +120,15 @@ public class ClanImpl extends AbstractClan {
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         switch (Rank.RankType.getRank(id)) {
             case LEADER: return new ClanResponse(Config.getCommandMessages().notGiveRankLeader(), ClanResponse.ResponseType.FAILURE);
-            case DEPUTY: clan.getMembers().compute(modifiedPlayer, (k, v) -> Rank.RankType.DEPUTY.getName());
+            case DEPUTY: {
+                Permission.getPermissionsPlayer(modifiedPlayer).setPermissionsPlayer(PermissionType.INVITE, PermissionType.KICK, PermissionType.PVP, PermissionType.KICK, PermissionType.STORAGE);
+                clan.getMembers().compute(modifiedPlayer, (k, v) -> Rank.RankType.DEPUTY.getName());
+            }
                         break;
-            case MEMBER: clan.getMembers().compute(modifiedPlayer, (k, v) -> Rank.RankType.MEMBER.getName());
+            case MEMBER: {
+                Permission.getPermissionsPlayer(modifiedPlayer).clearPermissionsPlayer(PermissionType.INVITE, PermissionType.KICK, PermissionType.PVP, PermissionType.KICK, PermissionType.STORAGE, PermissionType.BASE, PermissionType.GLOW, PermissionType.WITHDRAW, PermissionType.PERMISSION);
+                clan.getMembers().compute(modifiedPlayer, (k, v) -> Rank.RankType.MEMBER.getName());
+            }
                         break;
             case UNDEFINED: return new ClanResponse(Config.getCommandMessages().rankNoExists(), ClanResponse.ResponseType.FAILURE);
         }
@@ -161,11 +168,11 @@ public class ClanImpl extends AbstractClan {
 
         if (menuType == MenuType.MENU_CLAN_MEMBERS) {
             MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) menuProvider;
-            Inventory menu = menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin);
-            List<ItemStack> players = menuClanMembersProvider.getPlayers(((ClanImpl) modifiedPlayer.getClan()), plugin);
+            Inventory menu = menuProvider.getMenu(modifiedPlayer, ((ClanImpl) modifiedPlayer.getClan()), plugin);
+            List<ItemStack> players = menuClanMembersProvider.getPlayers(modifiedPlayer, ((ClanImpl) modifiedPlayer.getClan()), plugin);
             MenuPages menuPages = menuClanMembersProvider.register(modifiedPlayer.getPlayerUUID(), new MenuPages(0, players, menu));
             modifiedPlayer.getPlayer().openInventory(menuPages.getPage(menuPages.getCurrentPage()));
-        } else modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(((ClanImpl) modifiedPlayer.getClan()), plugin));
+        } else modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(modifiedPlayer, ((ClanImpl) modifiedPlayer.getClan()), plugin));
 
 
     }
