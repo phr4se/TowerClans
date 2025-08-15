@@ -49,12 +49,10 @@ public class ClanCreateCommand implements CommandHandler {
             return true;
         }
 
-
         if(checkClanName(name, Config.getSettings().badWords())) {
             Utils.sendMessage(player, Config.getMessages().clanNameBadWord());
             return true;
         }
-
 
         int amount = Config.getSettings().costCreatingClan();
 
@@ -87,19 +85,15 @@ public class ClanCreateCommand implements CommandHandler {
 
     private boolean checkClanName(String clanName, List<String> badWords) {
 
-        if(badWords == null || badWords.isEmpty()) {
-            return false;
-        }
+        if(!clanName.matches("^[A-Za-z&А-Яа-яЁё]+$")) return true;
 
-        String regex = badWords.stream()
+        if(badWords == null || badWords.isEmpty()) return false;
+
+        return Pattern.compile(badWords.stream()
                 .map(Pattern::quote)
                 .map(word -> "\\b" + word + "\\b")
-                .collect(Collectors.joining("|"));
-
-        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-
-        Matcher matcher = pattern.matcher(clanName);
-
-        return matcher.find();
+                .collect(Collectors.joining("|"))).matcher(clanName).matches();
     }
+
+
 }

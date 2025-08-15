@@ -115,8 +115,10 @@ public class Config {
                 getMessagePrefixed(configurationSectionSettings.getStringList("bad-words"), prefix),
                 configurationSectionSettings.getString("unknown-clan"),
                 configurationSectionSettings.getString("type"),
-                PrivilegeManager.transformation(configurationSectionSettings.getStringList("disable-privilege-type"))
-        );
+                PrivilegeManager.transformation(configurationSectionSettings.getStringList("disable-privilege-type")),
+                configurationSectionSettings.getString("symbol-one"),
+                configurationSectionSettings.getString("symbol-two")
+                );
     }
 
     public static String getMessagePrefixed(String message, String prefix) {

@@ -13,6 +13,8 @@ settings:
     - "FLY"
     - "GOD"
     - "VANISH"
+  symbol-one: "&7["
+  symbol-two: "&7]"
   level:
     1:
      level: 1

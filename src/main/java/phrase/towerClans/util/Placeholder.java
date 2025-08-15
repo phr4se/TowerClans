@@ -26,7 +26,7 @@ public class Placeholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.6";
+        return "1.6a";
     }
 
     @Override
@@ -42,6 +42,13 @@ public class Placeholder extends PlaceholderExpansion {
             if(modifiedPlayer.getClan() == null) return Config.getSettings().unknownClan();
             ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
             return clan.getName();
+        }
+
+        if (identifier.equals("clan_name_chat")) {
+            ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
+            if(modifiedPlayer.getClan() == null) return Config.getSettings().unknownClan();
+            ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+            return Config.getSettings().symbolOne() + clan.getName() + Config.getSettings().symbolTwo();
         }
 
         if(identifier.startsWith("top_")) {

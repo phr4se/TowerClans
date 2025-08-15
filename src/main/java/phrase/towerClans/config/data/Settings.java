@@ -13,6 +13,8 @@ public record Settings(DatabaseType databaseType,
                        List<String> badWords,
                        String unknownClan,
                        String type,
-                       List<PrivilegeType> disablePrivilegeType
+                       List<PrivilegeType> disablePrivilegeType,
+                       String symbolOne,
+                       String symbolTwo
                        ){
 }
