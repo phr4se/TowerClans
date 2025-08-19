@@ -1,0 +1,248 @@
+
+settings:
+  database: SQLITE
+  cost-creating-clan: 10000
+  xp-for-murder: 2
+  min-size-clan-name: 2
+  max-size-clan-name: 10
+  bad-words:
+    - "Admin"
+  unknown-clan: "Нет"
+  type: "Essentials"
+  disable-privilege-type:
+    - "FLY"
+    - "GOD"
+    - "VANISH"
+  symbol-one: "&7["
+  symbol-two: "&7]"
+  level:
+    1:
+     level: 1
+     xp: 0
+     available: 9
+     maximum_members: 5
+     maximum_balance: 250000
+    2:
+      level: 2
+      xp: 1000
+      available: 18
+      maximum_members: 10
+      maximum_balance: 500000
+    3:
+      level: 3
+      xp: 2500
+      available: 27
+      maximum_members: 15
+      maximum_balance: 1000000
+    4:
+      level: 4
+      xp: 5000
+      available: 36
+      maximum_members: 20
+      maximum_balance: 1750000
+    5:
+      level: 5
+      xp: 7500
+      available: 45
+      maximum_members: 25
+      maximum_balance: 2500000
+    6:
+      level: 6
+      xp: 10000
+      available: 54
+      maximum_members: 30
+      maximum_balance: 5000000
+  rank:
+    leader: "Лидер"
+    deputy: "Заместитель"
+    member: "Участник"
+  event:
+    capture:
+      schematic_name: "event"
+      world: "world"
+      xp_for_winning: 1000
+      max_point: 1000
+      point_per_zone: 10
+      width: 5
+      height: 5
+      length: 5
+      x_range: 1000
+      z_range: 1000
+      teleport: true
+      messages_start_event:
+        - "&cВнимание!"
+        - "&fЗапущен &6клановый ивент"
+      messages_end_event:
+          - "&cВнимание!"
+          - "&fКлановый ивент &6завершен"
+          - "&fПобедитель: &d%clan_name%"
+      bossbar:
+        title: "&fКоординаты: &d%x% %y% %z% &7| &fЛидер: &6%clan_name%"
+        bar_color: RED
+        bar_style: SOLID
+        update_bossbar: 20
+      search_for_players: 20
+      blocked_commands:
+        - "fly"
+        - "god"
+        - "vanish"
+      region_flags:
+        - "PVP: ALLOW"
+        - "BUILD: DENY"
+  menu:
+    item_per_page: 18
+    previous:
+      material: spectral_arrow
+      title: "&cПредыдущая"
+    next:
+      material: spectral_arrow
+      title: "&aСледующая"
+    menu_clan_main:
+       size: 27
+       title: "%clan_name%"
+       items:
+         1:
+           material: knowledge_book
+           slot: 11
+           title: "&6Информация о клане"
+           lore:
+             - "&fКлан: &6%name%"
+             - "&fУчастников: &e%members%&7/&6%maximum_members%"
+             - "&fУровень: &6%level% &7(&6%xp% &fXP&7)"
+             - "&fБаланс: &6%balance%"
+             - "&fУбийств: &a%kills%"
+             - "&fСмерти: &c%deaths%"
+             - "&fPVP-Режим: &6%pvp%"
+             - "&fЛимит баланса: &6%maximum_balance%"
+         2:
+           material: totem_of_undying
+           slot: 13
+           title: "&6Участники клана"
+           lore:
+             - "&fНажмите, чтобы посмотреть участников клана"
+           actions_when_clicking: "MENU_CLAN_MEMBERS"
+         3:
+           material: diamond
+           slot: 15
+           title: "&6Уровень клана"
+           lore:
+             - "&fНажмите, чтобы посмотреть уровень клана"
+           actions_when_clicking: "MENU_CLAN_LEVEL"
+         4:
+           material: leather_horse_armor
+           slot: 18
+           title: "&6Свечение"
+           lore:
+             - "&fНажмите, чтобы изменить свечение"
+           actions_when_clicking: "MENU_CLAN_GLOW"
+         5:
+           material: spectral_arrow
+           slot: 26
+           title: "&cВыйти"
+           lore:
+             - "&fНажмите, чтобы выйти"
+           actions_when_clicking: "MENU_CLAN_EXIT"
+    menu_clan_members:
+       size: 27
+       title_menu: "Участники клана"
+       material: paper
+       title_item: "&e%player_name%"
+       lore:
+         - "&fРанг: &6%player_rank%"
+         - "&fУбийств: &a%player_kills%"
+         - "&fСмертей: &c%player_deaths%"
+         - ""
+         - "&6ЛКМ &7- &fвниз | &cПКМ &7- &fизменить"
+       permission:
+         - "%cursor% &fУстанавливать/удалять базу клана: &6%base%"
+         - "%cursor% &fМенять подсветку брони клана: &6%glow%"
+         - "%cursor% &fПриглашать игроков в клан: &6%invite%"
+         - "%cursor% &fКикать игроков из клана: &6%kick%"
+         - "%cursor% &fМенять PvP-режим клана: &6%pvp%"
+         - "%cursor% &fОткрывать хранилище клана: &6%storage%"
+         - "%cursor% &fСнимать с баланса клана: &6%withdraw%"
+       cursor: "&6>"
+       permission_is_available: "&aЕсть"
+       permission_not_available: "&cНет"
+       items:
+         1:
+           material: spectral_arrow
+           slot: 26
+           title: "&cНазад"
+           lore:
+             - "&fНажмите, чтобы выйти"
+           actions_when_clicking: "MENU_CLAN_BACK"
+    menu_clan_level:
+       size: 27
+       title: "Уровень клана"
+       slot: 0
+       received:
+         material: chest_minecart
+         title: "&fУровень &6%level%"
+         lore:
+           - "&fСтатус: &aПолучен"
+           - ""
+           - "&fЛимит баланса: &6%maximum_balance%"
+           - "&fЛимит участников: &6%maximum_members%"
+           - "&fСлотов в хранилище: &6%available%"
+       not_received:
+         material: furnace_minecart
+         title: "&fУровень &6%level%"
+         lore:
+           - "&fСтатус: &cНе получен"
+           - ""
+           - "&fЛимит баланса: &6%maximum_balance%"
+           - "&fЛимит участников: &6%maximum_members%"
+           - "&fСлотов в хранилище: &6%available%"
+       items:
+         1:
+           material: spectral_arrow
+           slot: 26
+           title: "&cНазад"
+           lore:
+             - "&fНажмите, чтобы выйти"
+           actions_when_clicking: "MENU_CLAN_BACK"
+    menu_clan_storage:
+       size: 54
+       title: "Хранилище клана"
+       item:
+         material: red_stained_glass_pane
+         title: "&cЗаблокировано"
+    menu_clan_glow:
+      size: 27
+      title: "Свечение"
+      items:
+        1:
+          material: red_dye
+          slot: 11
+          title: "&cКрасное свечение"
+          lore:
+            - "&fНажмите, чтобы сделать свечение красным"
+          actions_when_clicking: "RED"
+        2:
+          material: green_dye
+          slot: 13
+          title: "&aЗеленое свечение"
+          lore:
+            - "&fНажмите, чтобы сделать свечение зеленым"
+          actions_when_clicking: "GREEN"
+        3:
+          material: blue_dye
+          slot: 15
+          title: "&9Синее свечение"
+          lore:
+            - "&fНажмите, чтобы сделать свечение синим"
+          actions_when_clicking: "BLUE"
+        4:
+          material: spectral_arrow
+          slot: 26
+          title: "&cНазад"
+          lore:
+            - "&fНажмите, чтобы выйти"
+          actions_when_clicking: "MENU_CLAN_BACK"
+
+
+
+
+
+
