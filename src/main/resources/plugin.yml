@@ -1,0 +1,4 @@
+name: TowerClans Free
+version: '1.0'
+main: phrase.towerClansFree.TowerClansFree
+api-version: '1.18'
