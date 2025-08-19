@@ -1,0 +1,12 @@
+name: TowerClans
+version: '1.6b'
+main: phrase.towerClans.Plugin
+api-version: '1.16'
+depend:
+  - Vault
+  - ProtocolLib
+  - WorldEdit
+  - WorldGuard
+  - PlaceholderAPI
+commands:
+  clan: {}

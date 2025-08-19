@@ -92,9 +92,7 @@ public class SQLite implements Database {
                     preparedStatementSave.setString(9, InventorySerializable.inventoryToBase64(clan.getStorage().getInventory()));
                     preparedStatementSave.setString(10, ListStringSerializable.listToString(ClanDataConverter.mapToList(clan.getMembers())));
                     preparedStatementSave.setBoolean(11, clan.isPvp());
-                    preparedStatementSave.setInt(12, clan.getColor().getR());
-                    preparedStatementSave.setInt(12, clan.getColor().getG());
-                    preparedStatementSave.setInt(12, clan.getColor().getB());
+                    preparedStatementSave.setInt(12, clan.getColor().getId());
                     preparedStatementSave.addBatch();
                 } else {
                     preparedStatementUpdate.setInt(1, clan.getLevel());
@@ -161,9 +159,9 @@ public class SQLite implements Database {
                     Location location = new Location(world, x, y, z);
                     Base.setBase(clan, location);
                 }
-                boolean pvp = resultSet.getBoolean(10);
+                boolean pvp = resultSet.getBoolean(11);
                 clan.setPvp(pvp);
-                int id = resultSet.getInt(11);
+                int id = resultSet.getInt(12);
                 clan.setColor(Glow.LeatherColor.getLeaherColor(id));
                 Inventory storage = InventorySerializable.base64ToInventory(resultSet.getString(9));
                 clan.getStorage().getInventory().setContents(storage.getContents());
