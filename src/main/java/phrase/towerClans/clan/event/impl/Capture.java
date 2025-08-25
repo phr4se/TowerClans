@@ -152,7 +152,7 @@ public class Capture extends Event {
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
 
         int plusXp = configurationSection.getInt("xp_for_winning");
-        clan.setXp(plusXp);
+        clan.setXp(clan.getXp() + plusXp);
         int nextLevel = clan.getLevel() + 1;
         if(!(Level.getXpLevel(nextLevel) == -1)) {
             int xp = Level.getXpLevel(nextLevel);

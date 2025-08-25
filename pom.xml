@@ -6,7 +6,7 @@
 
     <groupId>phrase</groupId>
     <artifactId>TowerClans</artifactId>
-    <version>1.6c</version>
+    <version>1.6d</version>
     <packaging>jar</packaging>
 
     <name>TowerClans</name>

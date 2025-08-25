@@ -68,7 +68,7 @@ public class ClanImpl extends AbstractClan {
     @Override
     public ClanResponse invest(ModifiedPlayer modifiedPlayer, int amount) {
         if(amount <= 0) return new ClanResponse(Config.getCommandMessages().incorrectArguments(), ClanResponse.ResponseType.FAILURE);
-        if (plugin.getEconomy().getBalance(modifiedPlayer.getPlayer()) < amount) return new ClanResponse(Config.getCommandMessages().notEnough(), ClanResponse.ResponseType.FAILURE);
+        if (plugin.getEconomy().getBalance(modifiedPlayer.getPlayer()) < amount) return new ClanResponse(Config.getCommandMessages().notEnough().replace("%amount%", String.valueOf(amount)), ClanResponse.ResponseType.FAILURE);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         int maximumBalance = Level.getLevelMaximumBalance(clan.getLevel());
         if ((clan.getBalance() + amount) > maximumBalance) return new ClanResponse(Config.getCommandMessages().noPlaceCurrencyInClan(), ClanResponse.ResponseType.FAILURE);
