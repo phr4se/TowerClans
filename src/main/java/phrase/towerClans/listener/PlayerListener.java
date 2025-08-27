@@ -56,31 +56,56 @@ public class PlayerListener implements Listener {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if(!event.isLeftClick() && !event.isRightClick()) {
-            event.setCancelled(true);
-            return;
-        }
-
-        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MAIN).getMenu(modifiedPlayer, clan, plugin), event.getInventory()))
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MAIN).getMenu(modifiedPlayer, clan, plugin), event.getInventory())) {
+            if (!event.isLeftClick() && !event.isRightClick()) {
+                event.setCancelled(true);
+                return;
+            }
             pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
+        }
 
         if (((MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS)).getMenuPages(player.getUniqueId()) != null) {
             MenuPages menuPages = ((MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS)).getMenuPages(player.getUniqueId());
-            if (identical(menuPages.getPage(menuPages.getCurrentPage()), event.getInventory()))
+            if (identical(menuPages.getPage(menuPages.getCurrentPage()), event.getInventory())) {
+                if (!event.isLeftClick() && !event.isRightClick()) {
+                    event.setCancelled(true);
+                    return;
+                }
                 pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
+            }
         }
 
-        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS).getMenu(modifiedPlayer, clan, plugin), event.getInventory()))
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS).getMenu(modifiedPlayer, clan, plugin), event.getInventory())) {
+            if (!event.isLeftClick() && !event.isRightClick()) {
+                event.setCancelled(true);
+                return;
+            }
             pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
+        }
 
-        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_LEVEL).getMenu(modifiedPlayer, clan, plugin), event.getInventory()))
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_LEVEL).getMenu(modifiedPlayer, clan, plugin), event.getInventory())) {
+            if (!event.isLeftClick() && !event.isRightClick()) {
+                event.setCancelled(true);
+                return;
+            }
             pluginManager.callEvent(new ClickMenuClanLevelEvent(modifiedPlayer, event));
+        }
 
-        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_STORAGE).getMenu(modifiedPlayer, clan, plugin), event.getInventory()))
+        if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_STORAGE).getMenu(modifiedPlayer, clan, plugin), event.getInventory())) {
+            if (!event.isLeftClick() && !event.isRightClick()) {
+                event.setCancelled(true);
+                return;
+            }
             pluginManager.callEvent(new ClickMenuClanStorageEvent(clan, player, event.getInventory(), event));
+        }
 
-        if(identical(MenuFactory.getProvider(MenuType.MENU_CLAN_GLOW).getMenu(modifiedPlayer, clan, plugin), event.getInventory()))
+        if(identical(MenuFactory.getProvider(MenuType.MENU_CLAN_GLOW).getMenu(modifiedPlayer, clan, plugin), event.getInventory())) {
+            if (!event.isLeftClick() && !event.isRightClick()) {
+                event.setCancelled(true);
+                return;
+            }
             pluginManager.callEvent(new ClickMenuClanGlowEvent(modifiedPlayer, event));
+        }
 
     }
 
@@ -116,8 +141,6 @@ public class PlayerListener implements Listener {
             if (storage.getPlayers().contains(player.getUniqueId()))
                 pluginManager.callEvent(new CloseMenuClanStorageEvent(clan, player, event.getInventory()));
         }
-
-        plugin.getLogger().severe(player.getInventory().getItemInOffHand().getType().toString());
 
     }
 

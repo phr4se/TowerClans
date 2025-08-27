@@ -148,7 +148,7 @@ public class ClanImpl extends AbstractClan {
     public ClanResponse disband(ModifiedPlayer modifiedPlayer) {
         if (!getMembers().get(modifiedPlayer).equals(Rank.RankType.LEADER.getName())) return new ClanResponse(Config.getCommandMessages().notLeader(), ClanResponse.ResponseType.FAILURE);
 
-        if(modifiedPlayer.hasPermission(PermissionType.PERMISSION)) Permission.getPermissionsPlayer(modifiedPlayer).getPermissionTypes().remove(PermissionType.PERMISSION);
+        if(modifiedPlayer.hasPermission(PermissionType.PERMISSION)) Permission.getPermissionsPlayer(modifiedPlayer).clearPermissionPlayer(PermissionType.PERMISSION);
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
