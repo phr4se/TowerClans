@@ -1,20 +1,22 @@
 package phrase.towerClans.listener;
 
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.projectiles.ProjectileSource;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
@@ -22,7 +24,6 @@ import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.event.Event;
 import phrase.towerClans.clan.event.impl.Capture;
-import phrase.towerClans.clan.event.privilege.PrivilegeManager;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.impl.invite.PlayerCalls;
 import phrase.towerClans.config.Config;
@@ -54,6 +55,11 @@ public class PlayerListener implements Listener {
         if (modifiedPlayer.getClan() == null) return;
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+
+        if(!event.isLeftClick() && !event.isRightClick()) {
+            event.setCancelled(true);
+            return;
+        }
 
         if (identical(MenuFactory.getProvider(MenuType.MENU_CLAN_MAIN).getMenu(modifiedPlayer, clan, plugin), event.getInventory()))
             pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
@@ -105,24 +111,36 @@ public class PlayerListener implements Listener {
         Player player = (Player) event.getPlayer();
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if (clan == null) return;
-        Storage storage = clan.getStorage();
-        if (storage.getPlayers().contains(player.getUniqueId()))
-            pluginManager.callEvent(new CloseMenuClanStorageEvent(clan, player, event.getInventory()));
+        if (clan != null) {
+            Storage storage = clan.getStorage();
+            if (storage.getPlayers().contains(player.getUniqueId()))
+                pluginManager.callEvent(new CloseMenuClanStorageEvent(clan, player, event.getInventory()));
+        }
+
+        plugin.getLogger().severe(player.getInventory().getItemInOffHand().getType().toString());
+
     }
 
     @EventHandler
     public void onPvp(EntityDamageByEntityEvent event) {
 
-        if (!(event.getDamager() instanceof Player)) return;
-
-
-        Player attacker = (Player) event.getDamager();
-
         if (!(event.getEntity() instanceof Player)) return;
 
-
         Player defender = (Player) event.getEntity();
+
+        if (!(event.getDamager() instanceof Player) && (!(event.getDamager() instanceof Projectile))) return;
+
+        Player attacker = null;
+
+        if(event.getDamager() instanceof Player) {
+            attacker = (Player) event.getDamager();
+        } else if (event.getDamager() instanceof Projectile) {
+            if(((Projectile) event.getDamager()).getShooter() instanceof Player) {
+                attacker = (Player) ((Projectile) event.getDamager()).getShooter();
+            }
+        }
+
+        if(attacker == null) return;
 
         ModifiedPlayer attackerModifiedPlayer = ModifiedPlayer.get(attacker);
         ModifiedPlayer defenderModifiedPlayer = ModifiedPlayer.get(defender);
