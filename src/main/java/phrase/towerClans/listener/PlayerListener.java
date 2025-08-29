@@ -124,8 +124,6 @@ public class PlayerListener implements Listener {
 
             if (item1 == null || item2 == null) return false;
 
-            if (!item1.isSimilar(item2)) return false;
-
         }
 
         return true;
