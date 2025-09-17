@@ -14,8 +14,10 @@ public abstract class MenuProvider {
     }
 
     public abstract Inventory getMenu(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin);
+    public abstract boolean menuPages();
 
     protected MenuService getMenuService() {
         return menuService;
     }
+
 }

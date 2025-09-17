@@ -6,7 +6,6 @@ import phrase.towerClans.clan.ClanResponse;
 import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
-import phrase.towerClans.clan.permission.PermissionType;
 import phrase.towerClans.command.CommandHandler;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.util.Utils;

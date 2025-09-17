@@ -1,8 +1,6 @@
 package phrase.towerClans.command.impl.info;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;

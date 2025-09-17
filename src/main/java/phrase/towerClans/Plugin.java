@@ -44,7 +44,6 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
     private Economy economy;
     private String path;
     private DatabaseManager databaseMananger;
-    private PrivilegeManager privilegeManager;
 
     @Override
     public void onEnable() {
@@ -66,7 +65,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         databaseMananger = new DatabaseManager(Config.getSettings().databaseType(), this);
 
         initializeSchematicPath();
-        commandMapper = new CommandMapper(this);
+        commandMapper = new CommandMapper();
 
         Level.initialize(this);
         Storage.initialize(this);
@@ -203,11 +202,4 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         return economy;
     }
 
-    public DatabaseManager getDatabaseMananger() {
-        return databaseMananger;
-    }
-
-    public PrivilegeManager getPrivilegeManager() {
-        return privilegeManager;
-    }
 }

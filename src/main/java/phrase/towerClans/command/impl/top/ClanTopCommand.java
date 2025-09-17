@@ -1,8 +1,6 @@
 package phrase.towerClans.command.impl.top;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
 import phrase.towerClans.config.Config;
@@ -10,7 +8,6 @@ import phrase.towerClans.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ClanTopCommand implements CommandHandler {
 

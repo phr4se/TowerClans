@@ -61,4 +61,9 @@ public class MenuClanGlowService implements MenuService {
 
         return menu;
     }
+
+    @Override
+    public boolean menuPages() {
+        return false;
+    }
 }

@@ -25,6 +25,7 @@ import phrase.towerClans.command.impl.storage.ClanStorageCommand;
 import phrase.towerClans.command.impl.top.ClanTopCommand;
 import phrase.towerClans.command.impl.withdraw.ClanWithdrawCommand;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class CommandLogger {
     }
 
     public static Map<String, CommandDescription> getCommands() {
-        return COMMANDS;
+        return Collections.unmodifiableMap(COMMANDS);
     }
 
     private void intialize() {

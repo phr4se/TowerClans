@@ -3,13 +3,10 @@ package phrase.towerClans.util;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import phrase.towerClans.Plugin;
-import phrase.towerClans.clan.AbstractClan;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.config.Config;
 
-import java.util.Comparator;
 import java.util.List;
 
 public class Placeholder extends PlaceholderExpansion {
@@ -26,7 +23,7 @@ public class Placeholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.6h";
+        return "1.6x";
     }
 
     @Override

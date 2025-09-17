@@ -134,6 +134,11 @@ class MenuClanMembersService implements MenuService {
 
     }
 
+    @Override
+    public boolean menuPages() {
+        return true;
+    }
+
     public static MenuPages register(UUID player, MenuPages menuPages) {
         PLAYERS.put(player, menuPages);
         return PLAYERS.get(player);

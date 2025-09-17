@@ -1,6 +1,5 @@
 package phrase.towerClans.command.impl.reload;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;

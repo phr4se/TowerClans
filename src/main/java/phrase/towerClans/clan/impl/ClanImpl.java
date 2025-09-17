@@ -1,6 +1,7 @@
 package phrase.towerClans.clan.impl;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import phrase.towerClans.Plugin;
@@ -10,12 +11,10 @@ import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.permission.Permission;
 import phrase.towerClans.clan.permission.PermissionType;
+import phrase.towerClans.command.impl.base.Base;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.glow.Glow;
-import phrase.towerClans.gui.MenuFactory;
-import phrase.towerClans.gui.MenuPages;
-import phrase.towerClans.gui.MenuProvider;
-import phrase.towerClans.gui.MenuType;
+import phrase.towerClans.gui.*;
 import phrase.towerClans.gui.impl.MenuClanMembersProvider;
 import phrase.towerClans.util.Utils;
 
@@ -28,6 +27,21 @@ public class ClanImpl extends AbstractClan {
 
     public ClanImpl(String name, Plugin plugin) {
         super(name);
+
+        CLANS.put(name, this);
+
+        this.plugin = plugin;
+    }
+
+    public ClanImpl(String name, ModifiedPlayer modifiedPlayer, Plugin plugin) {
+        super(name);
+
+        modifiedPlayer.setClan(this);
+        getMembers().put(modifiedPlayer, Rank.RankType.LEADER.getName());
+        CLANS.put(name, this);
+        Base.setBase(this, null);
+        Permission.getPermissionsPlayer(modifiedPlayer).setPermissionsPlayer(PermissionType.PERMISSION, PermissionType.WITHDRAW, PermissionType.STORAGE, PermissionType.BASE, PermissionType.KICK, PermissionType.PVP, PermissionType.GLOW, PermissionType.INVITE);
+
         this.plugin = plugin;
     }
 
@@ -39,11 +53,9 @@ public class ClanImpl extends AbstractClan {
         if ((clan.getMembers().size() + 1) > maximumMembers) return new ClanResponse(Config.getCommandMessages().noPlaceInClan(), ClanResponse.ResponseType.FAILURE);
         clan.getMembers().put(modifiedPlayer, Rank.RankType.MEMBER.getName());
 
-        for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = Config.getCommandMessages().notificationInvited().replace("%player%", modifiedPlayer.getPlayer().getName());
-            if(entry.getKey().getPlayer() == null) continue;
-            Utils.sendMessage(entry.getKey().getPlayer(), string);
-        }
+        String message = Config.getCommandMessages().notificationInvited().replace("%player%", modifiedPlayer.getPlayer().getName());
+
+        chat(message);
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
@@ -55,12 +67,8 @@ public class ClanImpl extends AbstractClan {
             return new ClanResponse(Config.getCommandMessages().playerNotInYourselfClan(), ClanResponse.ResponseType.FAILURE);
         clan.getMembers().remove(modifiedPlayer);
 
-        for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String name = (modifiedPlayer.getPlayer() == null) ? Bukkit.getOfflinePlayer(modifiedPlayer.getPlayerUUID()).getName() : modifiedPlayer.getPlayer().getName();
-            String string = Config.getCommandMessages().notificationKicked().replace("%player%", name);
-            if (entry.getKey().getPlayer() == null) continue;
-            Utils.sendMessage(entry.getKey().getPlayer(), string);
-        }
+        String message = Config.getCommandMessages().notificationKicked().replace("%player%", (modifiedPlayer.getPlayer() == null) ? Bukkit.getOfflinePlayer(modifiedPlayer.getPlayerUUID()).getName() : modifiedPlayer.getPlayer().getName());
+        chat(message);
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
@@ -75,11 +83,8 @@ public class ClanImpl extends AbstractClan {
         plugin.getEconomy().withdrawPlayer(modifiedPlayer.getPlayer(), amount);
         clan.setBalance(clan.getBalance() + amount);
 
-        for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = Config.getCommandMessages().notificationPut().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
-            if(entry.getKey().getPlayer() == null) continue;
-            Utils.sendMessage(entry.getKey().getPlayer(), string);
-        }
+        String message = Config.getCommandMessages().notificationPut().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
+        chat(message);
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
@@ -93,11 +98,8 @@ public class ClanImpl extends AbstractClan {
         plugin.getEconomy().depositPlayer(modifiedPlayer.getPlayer(), amount);
         clan.setBalance(clan.getBalance() - amount);
 
-        for (Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
-            String string = Config.getCommandMessages().notificationWithdraw().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
-            if(entry.getKey().getPlayer() == null) continue;
-            Utils.sendMessage(entry.getKey().getPlayer(), string);
-        }
+        String message = Config.getCommandMessages().notificationWithdraw().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
+        chat(message);
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
@@ -108,11 +110,8 @@ public class ClanImpl extends AbstractClan {
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         clan.getMembers().remove(modifiedPlayer);
 
-        for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = Config.getCommandMessages().notificationLeave().replace("%player%", modifiedPlayer.getPlayer().getName());
-            if(entry.getKey().getPlayer() == null) continue;
-            Utils.sendMessage(entry.getKey().getPlayer(), string);
-        }
+        String message = Config.getCommandMessages().notificationLeave().replace("%player%", modifiedPlayer.getPlayer().getName());
+        chat(message);
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
@@ -135,11 +134,8 @@ public class ClanImpl extends AbstractClan {
             case UNDEFINED: return new ClanResponse(Config.getCommandMessages().rankNoExists(), ClanResponse.ResponseType.FAILURE);
         }
 
-        for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            String string = Config.getCommandMessages().notificationRank().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", (id == 2) ? Rank.RankType.DEPUTY.getName() : Rank.RankType.MEMBER.getName());
-            if(entry.getKey().getPlayer() == null) continue;
-            Utils.sendMessage(entry.getKey().getPlayer(), string);
-        }
+        String message = Config.getCommandMessages().notificationRank().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", (id == 2) ? Rank.RankType.DEPUTY.getName() : Rank.RankType.MEMBER.getName());
+        chat(message);
 
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
@@ -150,12 +146,15 @@ public class ClanImpl extends AbstractClan {
 
         if(modifiedPlayer.hasPermission(PermissionType.PERMISSION)) Permission.getPermissionsPlayer(modifiedPlayer).clearPermissionPlayer(PermissionType.PERMISSION);
 
+        String message = Config.getCommandMessages().notificationDisband();
+        chat(message);
+
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             entry.getKey().setClan(null);
-            if(entry.getKey().getPlayer() == null) continue;
+            Player player = entry.getKey().getPlayer();
+            if(player == null) continue;
             if(Glow.isEnableForPlayer(entry.getKey())) Glow.disableForPlayer(entry.getKey());
-            Utils.sendMessage(entry.getKey().getPlayer(), Config.getCommandMessages().notificationDisband());
         }
 
         CLANS.remove(clan.getName());
@@ -170,13 +169,14 @@ public class ClanImpl extends AbstractClan {
             return;
         }
 
-        if (menuType == MenuType.MENU_CLAN_MEMBERS) {
-            MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) menuProvider;
+        Player player = modifiedPlayer.getPlayer();
+
+        if (menuProvider.menuPages()) {
             Inventory menu = menuProvider.getMenu(modifiedPlayer, ((ClanImpl) modifiedPlayer.getClan()), plugin);
-            List<ItemStack> players = menuClanMembersProvider.getPlayers(modifiedPlayer, ((ClanImpl) modifiedPlayer.getClan()), plugin);
-            MenuPages menuPages = menuClanMembersProvider.register(modifiedPlayer.getPlayerUUID(), new MenuPages(0, players, menu));
-            modifiedPlayer.getPlayer().openInventory(menuPages.getPage(menuPages.getCurrentPage()));
-        } else modifiedPlayer.getPlayer().openInventory(menuProvider.getMenu(modifiedPlayer, ((ClanImpl) modifiedPlayer.getClan()), plugin));
+            List<ItemStack> players = ((Pages) menuProvider).getContents(modifiedPlayer, ((ClanImpl) modifiedPlayer.getClan()), plugin);
+            MenuPages menuPages = ((Pages) menuProvider).register(modifiedPlayer.getPlayerUUID(), new MenuPages(0, players, menu));
+            player.openInventory(menuPages.getPage(menuPages.getCurrentPage()));
+        } else player.openInventory(menuProvider.getMenu(modifiedPlayer, ((ClanImpl) modifiedPlayer.getClan()), plugin));
 
 
     }
@@ -195,8 +195,19 @@ public class ClanImpl extends AbstractClan {
 
     }
 
+    @Override
+    public void chat(String message) {
+
+        for(Map.Entry<ModifiedPlayer, String> entry : getMembers().entrySet()) {
+            Player player = entry.getKey().getPlayer();
+            if(player == null) return;
+            Utils.sendMessage(player, message);
+        }
+
+    }
+
     public static Map<String, ClanImpl> getClans() {
-        return CLANS;
+        return Collections.unmodifiableMap(CLANS);
     }
 
 }

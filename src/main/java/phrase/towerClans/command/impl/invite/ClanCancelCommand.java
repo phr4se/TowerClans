@@ -1,9 +1,7 @@
 package phrase.towerClans.command.impl.invite;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import phrase.towerClans.Plugin;
 import phrase.towerClans.command.CommandHandler;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.util.Utils;

@@ -1,8 +1,6 @@
 package phrase.towerClans.command.impl.menu;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;

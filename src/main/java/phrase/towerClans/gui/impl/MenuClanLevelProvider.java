@@ -16,4 +16,9 @@ public class MenuClanLevelProvider extends MenuProvider {
     public Inventory getMenu(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
         return getMenuService().create(modifiedPlayer, clan, plugin);
     }
+
+    @Override
+    public boolean menuPages() {
+        return getMenuService().menuPages();
+    }
 }

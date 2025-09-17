@@ -8,5 +8,6 @@ import phrase.towerClans.clan.impl.ClanImpl;
 public interface MenuService {
 
     Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin);
+    boolean menuPages();
 
 }

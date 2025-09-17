@@ -1,6 +1,5 @@
 package phrase.towerClans.command.impl.glow;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;

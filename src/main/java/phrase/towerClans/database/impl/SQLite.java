@@ -167,7 +167,6 @@ public class SQLite implements Database {
                 clan.getStorage().getInventory().setContents(storage.getContents());
                 Map<ModifiedPlayer, String> members = ClanDataConverter.listToMap(ListStringSerializable.stringToList(resultSet.getString(10)), clan);
                 clan.setMembers(members);
-                ClanImpl.getClans().put(name, clan);
             }
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);

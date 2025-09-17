@@ -2,17 +2,10 @@ package phrase.towerClans.command;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import phrase.towerClans.Plugin;
 import phrase.towerClans.command.impl.event.ClanEventCommand;
 import phrase.towerClans.config.Config;
 
 public class CommandMapper {
-
-    private final Plugin plugin;
-
-    public CommandMapper(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     public CommandResult mapCommand(Player player, String label, String[] args) {
 
@@ -42,7 +35,7 @@ public class CommandMapper {
         CommandHandler commandHandler = commandDescription.getCommandHandler();
         if(commandHandler == null) return;
 
-        ((ClanEventCommand)commandHandler).handler(sender, args);
+        if(commandHandler instanceof ClanEventCommand) ((ClanEventCommand)commandHandler).handler(sender, args);
 
     }
 

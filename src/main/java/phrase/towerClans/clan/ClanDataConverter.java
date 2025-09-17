@@ -1,6 +1,5 @@
 package phrase.towerClans.clan;
 
-import org.bukkit.Bukkit;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 

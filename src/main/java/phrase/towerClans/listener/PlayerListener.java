@@ -16,14 +16,12 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.projectiles.ProjectileSource;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.event.Event;
-import phrase.towerClans.clan.event.impl.Capture;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.impl.invite.PlayerCalls;
 import phrase.towerClans.config.Config;
@@ -239,10 +237,7 @@ public class PlayerListener implements Listener {
         MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
         if (menuClanMembersProvider.isRegistered(player.getUniqueId())) menuClanMembersProvider.unRegister(player.getUniqueId());
 
-        BossBar bossBar = plugin.getServer().getBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"));
-        if(bossBar != null) {
-            if(bossBar.getPlayers().contains(player)) bossBar.removePlayer(player);
-        }
+        updateAllBossBarForPlayer(player);
     }
 
     @EventHandler
@@ -257,13 +252,23 @@ public class PlayerListener implements Listener {
             Stats.PLAYERS.put(player, stats);
         }
 
-        BossBar bossBar = plugin.getServer().getBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"));
+        updateAllBossBarForPlayer(event.getPlayer());
+    }
+
+    private void updateBossBarForPlayer(Player player, NamespacedKey key) {
+        BossBar bossBar = plugin.getServer().getBossBar(key);
+
         if(!Event.isRunningEvent()) {
-            if(bossBar != null)
-                if(bossBar.getPlayers().contains(player)) bossBar.removePlayer(event.getPlayer());
+            if (bossBar != null) {
+                if (bossBar.getPlayers().contains(player)) bossBar.removePlayer(player);
+            }
         } else {
-            if(bossBar != null) bossBar.addPlayer(event.getPlayer());
+            if(bossBar != null) bossBar.addPlayer(player);
         }
+    }
+
+    private void updateAllBossBarForPlayer(Player player) {
+        updateBossBarForPlayer(player, NamespacedKey.fromString("towerclans_bossbar_event_capture"));
     }
 
     private void sendOperatorMessage(Player player) {
@@ -283,16 +288,16 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onCommandPreprocessCommand(PlayerCommandPreprocessEvent event) {
 
-        if(!Event.isRunningEventType(Event.EventType.CAPTURE)) return;
+        if(!Event.isCurrentRunningEvent()) return;
 
-        Capture capture = (Capture) Event.getRunningEvent(Event.EventType.CAPTURE);
+        Event clanEvent = Event.getCurrentRunningEvent();
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
         List<String> blockedCommands = configurationSection.getStringList("blocked_commands");
 
         String command = event.getMessage().split(" ")[0].replaceFirst("/", "");
         Player player = event.getPlayer();
-        if(capture.playerAtEvent(player) && blockedCommands.contains(command)) {
+        if(clanEvent.playerAtEvent(player) && blockedCommands.contains(command)) {
             Utils.sendMessage(player, Config.getMessages().useBlockedCommand().replace("%command%", command));
             event.setCancelled(true);
         }

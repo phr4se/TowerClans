@@ -17,4 +17,8 @@ public class MenuClanStorageProvider extends MenuProvider {
         return getMenuService().create(modifiedPlayer, clan, plugin);
     }
 
+    @Override
+    public boolean menuPages() {
+        return getMenuService().menuPages();
+    }
 }

@@ -1,20 +1,14 @@
 package phrase.towerClans.command.impl.create;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
-import phrase.towerClans.clan.attribute.clan.Rank;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
-import phrase.towerClans.clan.permission.Permission;
-import phrase.towerClans.clan.permission.PermissionType;
 import phrase.towerClans.command.CommandHandler;
-import phrase.towerClans.command.impl.base.Base;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.util.Utils;
 
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -71,12 +65,7 @@ public class ClanCreateCommand implements CommandHandler {
 
         plugin.getEconomy().withdrawPlayer(player, amount);
 
-        ClanImpl clan = new ClanImpl(name, plugin);
-        modifiedPlayer.setClan(clan);
-        clan.getMembers().put(modifiedPlayer, Rank.RankType.LEADER.getName());
-        ClanImpl.getClans().put(args[1], clan);
-        Base.setBase(clan, null);
-        Permission.getPermissionsPlayer(modifiedPlayer).setPermissionsPlayer(PermissionType.PERMISSION, PermissionType.WITHDRAW, PermissionType.STORAGE, PermissionType.BASE, PermissionType.KICK, PermissionType.PVP, PermissionType.GLOW, PermissionType.INVITE);
+        new ClanImpl(name, modifiedPlayer, plugin);
 
         Utils.sendMessage(player, Config.getCommandMessages().creatingClan());
 

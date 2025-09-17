@@ -81,6 +81,8 @@ class MenuClanMainService implements MenuService {
 
     }
 
-
-
+    @Override
+    public boolean menuPages() {
+        return false;
+    }
 }

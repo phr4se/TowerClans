@@ -107,4 +107,9 @@ class MenuClanLevelService implements MenuService {
 
         return menu;
     }
+
+    @Override
+    public boolean menuPages() {
+        return false;
+    }
 }

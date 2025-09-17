@@ -38,6 +38,8 @@ public abstract class AbstractClan implements Clan {
 
     public abstract void glow(ModifiedPlayer modifiedPlayer, Plugin plugin);
 
+    public abstract void chat(String message);
+
     public void setColor(Glow.LeatherColor color) {
         this.color = color;
     }

@@ -222,6 +222,7 @@ public class Capture extends Event {
         bossBar.removeAll();
     }
 
+    @Override
     public boolean playerAtEvent(Player player) {
         Location location = player.getLocation();
         int x = location.getBlockX();
@@ -290,31 +291,25 @@ public class Capture extends Event {
 
     }
 
+    @Override
     public void broadcastForPlayersAboutStartEvent() {
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
 
         List<String> messages = configurationSection.getStringList("messages_start_event");
 
-        for(Player player : plugin.getServer().getOnlinePlayers()) {
-            for(String message : messages) {
-                Utils.sendMessage(player, Utils.COLORIZER.colorize(message));
-            }
-        }
+        broadcast(plugin, messages);
 
     }
 
+    @Override
     public void broadcastForPlayersAboutEndEvent(String clanName) {
 
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
 
-        List<String> messages = configurationSection.getStringList("messages_end_event");
+        List<String> messages = configurationSection.getStringList("messages_end_event").stream().map(message -> message.replace("%clan_name%", clanName)).toList();
 
-        for(Player player : plugin.getServer().getOnlinePlayers()) {
-            for(String message : messages) {
-                Utils.sendMessage(player, Utils.COLORIZER.colorize(message.replace("%clan_name%", clanName)));
-            }
-        }
+        broadcast(plugin, messages);
 
     }
 

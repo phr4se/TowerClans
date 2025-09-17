@@ -1,14 +1,11 @@
 package phrase.towerClans.command.impl.chat;
 
 import org.bukkit.entity.Player;
-import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.command.CommandHandler;
 import phrase.towerClans.config.Config;
 import phrase.towerClans.util.Utils;
-
-import java.util.Map;
 
 public class ClanChatCommand implements CommandHandler {
 
@@ -29,11 +26,8 @@ public class ClanChatCommand implements CommandHandler {
             stringBuilder.append(args[i]).append(" ");
         }
 
-        String string = Config.getCommandMessages().messageFormat().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", clan.getMembers().get(modifiedPlayer)).replace("%message%", stringBuilder.toString());
-        for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
-            if(entry.getKey().getPlayer() == null) continue;
-            Utils.sendMessage(entry.getKey().getPlayer(), string);
-        }
+        String message = Config.getCommandMessages().messageFormat().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", clan.getMembers().get(modifiedPlayer)).replace("%message%", stringBuilder.toString());
+        clan.chat(message);
 
         return true;
     }

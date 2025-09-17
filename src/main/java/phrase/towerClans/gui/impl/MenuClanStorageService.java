@@ -36,4 +36,9 @@ class MenuClanStorageService implements MenuService {
 
         return menu;
     }
+
+    @Override
+    public boolean menuPages() {
+        return false;
+    }
 }

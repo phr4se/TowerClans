@@ -2,7 +2,6 @@ package phrase.towerClans.util;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import phrase.towerClans.config.Config;
 import phrase.towerClans.util.colorizer.ColorizerFactory;
 import phrase.towerClans.util.colorizer.ColorizerProvider;
 import phrase.towerClans.util.colorizer.ColorizerType;

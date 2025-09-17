@@ -2,12 +2,12 @@ package phrase.towerClans.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Storage;
@@ -47,8 +47,10 @@ public class ClanListener implements Listener {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if (item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING) != null) {
-            String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
+        PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
+
+        if (persistentDataContainer.has(NamespacedKey.fromString("action"), PersistentDataType.STRING)) {
+            String action = persistentDataContainer.get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
             MenuType menu = MenuType.valueOf(action);
             event.setCancelled(true);
             clan.showMenu(modifiedPlayer, menu);
@@ -56,6 +58,8 @@ public class ClanListener implements Listener {
             event.setCancelled(true);
         }
     }
+
+    private static final Pattern pattern = Pattern.compile("%(.*?)%");
 
     @EventHandler
     public void onClickClanMenuMembers(ClickMenuClanMembersEvent event) {
@@ -68,9 +72,11 @@ public class ClanListener implements Listener {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if ((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
+        PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
+
+        if (persistentDataContainer.has(NamespacedKey.fromString("action"), PersistentDataType.STRING)) {
             MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
-            String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
+            String action = persistentDataContainer.get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
             MenuType menu = MenuType.valueOf(action);
             event.setCancelled(true);
             switch (menu) {
@@ -90,7 +96,7 @@ public class ClanListener implements Listener {
             }
         }
 
-        if((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("player"), PersistentDataType.STRING)) != null) {
+        if(persistentDataContainer.has(NamespacedKey.fromString("player"), PersistentDataType.STRING)) {
 
             if(!modifiedPlayer.hasPermission(PermissionType.PERMISSION)) {
                 Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().noPermission());
@@ -115,7 +121,6 @@ public class ClanListener implements Listener {
 
                 Permission permission = Permission.getPermissionsPlayer(modifiedPlayer);
 
-                Pattern pattern = Pattern.compile("%(.*?)%");
                 Matcher matcher = pattern.matcher(lore.get(permission.getCurrentPermission()));
 
                 PermissionType permissionType = null;
@@ -125,7 +130,7 @@ public class ClanListener implements Listener {
                     } catch (IllegalArgumentException ignored) {}
                 }
 
-                UUID target = UUID.fromString(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("player"), PersistentDataType.STRING));
+                UUID target = UUID.fromString(persistentDataContainer.get(NamespacedKey.fromString("player"), PersistentDataType.STRING));
                 ModifiedPlayer targetModifiedPlayer = (Bukkit.getPlayer(target) == null) ? ModifiedPlayer.get(Bukkit.getOfflinePlayer(target)) : ModifiedPlayer.get(Bukkit.getPlayer(target));
                 if (Permission.getPermissionsPlayer(targetModifiedPlayer).getPermissionTypes().contains(permissionType))
                     Permission.getPermissionsPlayer(targetModifiedPlayer).clearPermissionPlayer(permissionType);
@@ -155,8 +160,10 @@ public class ClanListener implements Listener {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if ((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
-            String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
+        PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
+
+        if (persistentDataContainer.has(NamespacedKey.fromString("action"), PersistentDataType.STRING)) {
+            String action = persistentDataContainer.get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
 
             MenuType menu = MenuType.valueOf(action);
             event.setCancelled(true);
@@ -178,9 +185,11 @@ public class ClanListener implements Listener {
 
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
-        if((item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING)) != null) {
+        PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
+
+        if(persistentDataContainer.has(NamespacedKey.fromString("action"), PersistentDataType.STRING)) {
             event.setCancelled(true);
-            String action = item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
+            String action = persistentDataContainer.get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
 
             try {
                 Glow.LeatherColor color = Glow.LeatherColor.valueOf(action);
@@ -288,8 +297,9 @@ public class ClanListener implements Listener {
     @EventHandler
     public void onClickMenuClanStorage(ClickMenuClanStorageEvent event) {
         ItemStack item = event.getCurrentItem();
+        PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
         if(item != null) {
-            if (item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("no_available"), PersistentDataType.STRING) != null)
+            if (persistentDataContainer.has(NamespacedKey.fromString("no_available"), PersistentDataType.STRING))
                 event.setCancelled(true);
         }
 

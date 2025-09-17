@@ -1,10 +1,13 @@
 package phrase.towerClans.clan.event;
 
+import org.bukkit.entity.Player;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.event.privilege.PrivilegeManager;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.util.Utils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class Event {
@@ -39,6 +42,14 @@ public abstract class Event {
 
     public abstract boolean isRunning();
 
+    public static boolean isCurrentRunningEvent() {
+        return !RUNNING_EVENTS.isEmpty();
+    }
+
+    public static Event getCurrentRunningEvent() {
+        return RUNNING_EVENTS.entrySet().stream().map(Map.Entry::getValue).findFirst().get();
+    }
+
     public static boolean register(EventType eventType, Event event) {
         if (RUNNING_EVENTS.containsKey(eventType)) return false;
         RUNNING_EVENTS.put(eventType, event);
@@ -59,6 +70,14 @@ public abstract class Event {
 
     public static boolean isRunningEventType(EventType eventType) {
         return RUNNING_EVENTS.containsKey(eventType);
+    }
+
+    public abstract boolean playerAtEvent(Player player);
+    public abstract void broadcastForPlayersAboutStartEvent();
+    public abstract void broadcastForPlayersAboutEndEvent(String clanName);
+
+    public void broadcast(Plugin plugin, List<String> messages) {
+        plugin.getServer().getOnlinePlayers().forEach(player -> messages.forEach(message -> Utils.sendMessage(player, message)));
     }
 
 }
