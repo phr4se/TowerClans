@@ -15,7 +15,6 @@ public abstract class AbstractClan implements Clan {
     private Map<ModifiedPlayer, String> members;
     private int level;
     private int xp;
-    private final int availableSlots;
     private int balance;
     private boolean pvp;
     private final Storage storage;
@@ -27,7 +26,6 @@ public abstract class AbstractClan implements Clan {
         members = new HashMap<>();
         level = 1;
         xp = Level.getXpLevel(level);
-        availableSlots = Level.getAvailableSlots(level);
         balance = 0;
         pvp = false;
         storage = new Storage();
@@ -73,7 +71,7 @@ public abstract class AbstractClan implements Clan {
     }
 
     public int getAvailableSlots() {
-        return availableSlots;
+        return Level.getAvailableSlots(level);
     }
 
     public int getXp() {

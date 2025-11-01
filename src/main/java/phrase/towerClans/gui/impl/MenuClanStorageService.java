@@ -29,6 +29,13 @@ class MenuClanStorageService implements MenuService {
                 .setPersistentDataContainer(NamespacedKey.fromString("no_available"), PersistentDataType.STRING, "no_available")
                 .build();
 
+        for(int i = 0; i <= availableSlots; i++) {
+            if(menu.getItem(i) == null) continue;
+            if(menu.getItem(i).getItemMeta().getPersistentDataContainer().has(NamespacedKey.fromString("no_available"), PersistentDataType.STRING)) {
+                menu.setItem(i, null);
+            }
+        }
+
         for(int i = 0; i <= menu.getSize() - 1; i++) {
             if(i >= 0 && i <= availableSlots) continue;
             menu.setItem(i, item);

@@ -3,8 +3,10 @@ package phrase.towerClans.clan.attribute.clan;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import phrase.towerClans.Plugin;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;

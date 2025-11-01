@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
@@ -297,11 +298,14 @@ public class ClanListener implements Listener {
     @EventHandler
     public void onClickMenuClanStorage(ClickMenuClanStorageEvent event) {
         ItemStack item = event.getCurrentItem();
-        PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
-        if(item != null) {
-            if (persistentDataContainer.has(NamespacedKey.fromString("no_available"), PersistentDataType.STRING))
-                event.setCancelled(true);
+        if(item  == null) {
+            event.setCancelled(true);
+            return;
         }
+        PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
+
+        if (persistentDataContainer.has(NamespacedKey.fromString("no_available"), PersistentDataType.STRING))
+            event.setCancelled(true);
 
         ClanImpl clan = (ClanImpl) event.getClan();
         Player player = event.getPlayer();
