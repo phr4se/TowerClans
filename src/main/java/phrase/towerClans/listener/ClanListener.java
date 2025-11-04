@@ -298,14 +298,12 @@ public class ClanListener implements Listener {
     @EventHandler
     public void onClickMenuClanStorage(ClickMenuClanStorageEvent event) {
         ItemStack item = event.getCurrentItem();
-        if(item  == null) {
-            event.setCancelled(true);
-            return;
-        }
-        PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
 
-        if (persistentDataContainer.has(NamespacedKey.fromString("no_available"), PersistentDataType.STRING))
-            event.setCancelled(true);
+        if(item != null) {
+            PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
+            if (persistentDataContainer.has(NamespacedKey.fromString("no_available"), PersistentDataType.STRING))
+                event.setCancelled(true);
+        }
 
         ClanImpl clan = (ClanImpl) event.getClan();
         Player player = event.getPlayer();
