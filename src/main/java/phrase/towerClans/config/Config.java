@@ -2,6 +2,8 @@ package phrase.towerClans.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.event.privilege.PrivilegeManager;
 import phrase.towerClans.config.data.CommandMessages;
 import phrase.towerClans.config.data.Messages;
@@ -9,6 +11,7 @@ import phrase.towerClans.config.data.Settings;
 import phrase.towerClans.database.DatabaseType;
 import phrase.towerClans.util.Utils;
 
+import java.io.File;
 import java.util.List;
 
 public class Config {
@@ -133,6 +136,20 @@ public class Config {
             return messages;
         }
         return messages.stream().map(message -> getMessagePrefixed(message, prefix)).toList();
+    }
+
+    public static void createFiles(Plugin plugin, String... filesName) {
+        for(String fileName : filesName) {
+            File file = new File(plugin.getDataFolder(), fileName);
+            if (!file.exists()) {
+                plugin.saveResource(fileName, false);
+            }
+        }
+    }
+
+    public static FileConfiguration getFile(Plugin plugin, String fileName) {
+        File file = new File(plugin.getDataFolder(), fileName);
+        return YamlConfiguration.loadConfiguration(file);
     }
 
     public static Messages getMessages() {

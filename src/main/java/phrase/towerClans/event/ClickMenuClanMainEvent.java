@@ -37,6 +37,10 @@ public class ClickMenuClanMainEvent extends Event implements Cancellable {
         return event.getCurrentItem();
     }
 
+    public boolean isRightClick() { return event.isRightClick(); }
+
+    public boolean isLeftClick() { return event.isLeftClick(); }
+
     @Override
     public boolean isCancelled() {
         return event.isCancelled();

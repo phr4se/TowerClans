@@ -1,0 +1,40 @@
+menu_clan_members:
+  size: 27
+  title_menu: "&0&lУчастники клана"
+  material: paper
+  title_item: "&#0080FF✿ &fИгрок &#0080FF%player_name%"
+  lore:
+    - ""
+    - "&#0080FF- &fРанг: &6%player_rank%"
+    - "&#0080FF- &fУбийств: &a%player_kills%"
+    - "&#0080FF- &fСмертей: &c%player_deaths%"
+    - ""
+    - "&#0080FF► ЛКМ - двигаться вниз"
+    - "&#0080FF► ПКМ - изменить значение"
+    - ""
+  permission:
+    - "%cursor% &fУстанавливать/удалять базу клана: %base%"
+    - "%cursor% &fМенять подсветку брони клана: %glow%"
+    - "%cursor% &fПриглашать игроков в клан: %invite%"
+    - "%cursor% &fКикать игроков из клана: %kick%"
+    - "%cursor% &fМенять PvP-режим клана: %pvp%"
+    - "%cursor% &fОткрывать хранилище клана: %storage%"
+    - "%cursor% &fСнимать с баланса клана: %withdraw%"
+  cursor: "&#0080FF►"
+  permission_is_available: "&a&l[✔]"
+  permission_not_available: "&c&l[✖]"
+  items:
+    1:
+      material: spectral_arrow
+      slot:
+        - 26
+      title: "&#0080FF➜ Выйти"
+      lore:
+        - ""
+        - "&#0080FF- &fНажмите, чтобы выйти"
+        - ""
+      hide-attributes: true
+      right_click_actions:
+        - "[open] MENU_CLAN_BACK"
+      left_click_actions:
+        - "[open] MENU_CLAN_BACK"

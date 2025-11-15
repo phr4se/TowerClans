@@ -2,6 +2,7 @@ package phrase.towerClans.gui;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -28,6 +29,15 @@ public class ItemBuilder {
     public ItemBuilder setLore(List<String> lore) {
         if (itemMeta != null) {
             itemMeta.setLore(lore);
+        }
+        return this;
+    }
+
+    public ItemBuilder setHideAttributes(boolean hideAttributes) {
+        if(itemMeta != null) {
+            if(hideAttributes) {
+                itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            }
         }
         return this;
     }

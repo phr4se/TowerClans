@@ -3,6 +3,7 @@ package phrase.towerClans.clan.permission;
 import org.bukkit.configuration.ConfigurationSection;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
+import phrase.towerClans.config.Config;
 
 import java.util.*;
 
@@ -52,7 +53,7 @@ public class Permission {
     }
 
     public boolean hasNextPermission(Plugin plugin) {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members");
+        ConfigurationSection configurationSection = Config.getFile(plugin, "menus/menu-clan-members.yml").getConfigurationSection("menu_clan_members");
         return currentPermission < configurationSection.getStringList("permission").size() - 1;
     }
     

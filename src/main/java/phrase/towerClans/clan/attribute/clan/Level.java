@@ -35,7 +35,6 @@ public record Level(int level, int xp, int maximumBalance, int maximumMembers, i
         return xpForMurder;
     }
 
-
     public static int getCountLevels() {
         return countLevels;
     }

@@ -1,0 +1,71 @@
+menu_clan_level:
+  size: 54
+  title: "&0&lУровень клана"
+  slot: 19
+  received:
+    material: chest_minecart
+    title: "&#0080FF⚡ &fУровень &#0080FF%level%"
+    lore:
+      - ""
+      - "&#0080FF- &fСтатус: &aПолучен"
+      - ""
+      - "&#0080FF- &fЛимит баланса: &#0080FF%maximum_balance%"
+      - "&#0080FF- &fЛимит участников: &#0080FF%maximum_members%"
+      - "&#0080FF- &fСлотов в хранилище: &#0080FF%available%"
+      - ""
+  not_received:
+    material: furnace_minecart
+    title: "&#0080FF⚡ &fУровень &#0080FF%level%"
+    lore:
+      - ""
+      - "&#0080FF- &fСтатус: &cНе получен"
+      - ""
+      - "&#0080FF- &fЛимит баланса: &#0080FF%maximum_balance%"
+      - "&#0080FF- &fЛимит участников: &#0080FF%maximum_members%"
+      - "&#0080FF- &fСлотов в хранилище: &#0080FF%available%"
+      - ""
+  items:
+    1:
+      material: spectral_arrow
+      slot:
+        - 49
+      title: "&#0080FF➜ Выйти"
+      lore:
+        - ""
+        - "&#0080FF- &fНажмите, чтобы выйти"
+        - ""
+      hide-attributes: true
+      right_click_actions:
+        - "[open] MENU_CLAN_BACK"
+      left_click_actions:
+        - "[open] MENU_CLAN_BACK"
+    3:
+      material: light_blue_stained_glass_pane
+      slot:
+        - 0
+        - 1
+        - 7
+        - 8
+        - 9
+        - 17
+        - 36
+        - 44
+        - 45
+        - 46
+        - 52
+        - 53
+      title: " "
+      lore:
+        - ""
+      hide-attributes: true
+    4:
+      material: chain
+      slot:
+        - 18
+        - 26
+        - 27
+        - 35
+      title: " "
+      lore:
+        - ""
+      hide-attributes: true

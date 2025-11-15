@@ -13,6 +13,7 @@ import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
 import phrase.towerClans.clan.permission.Permission;
 import phrase.towerClans.clan.permission.PermissionType;
+import phrase.towerClans.config.Config;
 import phrase.towerClans.gui.ItemBuilder;
 import phrase.towerClans.gui.MenuPages;
 import phrase.towerClans.gui.MenuService;
@@ -28,32 +29,68 @@ class MenuClanMembersService implements MenuService {
     @Override
     public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members");
+        ConfigurationSection configurationSection = Config.getFile(plugin, "menus/menu-clan-members.yml").getConfigurationSection("menu_clan_members");
         int size = configurationSection.getInt("size");
         String titleMenu = configurationSection.getString("title_menu");
 
         Inventory menu = Bukkit.createInventory(null, size, Utils.COLORIZER.colorize(titleMenu));
 
-        configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members.items");
+        configurationSection = Config.getFile(plugin, "menus/menu-clan-members.yml").getConfigurationSection("menu_clan_members.items");
 
         for(String key : configurationSection.getKeys(false)) {
 
             Material material = Material.matchMaterial(configurationSection.getString(key + ".material"));
-            int slot = configurationSection.getInt(key + ".slot");
+            List<Integer> slots = configurationSection.getIntegerList(key + ".slot");
+            boolean hideAttributes = configurationSection.getBoolean(key + ".hide-attributes");
             String titleItem = Utils.COLORIZER.colorize(configurationSection.getString(key + ".title"));
             List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(Utils.COLORIZER::colorize).toList();
 
-            if(configurationSection.contains(key + ".actions_when_clicking")) {
+            if(configurationSection.contains(key + ".right_click_actions") && configurationSection.contains(key + ".left_click_actions")) {
 
-                String action = configurationSection.getString(key + ".actions_when_clicking");
+                List<String> rightClickActions = configurationSection.getStringList(key + ".right_click_actions");
+                List<String> leftClickActions = configurationSection.getStringList(key + ".left_click_actions");
 
                 ItemStack item = new ItemBuilder(material)
                         .setName(titleItem)
                         .setLore(lore)
-                        .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, action)
+                        .setHideAttributes(hideAttributes)
+                        .setPersistentDataContainer(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING, String.join("|", rightClickActions))
+                        .setPersistentDataContainer(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING, String.join("|", leftClickActions))
                         .build();
 
-                menu.setItem(slot, item);
+                slots.forEach(slot -> menu.setItem(slot, item));
+                continue;
+
+            }
+
+            if(configurationSection.contains(key + ".right_click_actions")) {
+
+                List<String> rightClickActions = configurationSection.getStringList(key + ".right_click_actions");
+
+                ItemStack item = new ItemBuilder(material)
+                        .setName(titleItem)
+                        .setLore(lore)
+                        .setHideAttributes(hideAttributes)
+                        .setPersistentDataContainer(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING, String.join("|", rightClickActions))
+                        .build();
+
+                slots.forEach(slot -> menu.setItem(slot, item));
+                continue;
+
+            }
+
+            if(configurationSection.contains(key + ".left_click_actions")) {
+
+                List<String> leftClickActions = configurationSection.getStringList(key + ".left_click_actions");
+
+                ItemStack item = new ItemBuilder(material)
+                        .setName(titleItem)
+                        .setLore(lore)
+                        .setHideAttributes(hideAttributes)
+                        .setPersistentDataContainer(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING, String.join("|", leftClickActions))
+                        .build();
+
+                slots.forEach(slot -> menu.setItem(slot, item));
                 continue;
 
             }
@@ -61,9 +98,10 @@ class MenuClanMembersService implements MenuService {
             ItemStack item = new ItemBuilder(material)
                     .setName(titleItem)
                     .setLore(lore)
+                    .setHideAttributes(hideAttributes)
                     .build();
 
-            menu.setItem(slot, item);
+            slots.forEach(slot -> menu.setItem(slot, item));
 
         }
 
@@ -74,7 +112,7 @@ class MenuClanMembersService implements MenuService {
     public List<ItemStack> getPlayers(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
 
         List<ItemStack> players = new ArrayList<>();
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members");
+        ConfigurationSection configurationSection = Config.getFile(plugin, "menus/menu-clan-members.yml").getConfigurationSection("menu_clan_members");
 
         Material material;
         String titleItem;
@@ -124,6 +162,7 @@ class MenuClanMembersService implements MenuService {
             ItemStack item = new ItemBuilder(material)
                     .setName(currentTitle)
                     .setLore(currentLore)
+                    .setHideAttributes(true)
                     .setPersistentDataContainer(NamespacedKey.fromString("player"), PersistentDataType.STRING, key.getPlayerUUID().toString())
                     .build();
 

@@ -51,6 +51,12 @@ public class ClickMenuClanStorageEvent extends Event implements Cancellable {
         return event.getCurrentItem();
     }
 
+    public boolean isRightClick() { return event.isRightClick(); }
+
+    public boolean isLeftClick() { return event.isLeftClick(); }
+
+    public int getSlot() { return event.getSlot(); }
+
     @Override
     public boolean isCancelled() {
         return event.isCancelled();

@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Level;
@@ -121,6 +122,21 @@ public class PlayerListener implements Listener {
             if (item1 == null && item2 == null) continue;
 
             if (item1 == null || item2 == null) return false;
+
+            if(item1.getType() != item2.getType()) return false;
+
+            if(item1.getAmount() != item2.getAmount()) return false;
+
+            ItemMeta itemMeta1 = item1.getItemMeta();
+            ItemMeta itemMeta2 = item2.getItemMeta();
+
+            if (itemMeta1 == null && itemMeta2 == null) continue;
+
+            if (itemMeta1 == null || itemMeta2 == null) return false;
+
+            if(!itemMeta1.getDisplayName().equals(itemMeta2.getDisplayName())) return false;
+
+            if(!itemMeta1.getPersistentDataContainer().equals(itemMeta2.getPersistentDataContainer())) return false;
 
         }
 

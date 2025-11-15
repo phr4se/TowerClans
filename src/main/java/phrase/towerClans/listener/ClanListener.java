@@ -7,10 +7,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import phrase.towerClans.Plugin;
-import phrase.towerClans.clan.attribute.clan.Level;
+import phrase.towerClans.action.ActionExecutor;
+import phrase.towerClans.action.ActionTransformer;
 import phrase.towerClans.clan.attribute.clan.Storage;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
@@ -46,21 +48,29 @@ public class ClanListener implements Listener {
         }
 
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
-        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+        Player player = modifiedPlayer.getPlayer();
 
         PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
 
-        if (persistentDataContainer.has(NamespacedKey.fromString("action"), PersistentDataType.STRING)) {
-            String action = persistentDataContainer.get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
-            MenuType menu = MenuType.valueOf(action);
+        if (event.isRightClick() && persistentDataContainer.has(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING)) {
+            String rightClickActions = persistentDataContainer.get(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING);
+            ActionExecutor.execute(player, ActionTransformer.transform(List.of(rightClickActions.split("\\|"))));
             event.setCancelled(true);
-            clan.showMenu(modifiedPlayer, menu);
-        } else {
-            event.setCancelled(true);
+            return;
         }
+
+        if(event.isLeftClick() && persistentDataContainer.has(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING)) {
+            String leftClickActions = persistentDataContainer.get(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING);
+            ActionExecutor.execute(player, ActionTransformer.transform(List.of(leftClickActions.split("\\|"))));
+            event.setCancelled(true);
+            return;
+        }
+
+        event.setCancelled(true);
+
     }
 
-    private static final Pattern pattern = Pattern.compile("%(.*?)%");
+    private static final Pattern PATTERN = Pattern.compile("%(.*?)%");
 
     @EventHandler
     public void onClickClanMenuMembers(ClickMenuClanMembersEvent event) {
@@ -72,29 +82,20 @@ public class ClanListener implements Listener {
 
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+        Player player = modifiedPlayer.getPlayer();
 
         PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
 
-        if (persistentDataContainer.has(NamespacedKey.fromString("action"), PersistentDataType.STRING)) {
-            MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
-            String action = persistentDataContainer.get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
-            MenuType menu = MenuType.valueOf(action);
+        if (event.isRightClick() && persistentDataContainer.has(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING)) {
+            String rightClickActions = persistentDataContainer.get(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING);
+            ActionExecutor.execute(player, ActionTransformer.transform(List.of(rightClickActions.split("\\|"))));
             event.setCancelled(true);
-            switch (menu) {
-                case MENU_CLAN_PREVIOUS -> {
-                    MenuPages menuPages = menuClanMembersProvider.getMenuPages(modifiedPlayer.getPlayerUUID());
-                    if (!menuPages.hasPreviousPage()) return;
-                    menuPages.setCurrentPage(menuPages.getCurrentPage() - 1);
-                    modifiedPlayer.getPlayer().openInventory(menuPages.getPage(menuPages.getCurrentPage()));
-                }
-                case MENU_CLAN_NEXT -> {
-                    MenuPages menuPages = menuClanMembersProvider.getMenuPages(modifiedPlayer.getPlayerUUID());
-                    if (!menuPages.hasNextPage()) return;
-                    menuPages.setCurrentPage(menuPages.getCurrentPage() + 1);
-                    modifiedPlayer.getPlayer().openInventory(menuPages.getPage(menuPages.getCurrentPage()));
-                }
-                default -> clan.showMenu(modifiedPlayer, menu);
-            }
+        }
+
+        if(event.isLeftClick() && persistentDataContainer.has(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING)) {
+            String leftClickActions = persistentDataContainer.get(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING);
+            ActionExecutor.execute(player, ActionTransformer.transform(List.of(leftClickActions.split("\\|"))));
+            event.setCancelled(true);
         }
 
         if(persistentDataContainer.has(NamespacedKey.fromString("player"), PersistentDataType.STRING)) {
@@ -105,24 +106,13 @@ public class ClanListener implements Listener {
                 return;
             }
 
-            if(event.isLeftClick()) {
-
-                Permission permission = Permission.getPermissionsPlayer(modifiedPlayer);
-                int currentPermission = permission.getCurrentPermission();
-                if(permission.hasNextPermission(plugin)) permission.setCurrentPermission(currentPermission + 1);
-                else permission.setCurrentPermission(0);
-                event.setCancelled(true);
-                clan.showMenu(modifiedPlayer, MenuType.MENU_CLAN_MEMBERS);
-
-            }
-
             if(event.isRightClick()) {
 
-                List<String> lore = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_members").getStringList("permission");
+                List<String> lore = Config.getFile(plugin, "menus/menu-clan-members.yml").getConfigurationSection("menu_clan_members").getStringList("permission");
 
                 Permission permission = Permission.getPermissionsPlayer(modifiedPlayer);
 
-                Matcher matcher = pattern.matcher(lore.get(permission.getCurrentPermission()));
+                Matcher matcher = PATTERN.matcher(lore.get(permission.getCurrentPermission()));
 
                 PermissionType permissionType = null;
                 while(matcher.find()) {
@@ -137,6 +127,17 @@ public class ClanListener implements Listener {
                     Permission.getPermissionsPlayer(targetModifiedPlayer).clearPermissionPlayer(permissionType);
                 else Permission.getPermissionsPlayer(targetModifiedPlayer).setPermissionPlayer(permissionType);
 
+                event.setCancelled(true);
+                clan.showMenu(modifiedPlayer, MenuType.MENU_CLAN_MEMBERS);
+
+            }
+
+            if(event.isLeftClick()) {
+
+                Permission permission = Permission.getPermissionsPlayer(modifiedPlayer);
+                int currentPermission = permission.getCurrentPermission();
+                if(permission.hasNextPermission(plugin)) permission.setCurrentPermission(currentPermission + 1);
+                else permission.setCurrentPermission(0);
                 event.setCancelled(true);
                 clan.showMenu(modifiedPlayer, MenuType.MENU_CLAN_MEMBERS);
 
@@ -159,19 +160,22 @@ public class ClanListener implements Listener {
         }
 
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
-        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+        Player player = modifiedPlayer.getPlayer();
 
         PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
 
-        if (persistentDataContainer.has(NamespacedKey.fromString("action"), PersistentDataType.STRING)) {
-            String action = persistentDataContainer.get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
-
-            MenuType menu = MenuType.valueOf(action);
-            event.setCancelled(true);
-            clan.showMenu(modifiedPlayer, menu);
-        } else {
-            event.setCancelled(true);
+        if (event.isRightClick() && persistentDataContainer.has(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING)) {
+            String rightClickActions = persistentDataContainer.get(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING);
+            ActionExecutor.execute(player, ActionTransformer.transform(List.of(rightClickActions.split("\\|"))));
         }
+
+        if(event.isLeftClick() && persistentDataContainer.has(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING)) {
+            String leftClickActions = persistentDataContainer.get(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING);
+            ActionExecutor.execute(player, ActionTransformer.transform(List.of(leftClickActions.split("\\|"))));
+        }
+
+        event.setCancelled(true);
+
     }
 
     @EventHandler
@@ -183,17 +187,17 @@ public class ClanListener implements Listener {
         }
 
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
-
+        Player player = modifiedPlayer.getPlayer();
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
 
         PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
 
-        if(persistentDataContainer.has(NamespacedKey.fromString("action"), PersistentDataType.STRING)) {
+        if(event.isRightClick() && persistentDataContainer.has(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING)) {
             event.setCancelled(true);
-            String action = persistentDataContainer.get(NamespacedKey.fromString("action"), PersistentDataType.STRING);
+            String rightClickActions = persistentDataContainer.get(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING);
 
             try {
-                Glow.LeatherColor color = Glow.LeatherColor.valueOf(action);
+                Glow.LeatherColor color = Glow.LeatherColor.valueOf(rightClickActions);
                 if(!modifiedPlayer.hasPermission(PermissionType.GLOW)) {
                     Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().noPermission());
                     return;
@@ -201,15 +205,34 @@ public class ClanListener implements Listener {
                 clan.setColor(color);
                 for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) if(Glow.isEnableForPlayer(entry.getKey())) Glow.changeForPlayer(entry.getKey(), true);
             } catch (IllegalArgumentException e) {
-                MenuType menuType = MenuType.valueOf(action);
-                clan.showMenu(modifiedPlayer, menuType);
+                ActionExecutor.execute(player, ActionTransformer.transform(List.of(rightClickActions.split("\\|"))));
             }
 
 
-        } else {
-            event.setCancelled(true);
         }
+
+        if(event.isLeftClick() && persistentDataContainer.has(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING)) {
+            event.setCancelled(true);
+            String leftClickActions = persistentDataContainer.get(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING);
+
+            try {
+                Glow.LeatherColor color = Glow.LeatherColor.valueOf(leftClickActions);
+                if(!modifiedPlayer.hasPermission(PermissionType.GLOW)) {
+                    Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().noPermission());
+                    return;
+                }
+                clan.setColor(color);
+                for(Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) if(Glow.isEnableForPlayer(entry.getKey())) Glow.changeForPlayer(entry.getKey(), true);
+            } catch (IllegalArgumentException e) {
+                ActionExecutor.execute(player, ActionTransformer.transform(List.of(leftClickActions.split("\\|"))));
+            }
+
+
+        }
+
+        event.setCancelled(true);
     }
+
 
     @EventHandler
     public void onJoin(JoinEvent event) {
@@ -275,6 +298,21 @@ public class ClanListener implements Listener {
 
             if (item1 == null || item2 == null) return false;
 
+            if(item1.getType() != item2.getType()) return false;
+
+            if(item1.getAmount() != item2.getAmount()) return false;
+
+            ItemMeta itemMeta1 = item1.getItemMeta();
+            ItemMeta itemMeta2 = item2.getItemMeta();
+
+            if (itemMeta1 == null && itemMeta2 == null) continue;
+
+            if (itemMeta1 == null || itemMeta2 == null) return false;
+
+            if(!itemMeta1.getDisplayName().equals(itemMeta2.getDisplayName())) return false;
+
+            if(!itemMeta1.getPersistentDataContainer().equals(itemMeta2.getPersistentDataContainer())) return false;
+
         }
 
         return true;
@@ -299,14 +337,49 @@ public class ClanListener implements Listener {
     public void onClickMenuClanStorage(ClickMenuClanStorageEvent event) {
         ItemStack item = event.getCurrentItem();
 
+        Player player = event.getPlayer();
+        ClanImpl clan = (ClanImpl) event.getClan();
+
+        int slot = event.getSlot();
+
         if(item != null) {
+
             PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
-            if (persistentDataContainer.has(NamespacedKey.fromString("no_available"), PersistentDataType.STRING))
+            if (persistentDataContainer.has(NamespacedKey.fromString("no_available"), PersistentDataType.STRING)) {
                 event.setCancelled(true);
+                return;
+            }
+
+            if(Storage.isSafeSlots(slot)) {
+
+                if (event.isRightClick() && persistentDataContainer.has(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING)) {
+                    String rightClickActions = persistentDataContainer.get(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING);
+                    ActionExecutor.execute(player, ActionTransformer.transform(List.of(rightClickActions.split("\\|"))));
+                    event.setCancelled(true);
+                    return;
+                }
+
+                if(event.isLeftClick() && persistentDataContainer.has(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING)) {
+                    String leftClickActions = persistentDataContainer.get(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING);
+                    ActionExecutor.execute(player, ActionTransformer.transform(List.of(leftClickActions.split("\\|"))));
+                    event.setCancelled(true);
+                    return;
+                }
+
+                event.getStorage().setItem(slot, null);
+                event.setCancelled(true);
+                return;
+
+            }
+
         }
 
-        ClanImpl clan = (ClanImpl) event.getClan();
-        Player player = event.getPlayer();
+        if(Storage.isSafeSlots(slot)) {
+            event.getStorage().setItem(slot, null);
+            event.setCancelled(true);
+            return;
+        }
+
         Set<UUID> copyPlayers = new HashSet<>(clan.getStorage().getPlayers());
         copyPlayers.forEach(playerUUID -> {
             if(!playerUUID.equals(player.getUniqueId())) {
@@ -314,6 +387,7 @@ public class ClanListener implements Listener {
                 Bukkit.getPlayer(playerUUID).openInventory(event.getStorage());
             }
         });
+
     }
 
     @EventHandler

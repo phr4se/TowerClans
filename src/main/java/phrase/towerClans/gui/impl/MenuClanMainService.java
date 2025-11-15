@@ -12,6 +12,7 @@ import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.attribute.player.Stats;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.config.Config;
 import phrase.towerClans.gui.ItemBuilder;
 import phrase.towerClans.gui.MenuService;
 import phrase.towerClans.util.Utils;
@@ -24,18 +25,19 @@ class MenuClanMainService implements MenuService {
     @Override
     public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_main");
+        ConfigurationSection configurationSection = Config.getFile(plugin, "menus/menu-clan-main.yml").getConfigurationSection("menu_clan_main");
 
         int size = configurationSection.getInt("size");
         String titleMenu = configurationSection.getString("title").replace("%clan_name%", clan.getName());
         Inventory menu = Bukkit.createInventory(null, size, Utils.COLORIZER.colorize(titleMenu));
 
-        configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_main.items");
+        configurationSection = Config.getFile(plugin, "menus/menu-clan-main.yml").getConfigurationSection("menu_clan_main.items");
 
         for(String key : configurationSection.getKeys(false)) {
 
             Material material = Material.matchMaterial(configurationSection.getString(key + ".material"));
-            int slot = configurationSection.getInt(key + ".slot");
+            List<Integer> slots = configurationSection.getIntegerList(key + ".slot");
+            boolean hideAttributes = configurationSection.getBoolean(key + ".hide-attributes");
             String titleItem = Utils.COLORIZER.colorize(configurationSection.getString(key + ".title"));
             List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(
                     string -> {
@@ -54,26 +56,62 @@ class MenuClanMainService implements MenuService {
                     }
             ).collect(Collectors.toList());
 
-            if(configurationSection.contains(key + ".actions_when_clicking")) {
+            if(configurationSection.contains(key + ".right_click_actions") && configurationSection.contains(key + ".left_click_actions")) {
 
-                String action = configurationSection.getString(key + ".actions_when_clicking");
+                List<String> rightClickActions = configurationSection.getStringList(key + ".right_click_actions");
+                List<String> leftClickActions = configurationSection.getStringList(key + ".left_click_actions");
 
                 ItemStack item = new ItemBuilder(material)
                         .setName(titleItem)
                         .setLore(lore)
-                        .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, action)
+                        .setHideAttributes(hideAttributes)
+                        .setPersistentDataContainer(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING, String.join("|", rightClickActions))
+                        .setPersistentDataContainer(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING, String.join("|", leftClickActions))
                         .build();
 
-                menu.setItem(slot, item);
+                slots.forEach(slot -> menu.setItem(slot, item));
                 continue;
+
+            }
+
+            if(configurationSection.contains(key + ".right_click_actions")) {
+
+                List<String> rightClickActions = configurationSection.getStringList(key + ".right_click_actions");
+
+                ItemStack item = new ItemBuilder(material)
+                        .setName(titleItem)
+                        .setLore(lore)
+                        .setHideAttributes(hideAttributes)
+                        .setPersistentDataContainer(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING, String.join("|", rightClickActions))
+                        .build();
+
+                slots.forEach(slot -> menu.setItem(slot, item));
+                continue;
+            }
+
+            if(configurationSection.contains(key + ".left_click_actions")) {
+
+                List<String> leftClickActions = configurationSection.getStringList(key + ".left_click_actions");
+
+                ItemStack item = new ItemBuilder(material)
+                        .setName(titleItem)
+                        .setLore(lore)
+                        .setHideAttributes(hideAttributes)
+                        .setPersistentDataContainer(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING, String.join("|", leftClickActions))
+                        .build();
+
+                slots.forEach(slot -> menu.setItem(slot, item));
+                continue;
+
             }
 
             ItemStack item = new ItemBuilder(material)
                     .setName(titleItem)
+                    .setHideAttributes(hideAttributes)
                     .setLore(lore)
                     .build();
 
-            menu.setItem(slot, item);
+            slots.forEach(slot -> menu.setItem(slot, item));
 
         }
 

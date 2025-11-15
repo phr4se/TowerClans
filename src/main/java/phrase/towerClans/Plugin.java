@@ -62,6 +62,13 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         Config.setupMessages(YamlConfiguration.loadConfiguration(getMessagesFile()));
         Config.setupSettings(getConfig());
 
+        Config.createFiles(this,
+                "menus/menu-clan-main.yml",
+                "menus/menu-clan-members.yml",
+                "menus/menu-clan-level.yml",
+                "menus/menu-clan-storage.yml",
+                "menus/menu-clan-glow.yml");
+
         databaseMananger = new DatabaseManager(Config.getSettings().databaseType(), this);
 
         initializeSchematicPath();

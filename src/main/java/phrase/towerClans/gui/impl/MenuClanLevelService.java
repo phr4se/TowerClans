@@ -11,6 +11,7 @@ import phrase.towerClans.Plugin;
 import phrase.towerClans.clan.attribute.clan.Level;
 import phrase.towerClans.clan.entity.ModifiedPlayer;
 import phrase.towerClans.clan.impl.ClanImpl;
+import phrase.towerClans.config.Config;
 import phrase.towerClans.gui.ItemBuilder;
 import phrase.towerClans.gui.MenuService;
 import phrase.towerClans.util.Utils;
@@ -23,13 +24,83 @@ class MenuClanLevelService implements MenuService {
     @Override
     public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
 
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_level");
+        ConfigurationSection configurationSection = Config.getFile(plugin, "menus/menu-clan-level.yml").getConfigurationSection("menu_clan_level");
         int size = configurationSection.getInt("size");
         String titleMenu = configurationSection.getString("title");
 
         Inventory menu = Bukkit.createInventory(null, size, Utils.COLORIZER.colorize(titleMenu));
-        int slot = configurationSection.getInt("slot");
 
+        configurationSection = Config.getFile(plugin, "menus/menu-clan-level.yml").getConfigurationSection("menu_clan_level.items");
+
+        for(String key : configurationSection.getKeys(false)) {
+
+            Material material = Material.matchMaterial(configurationSection.getString(key + ".material"));
+            List<Integer> slots = configurationSection.getIntegerList(key + ".slot");
+            boolean hideAttributes = configurationSection.getBoolean(key + ".hide-attributes");
+            String titleItem = Utils.COLORIZER.colorize(configurationSection.getString(key + ".title"));
+            List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(Utils.COLORIZER::colorize).toList();
+
+            if(configurationSection.contains(key + ".right_click_actions") && configurationSection.contains(key + ".left_click_actions")) {
+
+                List<String> rightClickActions = configurationSection.getStringList(key + ".right_click_actions");
+                List<String> leftClickActions = configurationSection.getStringList(key + ".left_click_actions");
+
+                ItemStack item = new ItemBuilder(material)
+                        .setName(titleItem)
+                        .setLore(lore)
+                        .setHideAttributes(hideAttributes)
+                        .setPersistentDataContainer(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING, String.join("|", rightClickActions))
+                        .setPersistentDataContainer(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING, String.join("|", leftClickActions))
+                        .build();
+
+                slots.forEach(slot -> menu.setItem(slot, item));
+                continue;
+
+            }
+
+            if(configurationSection.contains(key + ".right_click_actions")) {
+
+                List<String> rightClickActions = configurationSection.getStringList(key + ".right_click_actions");
+
+                ItemStack item = new ItemBuilder(material)
+                        .setName(titleItem)
+                        .setLore(lore)
+                        .setHideAttributes(hideAttributes)
+                        .setPersistentDataContainer(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING, String.join("|", rightClickActions))
+                        .build();
+
+                slots.forEach(slot -> menu.setItem(slot, item));
+                continue;
+            }
+
+            if(configurationSection.contains(key + ".left_click_actions")) {
+
+                List<String> leftClickActions = configurationSection.getStringList(key + ".left_click_actions");
+
+                ItemStack item = new ItemBuilder(material)
+                        .setName(titleItem)
+                        .setLore(lore)
+                        .setHideAttributes(hideAttributes)
+                        .setPersistentDataContainer(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING, String.join("|", leftClickActions))
+                        .build();
+
+                slots.forEach(slot -> menu.setItem(slot, item));
+                continue;
+            }
+
+            ItemStack item = new ItemBuilder(material)
+                    .setName(titleItem)
+                    .setLore(lore)
+                    .setHideAttributes(hideAttributes)
+                    .build();
+
+            slots.forEach(slot -> menu.setItem(slot, item));
+
+        }
+
+        configurationSection = Config.getFile(plugin, "menus/menu-clan-level.yml").getConfigurationSection("menu_clan_level");
+
+        int startSlot = configurationSection.getInt("slot");
         for (int level = 1; level <= Level.getCountLevels(); level++) {
             int finalLevel = level;
             if (clan.getLevel() < level) {
@@ -46,10 +117,12 @@ class MenuClanLevelService implements MenuService {
                 ItemStack item = new ItemBuilder(material)
                         .setName(titleItem)
                         .setLore(lore)
+                        .setHideAttributes(true)
                         .build();
 
-                menu.setItem(slot, item);
-                slot++;
+                while(menu.getItem(startSlot) != null && menu.getItem(startSlot).getType() != Material.AIR) startSlot++;
+                menu.setItem(startSlot, item);
+                startSlot++;
                 continue;
             }
 
@@ -66,42 +139,12 @@ class MenuClanLevelService implements MenuService {
             ItemStack item = new ItemBuilder(material)
                     .setName(titleItem)
                     .setLore(lore)
+                    .setHideAttributes(true)
                     .build();
 
-            menu.setItem(slot, item);
-            slot++;
-
-        }
-
-        configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_level.items");
-
-        for(String key : configurationSection.getKeys(false)) {
-
-            Material material = Material.matchMaterial(configurationSection.getString(key + ".material"));
-            slot = configurationSection.getInt(key + ".slot");
-            String titleItem = Utils.COLORIZER.colorize(configurationSection.getString(key + ".title"));
-            List<String> lore = configurationSection.getStringList(key + ".lore").stream().map(Utils.COLORIZER::colorize).toList();
-
-            if(configurationSection.contains(key + ".actions_when_clicking")) {
-
-                String action = configurationSection.getString(key + ".actions_when_clicking");
-
-                ItemStack item = new ItemBuilder(material)
-                        .setName(titleItem)
-                        .setLore(lore)
-                        .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, action)
-                        .build();
-
-                menu.setItem(slot, item);
-                continue;
-            }
-
-            ItemStack item = new ItemBuilder(material)
-                    .setName(titleItem)
-                    .setLore(lore)
-                    .build();
-
-            menu.setItem(slot, item);
+            while(menu.getItem(startSlot) != null && menu.getItem(startSlot).getType() != Material.AIR) startSlot++;
+            menu.setItem(startSlot, item);
+            startSlot++;
 
         }
 

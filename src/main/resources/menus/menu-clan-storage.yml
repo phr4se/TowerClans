@@ -1,0 +1,31 @@
+menu_clan_storage:
+  size: 54
+  title: "&0&lХранилище клана"
+  safe_slots:
+    - 45
+    - 46
+    - 47
+    - 48
+    - 49
+    - 50
+    - 51
+    - 52
+    - 53
+  item:
+    material: red_stained_glass_pane
+    title: "&#0080FF✖ &cСлот заблокирован"
+  items:
+    1:
+      material: spectral_arrow
+      slot:
+        - 49
+      title: "&#0080FF➜ Выйти"
+      lore:
+        - ""
+        - "&#0080FF- &fНажмите, чтобы выйти"
+        - ""
+      hide-attributes: true
+      right_click_actions:
+        - "[open] MENU_CLAN_BACK"
+      left_click_actions:
+        - "[open] MENU_CLAN_BACK"

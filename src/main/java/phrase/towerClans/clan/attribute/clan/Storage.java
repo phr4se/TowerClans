@@ -3,13 +3,10 @@ package phrase.towerClans.clan.attribute.clan;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import phrase.towerClans.Plugin;
+import phrase.towerClans.config.Config;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class Storage {
 
@@ -18,6 +15,7 @@ public class Storage {
     private final Set<UUID> isUpdatedInventory;
     private static int size;
     private static String title;
+    private static List<Integer> safeSlots;
 
     public Storage() {
         players = new HashSet<>();
@@ -26,13 +24,18 @@ public class Storage {
     }
 
     public static void initialize(Plugin plugin) {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu.menu_clan_storage");
+        ConfigurationSection configurationSection = Config.getFile(plugin, "menus/menu-clan-storage.yml").getConfigurationSection("menu_clan_storage");
         size = configurationSection.getInt("size");
         title = configurationSection.getString("title");
+        safeSlots = configurationSection.getIntegerList("safe_slots");
     }
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public static boolean isSafeSlots(int slot) {
+        return safeSlots.contains(slot);
     }
 
     public Set<UUID> getPlayers() {

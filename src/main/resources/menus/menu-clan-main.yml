@@ -1,0 +1,121 @@
+menu_clan_main:
+  size: 54
+  title: "&0&lМеню клана %clan_name%"
+  items:
+    1:
+      material: knowledge_book
+      slot:
+        - 4
+      title: "&#0080FF☄ &fИнформация о клане"
+      lore:
+        - ""
+        - "&#0080FF- &fКлан: &#0080FF%name%"
+        - "&#0080FF- &fУчастников: &a%members%&7/&c%maximum_members%"
+        - "&#0080FF- &fУровень: &#0080FF%level% &f(&7%xp% XP&f)"
+        - "&#0080FF- &fБаланс: &#0080FF%balance%"
+        - "&#0080FF- &fУбийств: &a%kills%"
+        - "&#0080FF- &fСмерти: &c%deaths%"
+        - "&#0080FF- &fPVP-Режим: &#0080FF%pvp%"
+        - "&#0080FF- &fЛимит баланса: &#0080FF%maximum_balance%"
+        - ""
+      hide-attributes: true
+    2:
+      material: totem_of_undying
+      slot:
+        - 20
+      title: "&#0080FF☃ Участники клана"
+      lore:
+        - ""
+        - "&#0080FF- &fНажмите, чтобы посмотреть участников клана"
+        - ""
+      hide-attributes: true
+      right_click_actions:
+        - "[open] MENU_CLAN_MEMBERS"
+      left_click_actions:
+        - "[open] MENU_CLAN_MEMBERS"
+    3:
+      material: diamond
+      slot:
+        - 22
+      title: "&#0080FF✦ Уровень клана"
+      lore:
+        - ""
+        - "&#0080FF- &fНажмите, чтобы посмотреть уровень клана"
+        - ""
+      hide-attributes: true
+      right_click_actions:
+        - "[open] MENU_CLAN_LEVEL"
+      left_click_actions:
+        - "[open] MENU_CLAN_LEVEL"
+    4:
+      material: turtle_helmet
+      slot:
+        - 24
+      title: "&#0080FF☀ Свечение"
+      lore:
+        - ""
+        - "&#0080FF- &fНажмите, чтобы изменить свечение"
+        - ""
+      hide-attributes: true
+      right_click_actions:
+        - "[open] MENU_CLAN_GLOW"
+      left_click_actions:
+        - "[open] MENU_CLAN_GLOW"
+    5:
+      material: chest_minecart
+      slot:
+        - 31
+      title: "&#0080FF❏ Хранилище клана"
+      lore:
+        - ""
+        - "&#0080FF- &fНажмите, чтобы перейти в хранилище клана"
+        - ""
+      hide-attributes: true
+      right_click_actions:
+        - "[open] MENU_CLAN_STORAGE"
+      left_click_actions:
+        - "[open] MENU_CLAN_STORAGE"
+    6:
+      material: spectral_arrow
+      slot:
+        - 49
+      title: "&#0080FF➜ Выйти"
+      lore:
+        - ""
+        - "&#0080FF- &fНажмите, чтобы выйти"
+        - ""
+      hide-attributes: true
+      right_click_actions:
+        - "[open] MENU_CLAN_EXIT"
+      left_click_actions:
+        - "[open] MENU_CLAN_EXIT"
+    7:
+      material: light_blue_stained_glass_pane
+      slot:
+        - 0
+        - 1
+        - 7
+        - 8
+        - 9
+        - 17
+        - 36
+        - 44
+        - 45
+        - 46
+        - 52
+        - 53
+      title: " "
+      lore:
+        - ""
+      hide-attributes: true
+    10:
+      material: chain
+      slot:
+        - 18
+        - 26
+        - 27
+        - 35
+      title: " "
+      lore:
+        - ""
+      hide-attributes: true
