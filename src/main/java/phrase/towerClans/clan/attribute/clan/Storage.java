@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import phrase.towerClans.Plugin;
 import phrase.towerClans.config.Config;
+import phrase.towerClans.util.Utils;
 
 import java.util.*;
 
@@ -26,7 +27,7 @@ public class Storage {
     public static void initialize(Plugin plugin) {
         ConfigurationSection configurationSection = Config.getFile(plugin, "menus/menu-clan-storage.yml").getConfigurationSection("menu_clan_storage");
         size = configurationSection.getInt("size");
-        title = configurationSection.getString("title");
+        title = Utils.COLORIZER.colorize(configurationSection.getString("title"));
         safeSlots = configurationSection.getIntegerList("safe_slots");
     }
 
