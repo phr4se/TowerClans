@@ -2,11 +2,9 @@ package phrase.towerclans.clan.impl.clan;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import phrase.towerclans.Plugin;
 import phrase.towerclans.clan.*;
-import phrase.towerclans.clan.attribute.clan.RankManager;
+import phrase.towerclans.clan.attribute.clan.RankType;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.permission.PermissionType;
 import phrase.towerclans.command.impl.base.Base;
@@ -29,7 +27,7 @@ public class ClanImpl extends AbstractClan {
     public ClanImpl(String name, ModifiedPlayer modifiedPlayer, Plugin plugin) {
         super(name, plugin.getClanManager());
         modifiedPlayer.setClan(this);
-        getMembers().put(modifiedPlayer, RankManager.RankType.LEADER.getName());
+        getMembers().put(modifiedPlayer, RankType.LEADER.getName());
         plugin.getClanManager().addClan(name, this);
         Base.setBase(this, null);
         getPermissionManager().getPermissionsPlayer(modifiedPlayer).setPermissionsPlayer(PermissionType.PERMISSION, PermissionType.WITHDRAW, PermissionType.STORAGE, PermissionType.BASE, PermissionType.KICK, PermissionType.PVP, PermissionType.GLOW, PermissionType.INVITE);
@@ -44,7 +42,7 @@ public class ClanImpl extends AbstractClan {
         int maximumMembers = getLevelManager().getLevelMaximumMembers(clan.getLevel());
         if ((clan.getMembers().size() + 1) > maximumMembers)
             return new ClanResponse(Config.getCommandMessages().noPlaceInClan(), ClanResponse.ResponseType.FAILURE);
-        clan.getMembers().put(modifiedPlayer, RankManager.RankType.MEMBER.getName());
+        clan.getMembers().put(modifiedPlayer, RankType.MEMBER.getName());
         String message = Config.getCommandMessages().notificationInvited().replace("%player%", modifiedPlayer.getPlayer().getName());
         chat(message);
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
@@ -106,30 +104,30 @@ public class ClanImpl extends AbstractClan {
     @Override
     public ClanResponse rank(ModifiedPlayer modifiedPlayer, int id) {
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        switch (RankManager.RankType.getRank(id)) {
+        switch (RankType.getRank(id)) {
             case LEADER:
                 return new ClanResponse(Config.getCommandMessages().notGiveRankLeader(), ClanResponse.ResponseType.FAILURE);
             case DEPUTY: {
                 getPermissionManager().getPermissionsPlayer(modifiedPlayer).setPermissionsPlayer(PermissionType.INVITE, PermissionType.KICK, PermissionType.PVP, PermissionType.KICK, PermissionType.STORAGE);
-                clan.getMembers().compute(modifiedPlayer, (k, v) -> RankManager.RankType.DEPUTY.getName());
+                clan.getMembers().compute(modifiedPlayer, (k, v) -> RankType.DEPUTY.getName());
             }
             break;
             case MEMBER: {
                 getPermissionManager().getPermissionsPlayer(modifiedPlayer).clearPermissionsPlayer(PermissionType.INVITE, PermissionType.KICK, PermissionType.PVP, PermissionType.KICK, PermissionType.STORAGE, PermissionType.BASE, PermissionType.GLOW, PermissionType.WITHDRAW, PermissionType.PERMISSION);
-                clan.getMembers().compute(modifiedPlayer, (k, v) -> RankManager.RankType.MEMBER.getName());
+                clan.getMembers().compute(modifiedPlayer, (k, v) -> RankType.MEMBER.getName());
             }
             break;
             case UNDEFINED:
                 return new ClanResponse(Config.getCommandMessages().rankNoExists(), ClanResponse.ResponseType.FAILURE);
         }
-        String message = Config.getCommandMessages().notificationRank().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", (id == 2) ? RankManager.RankType.DEPUTY.getName() : RankManager.RankType.MEMBER.getName());
+        String message = Config.getCommandMessages().notificationRank().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", (id == 2) ? RankType.DEPUTY.getName() : RankType.MEMBER.getName());
         chat(message);
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
     @Override
     public ClanResponse disband(ModifiedPlayer modifiedPlayer) {
-        if (!getMembers().get(modifiedPlayer).equals(RankManager.RankType.LEADER.getName()))
+        if (!getMembers().get(modifiedPlayer).equals(RankType.LEADER.getName()))
             return new ClanResponse(Config.getCommandMessages().notLeader(), ClanResponse.ResponseType.FAILURE);
         if (modifiedPlayer.hasPermission(PermissionType.PERMISSION))
             getPermissionManager().getPermissionsPlayer(modifiedPlayer).clearPermissionPlayer(PermissionType.PERMISSION);

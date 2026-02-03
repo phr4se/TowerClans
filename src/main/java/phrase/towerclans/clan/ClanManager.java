@@ -8,6 +8,7 @@ import java.util.Map;
 public abstract class ClanManager<C extends AbstractClan> {
     public abstract void addClan(String name, C clan);
     public abstract void removeClan(String name);
+    public abstract C getClan(String name);
     public abstract LevelManager getLevelManager();
     public abstract PermissionManager getPermissionManager();
     public abstract Map<String, C> getClans();

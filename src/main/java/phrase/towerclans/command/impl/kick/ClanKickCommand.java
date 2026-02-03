@@ -5,7 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import phrase.towerclans.Plugin;
 import phrase.towerclans.clan.ClanResponse;
-import phrase.towerclans.clan.attribute.clan.RankManager;
+import phrase.towerclans.clan.attribute.clan.RankType;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.clan.permission.PermissionType;
@@ -46,7 +46,7 @@ public class ClanKickCommand implements CommandHandler {
                 Utils.sendMessage(player, Config.getCommandMessages().playerNotInYourselfClan());
                 return true;
             }
-            if (clan.getMembers().get(targetModifiedPlayer).equals(RankManager.RankType.LEADER.getName())) {
+            if (clan.getMembers().get(targetModifiedPlayer).equals(RankType.LEADER.getName())) {
                 Utils.sendMessage(player, Config.getCommandMessages().notLeaveWithClan());
                 return true;
             }
@@ -70,7 +70,7 @@ public class ClanKickCommand implements CommandHandler {
             Utils.sendMessage(player, Config.getCommandMessages().playerNotInYourselfClan());
             return true;
         }
-        if (clan.getMembers().get(targetModifiedPlayer).equals(RankManager.RankType.LEADER.getName())) {
+        if (clan.getMembers().get(targetModifiedPlayer).equals(RankType.LEADER.getName())) {
             Utils.sendMessage(player, Config.getCommandMessages().notLeaveWithClan());
             return true;
         }

@@ -24,7 +24,7 @@ public class ClanInfoCommand implements CommandHandler {
             return false;
         }
         String name = args[1];
-        ClanImpl clan = plugin.getClanManager().getClans().get(name);
+        ClanImpl clan = plugin.getClanManager().getClan(name);
         if (clan == null) {
             Utils.sendMessage(player, Config.getCommandMessages().clanNoExists());
             return true;

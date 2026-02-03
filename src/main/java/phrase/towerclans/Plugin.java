@@ -14,6 +14,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import phrase.towerclans.clan.ClanManager;
+import phrase.towerclans.clan.attribute.clan.RankType;
 import phrase.towerclans.clan.attribute.clan.StorageManager;
 import phrase.towerclans.clan.attribute.player.StatsManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
@@ -64,6 +65,7 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         databaseManager = new DatabaseManager(Config.getSettings().databaseType(), this);
         StorageManager.initialize();
         MenuPages.initialize(this);
+        RankType.initialize(this);
         ModifiedPlayer.plugin = this;
         if (!setupEconomy()) {
             logger.severe("Vault не найден. Плагин будет выключен");

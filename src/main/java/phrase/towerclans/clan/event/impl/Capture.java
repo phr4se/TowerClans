@@ -162,7 +162,7 @@ public class Capture extends Event {
                     if (bossBar.getPlayers().contains(player)) continue;
                     bossBar.addPlayer(player);
                 }
-                if (point >= maxPoint) endEvent(plugin.getClanManager().getClans().get(clanName));
+                if (point >= maxPoint) endEvent(plugin.getClanManager().getClan(clanName));
             }
         }.runTaskTimer(plugin, 0L, updateBossBar);
     }

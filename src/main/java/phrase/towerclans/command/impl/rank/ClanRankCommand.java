@@ -3,7 +3,7 @@ package phrase.towerclans.command.impl.rank;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import phrase.towerclans.clan.ClanResponse;
-import phrase.towerclans.clan.attribute.clan.RankManager;
+import phrase.towerclans.clan.attribute.clan.RankType;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.command.CommandHandler;
@@ -23,7 +23,7 @@ public class ClanRankCommand implements CommandHandler {
             return true;
         }
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if (!clan.getMembers().get(modifiedPlayer).equals(RankManager.RankType.LEADER.getName())) {
+        if (!clan.getMembers().get(modifiedPlayer).equals(RankType.LEADER.getName())) {
             Utils.sendMessage(player, Config.getCommandMessages().noPermission());
             return true;
         }
@@ -56,9 +56,9 @@ public class ClanRankCommand implements CommandHandler {
         }
         ClanResponse clanResponse = clan.rank(targetModifierPlayer, id);
         if (clanResponse.isSuccess()) {
-            String string = Config.getCommandMessages().giveRank().replace("%player%", targetPlayer.getName()).replace("%rank%", (id == 2) ? RankManager.RankType.DEPUTY.getName() : RankManager.RankType.MEMBER.getName());
+            String string = Config.getCommandMessages().giveRank().replace("%player%", targetPlayer.getName()).replace("%rank%", (id == 2) ? RankType.DEPUTY.getName() : RankType.MEMBER.getName());
             Utils.sendMessage(player, string);
-            string = Config.getCommandMessages().givingRank().replace("%player%", player.getName()).replace("%rank%", (id == 2) ? RankManager.RankType.DEPUTY.getName() : RankManager.RankType.MEMBER.getName());
+            string = Config.getCommandMessages().givingRank().replace("%player%", player.getName()).replace("%rank%", (id == 2) ? RankType.DEPUTY.getName() : RankType.MEMBER.getName());
             Utils.sendMessage(targetPlayer, string);
             return true;
         } else {
