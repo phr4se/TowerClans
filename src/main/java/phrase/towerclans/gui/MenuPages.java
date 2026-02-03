@@ -66,7 +66,8 @@ public class MenuPages {
         final String titlePrev = Utils.COLORIZER.colorize(configurationSectionPrevious.getString("title"));
         prev = new ItemBuilder(materialPrev)
                 .setName(titlePrev)
-                .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "MENU_CLAN_PREVIOUS")
+                .setPersistentDataContainer(NamespacedKey.fromString("left-click-actions"), PersistentDataType.STRING, String.join("|", List.of("MENU_CLAN_PREVIOUS")))
+                .setPersistentDataContainer(NamespacedKey.fromString("right-click-actions"), PersistentDataType.STRING, String.join("|", List.of("MENU_CLAN_PREVIOUS")))
                 .build();
         final ConfigurationSection configurationSectionNext = plugin.getConfig().getConfigurationSection("settings.menu.next");
         final Material materialNext = Material.matchMaterial(configurationSectionNext.getString("material"));
@@ -74,7 +75,8 @@ public class MenuPages {
         final String titleNext = Utils.COLORIZER.colorize(configurationSectionNext.getString("title"));
         next = new ItemBuilder(materialNext)
                 .setName(Utils.COLORIZER.colorize(titleNext))
-                .setPersistentDataContainer(NamespacedKey.fromString("action"), PersistentDataType.STRING, "MENU_CLAN_NEXT")
+                .setPersistentDataContainer(NamespacedKey.fromString("left-click-actions"), PersistentDataType.STRING, String.join("|", List.of("MENU_CLAN_NEXT")))
+                .setPersistentDataContainer(NamespacedKey.fromString("right-click-actions"), PersistentDataType.STRING, String.join("|", List.of("MENU_CLAN_NEXT")))
                 .build();
     }
 
