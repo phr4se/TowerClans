@@ -6,7 +6,7 @@ menu_clan_glow:
       material: red_dye
       slot:
         - 20
-      title: "&#0080FF⛄ &cКрасное свечение"
+      name: "&#0080FF⛄ &cКрасное свечение"
       lore:
         - ""
         - "&#0080FF- &fНажмите, чтобы сделать свечение красным"
@@ -16,11 +16,12 @@ menu_clan_glow:
         - "RED"
       left_click_actions:
         - "RED"
+      amount: 1
     2:
       material: green_dye
       slot:
         - 22
-      title: "&#0080FF⛄ &aЗеленое свечение"
+      name: "&#0080FF⛄ &aЗеленое свечение"
       lore:
         - ""
         - "&#0080FF- &fНажмите, чтобы сделать свечение зеленым"
@@ -30,11 +31,12 @@ menu_clan_glow:
         - "GREEN"
       left_click_actions:
         - "GREEN"
+      amount: 1
     3:
       material: blue_dye
       slot:
         - 24
-      title: "&#0080FF⛄ &9Синее свечение"
+      name: "&#0080FF⛄ &9Синее свечение"
       lore:
         - ""
         - "&#0080FF- &fНажмите, чтобы сделать свечение синим"
@@ -44,11 +46,12 @@ menu_clan_glow:
         - "BLUE"
       left_click_actions:
         - "BLUE"
+      amount: 1
     4:
       material: spectral_arrow
       slot:
         - 49
-      title: "&#0080FF➜ Выйти"
+      name: "&#0080FF➜ Выйти"
       lore:
         - ""
         - "&#0080FF- &fНажмите, чтобы выйти"
@@ -58,6 +61,7 @@ menu_clan_glow:
         - "[open] MENU_CLAN_BACK"
       left_click_actions:
         - "[open] MENU_CLAN_BACK"
+      amount: 1
     5:
       material: light_blue_stained_glass_pane
       slot:
@@ -73,18 +77,8 @@ menu_clan_glow:
         - 46
         - 52
         - 53
-      title: " "
+      name: " "
       lore:
         - ""
       hide-attributes: true
-    6:
-      material: chain
-      slot:
-        - 18
-        - 26
-        - 27
-        - 35
-      title: " "
-      lore:
-        - ""
-      hide-attributes: true
+      amount: 1

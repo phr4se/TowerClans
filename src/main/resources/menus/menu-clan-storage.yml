@@ -19,13 +19,14 @@ menu_clan_storage:
       material: spectral_arrow
       slot:
         - 49
-      title: "&#0080FF➜ Выйти"
+      name: "&#0080FF➜ Выйти"
       lore:
         - ""
         - "&#0080FF- &fНажмите, чтобы выйти"
         - ""
       hide-attributes: true
       right_click_actions:
-        - "[open] MENU_CLAN_BACK"
+        - "[open] MENU_CLAN_EXIT"
       left_click_actions:
-        - "[open] MENU_CLAN_BACK"
+        - "[open] MENU_CLAN_EXIT"
+      amount: 1

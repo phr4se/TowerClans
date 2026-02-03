@@ -1,4 +1,3 @@
-
 messages:
   prefix: "&#FF00FF[⚔]"
   no-permission: "&cУ вас нет прав"
@@ -84,17 +83,17 @@ messages:
     reload-config: "&fВы перезагрузили конфиг"
     player-not-in-yourself-clan: "&cИгрок не в вашем клане"
     statistic-player:
-          - "&fСтатистика игрока &e%player%"
-          - "&fУбийств: &a%kills%"
-          - "&fСмертей: &c%deaths%"
+      - "&fСтатистика игрока &e%player%"
+      - "&fУбийств: &a%kills%"
+      - "&fСмертей: &c%deaths%"
     clan-no-exists: "&cТакого клана не существует"
     information-clan:
-          - "&fКлан: &6%name%"
-          - "&fУчастников: &6%members%&7"
-          - "&fУровень: &6%level% &7(&6%xp% &fXP&7)"
-          - "&fБаланс: &6%balance%"
-          - "&fУбийств: &a%kills%"
-          - "&fСмерти: &c%deaths%"
+      - "&fКлан: &6%name%"
+      - "&fУчастников: &6%members%&7"
+      - "&fУровень: &6%level% &7(&6%xp% &fXP&7)"
+      - "&fБаланс: &6%balance%"
+      - "&fУбийств: &a%kills%"
+      - "&fСмерти: &c%deaths%"
     no-base: "&cНет базы у клана"
     teleport-base: "&fВы телепортированы на базу клана"
     set-base: "&fВы установили базу клана"

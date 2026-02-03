@@ -1,8 +1,11 @@
-
 settings:
   database: SQLITE
   cost-creating-clan: 10000
   xp-for-murder: 2
+  xp-for-kill-player: 2
+  xp-for-break-block: 2
+  white-blocks:
+    - "GRASS_BLOCK"
   min-size-clan-name: 2
   max-size-clan-name: 10
   bad-words:
@@ -17,11 +20,11 @@ settings:
   symbol-two: "&7]"
   level:
     1:
-     level: 1
-     xp: 0
-     available: 9
-     maximum_members: 5
-     maximum_balance: 250000
+      level: 1
+      xp: 0
+      available: 9
+      maximum_members: 5
+      maximum_balance: 250000
     2:
       level: 2
       xp: 1000
@@ -73,9 +76,9 @@ settings:
         - "&cВнимание!"
         - "&fЗапущен &6клановый ивент"
       messages_end_event:
-          - "&cВнимание!"
-          - "&fКлановый ивент &6завершен"
-          - "&fПобедитель: &d%clan_name%"
+        - "&cВнимание!"
+        - "&fКлановый ивент &6завершен"
+        - "&fПобедитель: &d%clan_name%"
       bossbar:
         title: "&fКоординаты: &d%x% %y% %z% &7| &fЛидер: &6%clan_name%"
         bar_color: RED
@@ -93,9 +96,11 @@ settings:
     item_per_page: 18
     previous:
       material: spectral_arrow
+      slot: 20
       title: "&cПредыдущая"
     next:
       material: spectral_arrow
+      slot: 22
       title: "&aСледующая"
 
 

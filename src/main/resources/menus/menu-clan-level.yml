@@ -4,7 +4,7 @@ menu_clan_level:
   slot: 19
   received:
     material: chest_minecart
-    title: "&#0080FF⚡ &fУровень &#0080FF%level%"
+    name: "&#0080FF⚡ &fУровень &#0080FF%level%"
     lore:
       - ""
       - "&#0080FF- &fСтатус: &aПолучен"
@@ -15,7 +15,7 @@ menu_clan_level:
       - ""
   not_received:
     material: furnace_minecart
-    title: "&#0080FF⚡ &fУровень &#0080FF%level%"
+    name: "&#0080FF⚡ &fУровень &#0080FF%level%"
     lore:
       - ""
       - "&#0080FF- &fСтатус: &cНе получен"
@@ -29,7 +29,7 @@ menu_clan_level:
       material: spectral_arrow
       slot:
         - 49
-      title: "&#0080FF➜ Выйти"
+      name: "&#0080FF➜ Выйти"
       lore:
         - ""
         - "&#0080FF- &fНажмите, чтобы выйти"
@@ -39,7 +39,8 @@ menu_clan_level:
         - "[open] MENU_CLAN_BACK"
       left_click_actions:
         - "[open] MENU_CLAN_BACK"
-    3:
+      amount: 1
+    2:
       material: light_blue_stained_glass_pane
       slot:
         - 0
@@ -54,18 +55,8 @@ menu_clan_level:
         - 46
         - 52
         - 53
-      title: " "
+      name: " "
       lore:
         - ""
       hide-attributes: true
-    4:
-      material: chain
-      slot:
-        - 18
-        - 26
-        - 27
-        - 35
-      title: " "
-      lore:
-        - ""
-      hide-attributes: true
+      amount: 1

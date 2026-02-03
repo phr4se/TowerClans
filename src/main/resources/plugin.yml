@@ -1,6 +1,6 @@
 name: TowerClans
-version: 'FINAL-1.6'
-main: phrase.towerClans.Plugin
+version: 'FINAL'
+main: phrase.towerclans.Plugin
 api-version: '1.16'
 depend:
   - Vault
@@ -9,4 +9,4 @@ depend:
   - WorldGuard
   - PlaceholderAPI
 commands:
-  clan: {}
+  clan: { }

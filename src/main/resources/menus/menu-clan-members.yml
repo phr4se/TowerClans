@@ -1,8 +1,8 @@
 menu_clan_members:
   size: 27
-  title_menu: "&0&lУчастники клана"
+  title: "&0&lУчастники клана"
   material: paper
-  title_item: "&#0080FF✿ &fИгрок &#0080FF%player_name%"
+  name: "&#0080FF✿ &fИгрок &#0080FF%player_name%"
   lore:
     - ""
     - "&#0080FF- &fРанг: &6%player_rank%"
@@ -28,7 +28,7 @@ menu_clan_members:
       material: spectral_arrow
       slot:
         - 26
-      title: "&#0080FF➜ Выйти"
+      name: "&#0080FF➜ Выйти"
       lore:
         - ""
         - "&#0080FF- &fНажмите, чтобы выйти"
@@ -38,3 +38,4 @@ menu_clan_members:
         - "[open] MENU_CLAN_BACK"
       left_click_actions:
         - "[open] MENU_CLAN_BACK"
+      amount: 1
