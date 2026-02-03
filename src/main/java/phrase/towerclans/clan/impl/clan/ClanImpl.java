@@ -147,23 +147,6 @@ public class ClanImpl extends AbstractClan {
     }
 
     @Override
-    public void showMenu(ModifiedPlayer modifiedPlayer, MenuType menuType) {
-        MenuProvider menuProvider = MenuFactory.getProvider(menuType);
-        if (menuProvider == null) {
-            modifiedPlayer.getPlayer().closeInventory();
-            return;
-        }
-        Player player = modifiedPlayer.getPlayer();
-        if (menuProvider.menuPages()) {
-            Inventory menu = menuProvider.getMenu(modifiedPlayer, ((ClanImpl) modifiedPlayer.getClan()), plugin);
-            List<ItemStack> players = ((Pages) menuProvider).getContents(modifiedPlayer, ((ClanImpl) modifiedPlayer.getClan()), plugin);
-            MenuPages menuPages = ((Pages) menuProvider).register(modifiedPlayer.getPlayerUUID(), new MenuPages(0, players, menu));
-            player.openInventory(menuPages.getPage(menuPages.getCurrentPage()));
-        } else
-            player.openInventory(menuProvider.getMenu(modifiedPlayer, ((ClanImpl) modifiedPlayer.getClan()), plugin));
-    }
-
-    @Override
     public void glow(ModifiedPlayer modifiedPlayer, Plugin plugin) {
         if (!Glow.isEnableForPlayer(modifiedPlayer)) {
             Glow.enableForPlayer(modifiedPlayer);

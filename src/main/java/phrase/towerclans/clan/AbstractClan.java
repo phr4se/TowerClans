@@ -35,7 +35,6 @@ public abstract class AbstractClan implements Clan {
         this.permissionManager = clanManager.getPermissionManager();
     }
 
-    public abstract void showMenu(ModifiedPlayer modifiedPlayer, MenuType menuType);
     public abstract void glow(ModifiedPlayer modifiedPlayer, Plugin plugin);
     public abstract void chat(String message);
 

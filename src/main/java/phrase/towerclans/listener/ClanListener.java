@@ -108,7 +108,7 @@ public class ClanListener implements Listener {
                     permissionManager.getPermissionsPlayer(targetModifiedPlayer).clearPermissionPlayer(permissionType);
                 else permissionManager.getPermissionsPlayer(targetModifiedPlayer).setPermissionPlayer(permissionType);
                 event.setCancelled(true);
-                clan.showMenu(modifiedPlayer, MenuType.MENU_CLAN_MEMBERS);
+                modifiedPlayer.showMenu(MenuType.MENU_CLAN_MEMBERS);
             }
             if (event.isLeftClick()) {
                 final PermissionManager permissionManager = plugin.getClanManager().getPermissionManager();
@@ -117,7 +117,7 @@ public class ClanListener implements Listener {
                 if (permission.hasNextPermission()) permission.setCurrentPermission(currentPermission + 1);
                 else permission.setCurrentPermission(0);
                 event.setCancelled(true);
-                clan.showMenu(modifiedPlayer, MenuType.MENU_CLAN_MEMBERS);
+                modifiedPlayer.showMenu(MenuType.MENU_CLAN_MEMBERS);
             }
         }
         event.setCancelled(true);

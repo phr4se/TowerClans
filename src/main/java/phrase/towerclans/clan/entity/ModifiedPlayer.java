@@ -3,12 +3,16 @@ package phrase.towerclans.clan.entity;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import phrase.towerclans.Plugin;
 import phrase.towerclans.clan.Clan;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.clan.permission.PermissionManager;
 import phrase.towerclans.clan.permission.PermissionType;
+import phrase.towerclans.gui.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -63,6 +67,22 @@ public class ModifiedPlayer {
 
     public boolean hasPermission(PermissionType permissionType) {
         return plugin.getClanManager().getPermissionManager().getPermissionsPlayer(this).getPermissionTypes().contains(permissionType);
+    }
+
+    public void showMenu(MenuType menuType) {
+        MenuProvider menuProvider = MenuFactory.getProvider(menuType);
+        if (menuProvider == null) {
+            this.getPlayer().closeInventory();
+            return;
+        }
+        Player player = this.getPlayer();
+        if (menuProvider.menuPages()) {
+            Inventory menu = menuProvider.getMenu(this, ((ClanImpl) this.getClan()), plugin);
+            List<ItemStack> players = ((Pages) menuProvider).getContents(this, ((ClanImpl) this.getClan()), plugin);
+            MenuPages menuPages = ((Pages) menuProvider).register(this.getPlayerUUID(), new MenuPages(0, players, menu));
+            player.openInventory(menuPages.getPage(menuPages.getCurrentPage()));
+        } else
+            player.openInventory(menuProvider.getMenu(this, ((ClanImpl) this.getClan()), plugin));
     }
 
     @Override

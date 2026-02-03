@@ -28,7 +28,7 @@ public class OpenAction implements Action<StringContext> {
                 menuPages.setCurrentPage(menuPages.getCurrentPage() + 1);
                 modifiedPlayer.getPlayer().openInventory(menuPages.getPage(menuPages.getCurrentPage()));
             }
-            default -> clan.showMenu(modifiedPlayer, MenuType.valueOf(context.message()));
+            default -> modifiedPlayer.showMenu(MenuType.valueOf(context.message()));
         }
     }
 }

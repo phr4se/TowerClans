@@ -22,7 +22,7 @@ public class ClanStorageCommand implements CommandHandler {
             Utils.sendMessage(player, Config.getCommandMessages().notInClan());
             return true;
         }
-        clan.showMenu(modifiedPlayer, MenuType.MENU_CLAN_STORAGE);
+        modifiedPlayer.showMenu(MenuType.MENU_CLAN_STORAGE);
         Utils.sendMessage(player, Config.getCommandMessages().openStorage());
         clan.getStorageManager().getPlayers().add(player.getUniqueId());
         return true;
