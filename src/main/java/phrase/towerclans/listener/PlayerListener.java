@@ -32,8 +32,8 @@ import phrase.towerclans.command.impl.invite.PlayerCalls;
 import phrase.towerclans.config.Config;
 import phrase.towerclans.event.*;
 import phrase.towerclans.glow.Glow;
+import phrase.towerclans.glow.GlowPacketListener;
 import phrase.towerclans.gui.MenuFactory;
-import phrase.towerclans.gui.MenuPages;
 import phrase.towerclans.gui.MenuType;
 import phrase.towerclans.gui.impl.*;
 import phrase.towerclans.util.Utils;
@@ -202,6 +202,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onExit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        GlowPacketListener.CACHE.remove(player.getEntityId());
         UUID playerUUID = player.getUniqueId();
         PlayerCalls.remove(playerUUID);
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
@@ -221,11 +222,13 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         if (event.getPlayer().isOp()) sendOperatorMessage(event.getPlayer());
-        UUID player = event.getPlayer().getUniqueId();
+        Player player = event.getPlayer();
+        GlowPacketListener.CACHE.put(player.getEntityId(), player);
+        UUID playerUUID = event.getPlayer().getUniqueId();
         final StatsManager statsManager = plugin.getStatsManager();
-        if (!statsManager.getPlayers().containsKey(player)) {
+        if (!statsManager.getPlayers().containsKey(playerUUID)) {
             StatsManager.Stats stats = new StatsManager.Stats(0, 0);
-            statsManager.getPlayers().put(player, stats);
+            statsManager.getPlayers().put(playerUUID, stats);
         }
         updateAllBossBarForPlayer(event.getPlayer());
     }

@@ -42,7 +42,7 @@ public class ClanCreateCommand implements CommandHandler {
             return true;
         }
         int amount = Config.getSettings().costCreatingClan();
-        if (plugin.getClanManager().getClans().containsKey(name)) {
+        if (plugin.getClanManager().existsClan(name)) {
             Utils.sendMessage(player, Config.getCommandMessages().clanNameExists());
             return true;
         }

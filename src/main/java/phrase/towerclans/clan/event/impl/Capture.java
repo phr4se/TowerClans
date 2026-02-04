@@ -28,6 +28,7 @@ import phrase.towerclans.config.Config;
 import phrase.towerclans.event.LevelUpEvent;
 import phrase.towerclans.util.Utils;
 
+import java.io.File;
 import java.util.*;
 
 public class Capture extends Event {
@@ -48,18 +49,15 @@ public class Capture extends Event {
 
     @Override
     public void startEvent() throws EventAlreadyRun, SchematicNotExist, SchematicDamaged {
-        schematicManager = new SchematicManager(plugin);
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
+        schematicManager = new SchematicManager(plugin, new File(Config.getSettings().pathEventCapture()), configurationSection.getStringList("region_flags"));
         if (!Event.register(EventType.CAPTURE, this)) throw new EventAlreadyRun("Ивент уже запущен");
         if (!schematicManager.existsSchematic()) throw new SchematicNotExist("Схематика не существует");
         if (schematicManager.schematicDamaged()) throw new SchematicDamaged("Схематика повреждена");
         new BukkitRunnable() {
             @Override
             public void run() {
-                ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
                 world = Bukkit.getWorld(configurationSection.getString("world"));
-                width = configurationSection.getInt("width") - 1;
-                height = configurationSection.getInt("height") - 1;
-                length = configurationSection.getInt("length") - 1;
                 RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world));
                 boolean availableCoordines;
                 Random random = new Random();
@@ -72,25 +70,15 @@ public class Capture extends Event {
                     pos1 = new Location(world, x, y, z);
                     while (pos1.getBlock().getType() == Material.WATER || pos1.getBlock().getType() == Material.LAVA)
                         pos1.setY(pos1.getY() + 2);
-                    pos2 = new Location(world, pos1.getX() + width, pos1.getY() + height, pos1.getZ() + length);
-                    availableCoordines = regionManager.getApplicableRegions(BlockVector3.at(pos1.getX(), pos1.getY(), pos1.getZ())).getRegions().isEmpty() && regionManager.getApplicableRegions(BlockVector3.at(pos2.getX(), pos2.getY(), pos2.getZ())).getRegions().isEmpty();
+                    availableCoordines = regionManager.getApplicableRegions(BlockVector3.at(pos1.getX(), pos1.getY(), pos1.getZ())).getRegions().isEmpty();
                 } while (!availableCoordines);
-                minX = Math.min(pos1.getBlockX(), pos2.getBlockX());
-                maxX = Math.max(pos1.getBlockX(), pos2.getBlockX());
-                minY = Math.min(pos1.getBlockY(), pos2.getBlockY());
-                maxY = Math.max(pos1.getBlockY(), pos2.getBlockY());
-                minZ = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
-                maxZ = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        region = new ProtectedCuboidRegion(UUID.randomUUID().toString(), BlockVector3.at(minX, minY - height, minZ), BlockVector3.at(maxX, maxY, maxZ));
-                        RegionFlag.setRegionFlags(region, configurationSection.getStringList("region_flags"));
-                        regionManager.addRegion(region);
-                        schematicManager.setSchematic(world, minX, maxX, minY, maxY, minZ, maxZ);
+                        schematicManager.setSchematic(pos1);
                         running = true;
                         broadcastForPlayersAboutStartEvent();
-                        enableBossBarForPlayers(minX, minY, minZ);
+                        enableBossBarForPlayers(pos1.getBlockX(), pos1.getBlockY(), pos1.getBlockZ());
                         searchForPlayers();
                     }
                 }.runTask(plugin);
@@ -104,7 +92,7 @@ public class Capture extends Event {
         running = false;
         WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world)).removeRegion(region.getId());
         Event.unRegister(EventType.CAPTURE);
-        schematicManager.regenerationBlocks(world, minX, maxX, minY, maxY, minZ, maxZ);
+        schematicManager.regenerationBlocks();
         broadcastForPlayersAboutEndEvent("Нет");
         disableBossBarForPlayers();
         PLAYERS.clear();
@@ -117,7 +105,7 @@ public class Capture extends Event {
         running = false;
         WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world)).removeRegion(region.getId());
         Event.unRegister(EventType.CAPTURE);
-        schematicManager.regenerationBlocks(world, minX, maxX, minY, maxY, minZ, maxZ);
+        schematicManager.regenerationBlocks();
         ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
         int plusXp = configurationSection.getInt("xp_for_winning");
         clan.setXp(clan.getXp() + plusXp);

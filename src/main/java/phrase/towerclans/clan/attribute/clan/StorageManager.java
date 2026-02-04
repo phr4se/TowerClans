@@ -30,12 +30,12 @@ public class StorageManager {
         safeSlots = configurationSection.getIntegerList("safe_slots");
     }
 
-    public Inventory getInventory() {
-        return inventory;
+    public static boolean isSafeSlots(int slot) {
+        return safeSlots.contains(slot);
     }
 
-    public boolean isSafeSlots(int slot) {
-        return safeSlots.contains(slot);
+    public Inventory getInventory() {
+        return inventory;
     }
 
     public Set<UUID> getPlayers() {

@@ -19,7 +19,6 @@ import phrase.towerclans.command.impl.leave.ClanLeaveCommand;
 import phrase.towerclans.command.impl.menu.ClanMenuCommand;
 import phrase.towerclans.command.impl.pvp.ClanPvpCommand;
 import phrase.towerclans.command.impl.rank.ClanRankCommand;
-import phrase.towerclans.command.impl.reload.ClanReloadCommand;
 import phrase.towerclans.command.impl.stats.ClanStatsCommand;
 import phrase.towerclans.command.impl.storage.ClanStorageCommand;
 import phrase.towerclans.command.impl.top.ClanTopCommand;
@@ -52,7 +51,6 @@ public class CommandLogger {
         commands.put("kick", new CommandDescription("towerclans.kick", new ClanKickCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
         commands.put("accept", new CommandDescription("towerclans.accept", new ClanAcceptCommand(plugin), CommandDescription.CommandType.WITHOUT_CLAN));
         commands.put("cancel", new CommandDescription("towerclans.cancel", new ClanCancelCommand(), CommandDescription.CommandType.WITHOUT_CLAN));
-        commands.put("reload", new CommandDescription("towerclans.reload", new ClanReloadCommand(plugin), CommandDescription.CommandType.ADMIN));
         commands.put("leave", new CommandDescription("towerclans.leave", new ClanLeaveCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
         commands.put("chat", new CommandDescription("towerclans.disband", new ClanChatCommand(), CommandDescription.CommandType.WITH_CLAN));
         commands.put("menu", new CommandDescription("towerclans.menu", new ClanMenuCommand(), CommandDescription.CommandType.WITH_CLAN));

@@ -252,7 +252,7 @@ public class ClanListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            if (storageManager.isSafeSlots(slot)) {
+            if (StorageManager.isSafeSlots(slot)) {
                 if (event.isRightClick() && persistentDataContainer.has(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING)) {
                     String rightClickActions = persistentDataContainer.get(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING);
                     ActionExecutor.execute(player, ActionTransformer.transform(List.of(rightClickActions.split("\\|"))));
@@ -270,7 +270,7 @@ public class ClanListener implements Listener {
                 return;
             }
         }
-        if (storageManager.isSafeSlots(slot)) {
+        if (StorageManager.isSafeSlots(slot)) {
             event.getStorage().setItem(slot, null);
             event.setCancelled(true);
             return;

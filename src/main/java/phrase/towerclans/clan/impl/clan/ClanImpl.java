@@ -10,7 +10,6 @@ import phrase.towerclans.clan.permission.PermissionType;
 import phrase.towerclans.command.impl.base.Base;
 import phrase.towerclans.config.Config;
 import phrase.towerclans.glow.Glow;
-import phrase.towerclans.gui.*;
 import phrase.towerclans.util.Utils;
 
 import java.util.*;

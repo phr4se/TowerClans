@@ -65,11 +65,11 @@ public class SQLite implements Database {
         ) {
             List<String> existingClanNames = new ArrayList<>();
             ResultSet resultSet = statementCheck.executeQuery(check);
-            while (resultSet.next()) if (!plugin.getClanManager().getClans().containsKey(resultSet.getString(1))) {
+            while (resultSet.next()) if (!plugin.getClanManager().existsClan(resultSet.getString(1))) {
                 preparedStatementDelete.setString(1, resultSet.getString(1));
                 preparedStatementDelete.addBatch();
             } else existingClanNames.add(resultSet.getString(1));
-            for (ClanImpl clan : plugin.getClanManager().getClans().values()) {
+            for (ClanImpl clan : plugin.getClanManager().values()) {
                 boolean exists = existingClanNames.contains(clan.getName());
                 if (!exists) {
                     preparedStatementSave.setString(1, clan.getName());

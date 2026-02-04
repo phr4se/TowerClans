@@ -55,7 +55,7 @@ public class ClanTabCompleter implements TabCompleter {
                 if (args[0].equals("stats"))
                     return new ArrayList<>(clan.getMembers().keySet().stream().map(o1 -> (o1.getPlayer() == null) ? Bukkit.getOfflinePlayer(o1.getPlayerUUID()).getName() : o1.getPlayer().getName()).toList());
                 if (args[0].equals("info"))
-                    return new ArrayList<>(plugin.getClanManager().getClans().keySet().stream().toList());
+                    return new ArrayList<>(plugin.getClanManager().keySet().stream().toList());
                 if (args[0].equals("event") && player.hasPermission(commandLogger.getCommands().get("event").getPermission())) {
                     if (args.length == 2) return List.of("capture");
                     if (args.length == 3) return List.of("start",

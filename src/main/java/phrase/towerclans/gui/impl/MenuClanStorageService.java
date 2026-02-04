@@ -43,7 +43,7 @@ public class MenuClanStorageService implements MenuClanService, InventoryHolder 
             }
         }
         for (int i = 0; i <= menu.getSize() - 1; i++) {
-            if (i >= 0 && i <= availableSlots || clan.getStorageManager().isSafeSlots(i)) continue;
+            if (i >= 0 && i <= availableSlots || StorageManager.isSafeSlots(i)) continue;
             menu.setItem(i, noAvailableItem);
         }
         final ConfigurationSection configurationSectionItems = Config.getFile("menus/menu-clan-storage.yml").getConfigurationSection("menu_clan_storage.items");

@@ -8,6 +8,7 @@ import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.config.Config;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Placeholder extends PlaceholderExpansion {
@@ -55,7 +56,7 @@ public class Placeholder extends PlaceholderExpansion {
             if (identifier.split("_").length != 2) return Config.getSettings().unknownClan();
             int num = Integer.parseInt(identifier.split("_")[1]);
             if (num < 0) return Config.getSettings().unknownClan();
-            List<ClanImpl> clanList = plugin.getClanManager().getClans().values().stream().sorted((o, o1) -> Integer.compare(o1.getXp(), o.getXp())).limit(10).toList();
+            List<ClanImpl> clanList = Arrays.stream(plugin.getClanManager().values()).sorted((o, o1) -> Integer.compare(o1.getXp(), o.getXp())).limit(10).toList();
             if (num >= clanList.size()) return Config.getSettings().unknownClan();
             return clanList.get(num).getName();
         }

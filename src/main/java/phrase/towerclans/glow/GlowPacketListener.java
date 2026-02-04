@@ -17,24 +17,22 @@ import phrase.towerclans.clan.impl.clan.ClanImpl;
 import org.bukkit.Color;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GlowPacketListener extends PacketAdapter {
+    public static final Map<Integer, Player> CACHE = new HashMap<>();
+
     public GlowPacketListener(Plugin plugin, PacketType... types) {
         super(plugin, types);
     }
 
     @Override
     public void onPacketSending(PacketEvent event) {
-        Player sender = null;
         Player receiver = event.getPlayer();
         PacketContainer container = event.getPacket();
-        int entityId = event.getPacket().getIntegers().read(0);
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
-            if (player.getEntityId() != entityId) continue;
-            sender = player;
-            break;
-        }
+        Player sender = CACHE.get(event.getPacket().getIntegers().read(0));
         if (sender == null) return;
         ModifiedPlayer o1 = ModifiedPlayer.get(sender);
         ModifiedPlayer o2 = ModifiedPlayer.get(receiver);

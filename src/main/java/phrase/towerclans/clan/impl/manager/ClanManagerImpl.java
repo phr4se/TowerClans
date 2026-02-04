@@ -9,8 +9,9 @@ import phrase.towerclans.clan.permission.PermissionManager;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-public class ClanManagerImpl extends ClanManager<ClanImpl> {
+public class ClanManagerImpl implements ClanManager<ClanImpl> {
     private final Map<String, ClanImpl> clans;
     private final PermissionManager permissionManager = new PermissionManager();
     private final LevelManager levelManager;
@@ -48,5 +49,25 @@ public class ClanManagerImpl extends ClanManager<ClanImpl> {
     @Override
     public Map<String, ClanImpl> getClans() {
         return Collections.unmodifiableMap(clans);
+    }
+
+    @Override
+    public ClanImpl[] values() {
+        return clans.values().toArray(new ClanImpl[0]);
+    }
+
+    @Override
+    public boolean existsClan(String name) {
+        return clans.containsKey(name);
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return clans.keySet();
+    }
+
+    @Override
+    public Set<Map.Entry<String, ClanImpl>> entrySet() {
+        return clans.entrySet();
     }
 }
