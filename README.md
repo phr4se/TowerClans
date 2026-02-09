@@ -42,9 +42,6 @@ Commands
 - /clan setbase - Set the clan base
 - /clan delbase - Delete the clan base
 - /clan rank <player> <1..3> - Set a player's rank in the clan
-- /clan setholo <..> - Set the clan hologram
-- /clan delholo - Delete the clan hologram
-- /clan editholo <..> - Edit the clan hologram
 - /clan stats <player> - View a player's statistics in the clan
 - /clan info <clan name> - View information about the clan
 - /clan top - View the top clans
