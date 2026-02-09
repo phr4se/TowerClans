@@ -49,3 +49,34 @@ Commands
 - /clan chat - Send a message to clan members
 - /clan event <capture> <start|stop> - Start/stop a clan event
 - /clan menu - Open the clan menu
+
+Usage api
+
+Maven
+<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+</repositories>
+
+<dependency>
+	  <groupId>com.github.phr4se</groupId>
+	  <artifactId>TowerClans</artifactId>
+	  <version>{VERSION}</version>
+    <scope>provided</scope>
+</dependency>
+Gradle
+dependencyResolutionManagement {
+		repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+		repositories {
+			  mavenCentral()
+			  maven { url 'https://jitpack.io' }
+		}
+}
+
+dependencies {
+	      implementation 'com.github.phr4se:TowerClans:{VERSION}'
+}
+
+Add the plugin to the plugin.yml dependency in depend (required) or soft-depend (optional)
