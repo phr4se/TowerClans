@@ -9,6 +9,7 @@ Functionality
 - Restrict command usage in the clan event zone
 - Customizable GUIs
 - Configure participant permissions in the GUI
+- Clan tops
 - Actions
 
 ️Placeholders
