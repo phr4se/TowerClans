@@ -36,11 +36,11 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 
 public final class TowerClans extends JavaPlugin implements CommandExecutor {
+    private static TowerClans instance;
     private final CommandLogger commandLogger = new CommandLogger(this);
     private final CommandMapper commandMapper = new CommandMapper(commandLogger);
     private final StatsManager statsManager = new StatsManager();
     private final PrivilegeManager privilegeManager = new PrivilegeManager();
-    private TowerClans instance;
     private Economy economy;
     private DatabaseManager databaseManager;
     private ClanManager<ClanImpl> clanManager;
@@ -148,11 +148,6 @@ public final class TowerClans extends JavaPlugin implements CommandExecutor {
         return true;
     }
 
-    public TowerClans getInstance() {
-        return instance;
-    }
-
-
     public ClanManager<ClanImpl> getClanManager() {
         return clanManager;
     }
@@ -167,5 +162,9 @@ public final class TowerClans extends JavaPlugin implements CommandExecutor {
 
     public PrivilegeManager getPrivilegeManager() {
         return privilegeManager;
+    }
+
+    public static TowerClans getInstance() {
+        return instance;
     }
 }
