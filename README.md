@@ -53,30 +53,33 @@ Commands
 Usage api
 
 Maven
-<repositories>
+
+	<repositories>
 		<repository>
 		    <id>jitpack.io</id>
 		    <url>https://jitpack.io</url>
 		</repository>
-</repositories>
+	</repositories>
 
-<dependency>
-	  <groupId>com.github.phr4se</groupId>
-	  <artifactId>TowerClans</artifactId>
-	  <version>{VERSION}</version>
-    <scope>provided</scope>
-</dependency>
+	<dependency>
+	    <groupId>com.github.phr4se</groupId>
+	    <artifactId>TowerClans</artifactId>
+	    <version>{VERSION}</version>
+		<scope>provided</scope>
+	</dependency>
+	
 Gradle
-dependencyResolutionManagement {
+
+	dependencyResolutionManagement {
 		repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
 		repositories {
-			  mavenCentral()
-			  maven { url 'https://jitpack.io' }
+			mavenCentral()
+			maven { url 'https://jitpack.io' }
 		}
-}
+	}
 
-dependencies {
-	      implementation 'com.github.phr4se:TowerClans:{VERSION}'
-}
+	dependencies {
+	        implementation 'com.github.phr4se:TowerClans:{VERSION}'
+	}
 
 Add the plugin to the plugin.yml dependency in depend (required) or soft-depend (optional)
