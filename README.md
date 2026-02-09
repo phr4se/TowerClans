@@ -1,5 +1,7 @@
 TowerClans - adds clans
+
 Functionality
+
 - Clan event
 - Highlight allies of the clan
 - Clan storage
@@ -8,15 +10,21 @@ Functionality
 - Customizable GUIs
 - Configure participant permissions in the GUI
 - Actions
+
 ️Placeholders
+
 %towerclans_clan_name% - displays the name of the clan a player is currently a member of. Use it in chat, signs, or anywhere placeholders are supported!
 %towerclans_clan_name% - displays the name of the clan the player belongs to; if the player does not belong to a clan, it shows the value from the config.
 %towerclans_clan_name_chat% - displays the name of the clan the player belongs to with symbols specified in the configuration file (config.yml); if the player does not belong to a clan, it shows the value from the config without symbols.
 %towerclans_top_<0..9>% - displays the name of the clan based on the top ranking; if there is no clan, it shows the value from the config.
+
 Permissions
+
 - towerclans.event.privilege.bypass - Bypass the privilege disabling in the clan event zone
 - towerclans.<command name> - Permission to use the command
+
 Commands
+
 - /clan - View the list of commands
 - /clan create <clan name> - Create a clan
 - /clan disband - Disband the clan
