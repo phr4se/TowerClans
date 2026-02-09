@@ -1,5 +1,5 @@
 name: TowerClans
-version: 'FINAL'
+version: '1.6.3'
 main: phrase.towerclans.TowerClans
 author: phrase
 api-version: '1.16'

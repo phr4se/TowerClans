@@ -40,12 +40,14 @@ public final class TowerClans extends JavaPlugin implements CommandExecutor {
     private final CommandMapper commandMapper = new CommandMapper(commandLogger);
     private final StatsManager statsManager = new StatsManager();
     private final PrivilegeManager privilegeManager = new PrivilegeManager();
+    private TowerClans instance;
     private Economy economy;
     private DatabaseManager databaseManager;
     private ClanManager<ClanImpl> clanManager;
 
     @Override
     public void onEnable() {
+        instance = this;
         Logger logger = getLogger();
         PluginManager pluginManager = Bukkit.getPluginManager();
         saveDefaultConfig();
@@ -54,7 +56,7 @@ public final class TowerClans extends JavaPlugin implements CommandExecutor {
             pluginManager.disablePlugin(this);
             return;
         }
-        Config.plugin = this;
+        Config.plugin = getInstance();
         Config.createFiles("menus/menu-clan-main.yml", "menus/menu-clan-members.yml", "menus/menu-clan-level.yml", "menus/menu-clan-storage.yml", "menus/menu-clan-glow.yml", "messages.yml", "levels.yml", "event-capture.yml", "menu-pages.yml");
         Config.setupMessages(Config.getFile("messages.yml"));
         Config.setupSettings(getConfig());
@@ -63,7 +65,7 @@ public final class TowerClans extends JavaPlugin implements CommandExecutor {
         StorageManager.initialize();
         MenuPages.initialize();
         RankType.initialize(this);
-        ModifiedPlayer.plugin = this;
+        ModifiedPlayer.plugin = getInstance();
         if (!setupEconomy()) {
             logger.severe("Vault не найден. Плагин будет выключен");
             pluginManager.disablePlugin(this);
@@ -145,6 +147,11 @@ public final class TowerClans extends JavaPlugin implements CommandExecutor {
         }
         return true;
     }
+
+    public TowerClans getInstance() {
+        return instance;
+    }
+
 
     public ClanManager<ClanImpl> getClanManager() {
         return clanManager;
