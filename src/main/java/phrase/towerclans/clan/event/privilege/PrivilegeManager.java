@@ -1,7 +1,7 @@
 package phrase.towerclans.clan.event.privilege;
 
 import org.bukkit.entity.Player;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.event.privilege.impl.EssentialsX;
 import phrase.towerclans.clan.event.privilege.impl.Vanilla;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrivilegeManager {
-    public void setPrivilege(String type, Plugin plugin) {
+    public void setPrivilege(String type, TowerClans plugin) {
         Privilege privilege;
         switch (type) {
             case "Essentials" -> {

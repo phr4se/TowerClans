@@ -2,7 +2,7 @@ package phrase.towerclans.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.database.impl.SQLite;
 
 import java.io.File;
@@ -14,7 +14,7 @@ public class DatabaseManager {
     private HikariDataSource hikariDataSource;
     private Database database;
 
-    public DatabaseManager(DatabaseType databaseType, Plugin plugin) {
+    public DatabaseManager(DatabaseType databaseType, TowerClans plugin) {
         switch (databaseType) {
             case SQLITE -> {
                 HikariConfig hikariConfig = new HikariConfig();

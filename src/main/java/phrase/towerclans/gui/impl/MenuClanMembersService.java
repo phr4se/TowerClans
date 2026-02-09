@@ -9,7 +9,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.attribute.player.StatsManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
@@ -33,12 +33,12 @@ public class MenuClanMembersService implements MenuClanService, InventoryHolder 
     private final static Map<UUID, MenuPages> PLAYERS = new HashMap<>();
 
     @Override
-    public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
-        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-members.yml").getConfigurationSection("menu_clan_members");
+    public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, TowerClans plugin) {
+        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-members.yml").getConfigurationSection("menu-clan-members");
         final int size = configurationSection.getInt("size");
         final String title = configurationSection.getString("title");
         final Inventory menu = Bukkit.createInventory(this, size, Utils.COLORIZER.colorize(title));
-        final ConfigurationSection configurationSectionItems = Config.getFile("menus/menu-clan-members.yml").getConfigurationSection("menu_clan_members.items");
+        final ConfigurationSection configurationSectionItems = configurationSection.getConfigurationSection("items");
         for (String key : configurationSectionItems.getKeys(false)) {
             final Material material = Material.matchMaterial(configurationSectionItems.getString(key + ".material"));
             final List<Integer> slots = configurationSectionItems.getIntegerList(key + ".slot");
@@ -50,12 +50,12 @@ public class MenuClanMembersService implements MenuClanService, InventoryHolder 
                     .setName(name)
                     .setLore(lore)
                     .setHideAttributes(hideAttributes);
-            if (configurationSectionItems.contains(key + ".right_click_actions")) {
-                final List<String> rightClickActions = configurationSectionItems.getStringList(key + ".right_click_actions");
+            if (configurationSectionItems.contains(key + ".right-click-actions")) {
+                final List<String> rightClickActions = configurationSectionItems.getStringList(key + ".right-click-actions");
                 itemBuilder.setPersistentDataContainer(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING, String.join("|", rightClickActions));
             }
-            if (configurationSectionItems.contains(key + ".left_click_actions")) {
-                final List<String> leftClickActions = configurationSectionItems.getStringList(key + ".left_click_actions");
+            if (configurationSectionItems.contains(key + ".left-click-actions")) {
+                final List<String> leftClickActions = configurationSectionItems.getStringList(key + ".left-click-actions");
                 itemBuilder.setPersistentDataContainer(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING, String.join("|", leftClickActions));
             }
             final ItemStack itemStack = itemBuilder.build();
@@ -65,9 +65,9 @@ public class MenuClanMembersService implements MenuClanService, InventoryHolder 
         return menu;
     }
 
-    public List<ItemStack> getContents(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
+    public List<ItemStack> getContents(ModifiedPlayer modifiedPlayer, ClanImpl clan, TowerClans plugin) {
         final List<ItemStack> players = new ArrayList<>();
-        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-members.yml").getConfigurationSection("menu_clan_members");
+        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-members.yml").getConfigurationSection("menu-clan-members");
         final Material material = Material.matchMaterial(configurationSection.getString("material"));
         final String name = configurationSection.getString("name");
         final List<String> lore = configurationSection.getStringList("lore");
@@ -79,8 +79,8 @@ public class MenuClanMembersService implements MenuClanService, InventoryHolder 
         ;
         permission.set(currentPermission, permission.get(currentPermission).replace("%cursor%", cursor));
         lore.addAll(permission);
-        final String isAvailable = configurationSection.getString("permission_is_available");
-        final String notAvailable = configurationSection.getString("permission_not_available");
+        final String isAvailable = configurationSection.getString("permission-is-available");
+        final String notAvailable = configurationSection.getString("permission-not-available");
         final StatsManager statsManager = plugin.getStatsManager();
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             final ModifiedPlayer key = entry.getKey();

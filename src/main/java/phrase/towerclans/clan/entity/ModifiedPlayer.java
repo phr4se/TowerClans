@@ -5,10 +5,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.Clan;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
-import phrase.towerclans.clan.permission.PermissionManager;
 import phrase.towerclans.clan.permission.PermissionType;
 import phrase.towerclans.gui.*;
 
@@ -18,7 +17,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ModifiedPlayer {
-    public static Plugin plugin;
+    public static TowerClans plugin;
     private final UUID playerUUID;
     private Clan clan;
 

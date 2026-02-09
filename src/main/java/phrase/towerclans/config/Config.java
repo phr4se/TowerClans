@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.config.data.CommandMessages;
 import phrase.towerclans.config.data.Messages;
 import phrase.towerclans.config.data.Settings;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Config {
-    public static Plugin plugin;
+    public static TowerClans plugin;
     private static String prefix;
     private static Messages messages;
     private static CommandMessages commandMessages;
@@ -123,7 +123,7 @@ public class Config {
                 configurationSectionSettings.getInt("xp-for-kill-player"),
                 configurationSectionSettings.getInt("xp-for-break-block"),
                 configurationSectionSettings.getStringList("white-blocks").stream().map(Material::valueOf).collect(Collectors.toList()),
-                configurationSectionSettings.getString(plugin.getDataFolder().getAbsolutePath() + "/schematics/" + configurationSectionSettings.getString("settings.event.capture.schematic_name") + ".schem")
+                configurationSectionSettings.getString(plugin.getDataFolder().getAbsolutePath() + "/schematics/" + getFile("event-capture.yml").getString("capture.schematic-name") + ".schem")
         );
     }
 

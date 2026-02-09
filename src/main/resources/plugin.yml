@@ -1,6 +1,7 @@
 name: TowerClans
 version: 'FINAL'
-main: phrase.towerclans.Plugin
+main: phrase.towerclans.TowerClans
+author: phrase
 api-version: '1.16'
 depend:
   - Vault

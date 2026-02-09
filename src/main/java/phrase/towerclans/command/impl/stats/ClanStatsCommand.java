@@ -2,7 +2,7 @@ package phrase.towerclans.command.impl.stats;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.attribute.player.StatsManager;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
@@ -13,9 +13,9 @@ import phrase.towerclans.util.Utils;
 import java.util.List;
 
 public class ClanStatsCommand implements CommandHandler {
-    private final Plugin plugin;
+    private final TowerClans plugin;
 
-    public ClanStatsCommand(Plugin plugin) {
+    public ClanStatsCommand(TowerClans plugin) {
         this.plugin = plugin;
     }
 

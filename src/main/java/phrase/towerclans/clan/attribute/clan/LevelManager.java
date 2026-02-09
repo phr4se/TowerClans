@@ -1,7 +1,6 @@
 package phrase.towerclans.clan.attribute.clan;
 
 import org.bukkit.configuration.ConfigurationSection;
-import phrase.towerclans.Plugin;
 import phrase.towerclans.config.Config;
 
 import java.util.HashMap;
@@ -15,9 +14,9 @@ public class LevelManager {
     private int xpForMurder;
     private int countLevels;
 
-    public LevelManager(Plugin plugin) {
+    public LevelManager() {
         this.levels = new HashMap<>();
-        initialize(plugin);
+        initialize();
     }
 
     public int getXpLevel(int level) {
@@ -45,15 +44,15 @@ public class LevelManager {
         return countLevels;
     }
 
-    private void initialize(Plugin plugin) {
+    private void initialize() {
         this.xpForMurder = Config.getSettings().xpForMurder();
-        final ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.level");
+        final ConfigurationSection configurationSection = Config.getFile("levels.yml").getConfigurationSection("level");
         countLevels = 0;
         for (String key : configurationSection.getKeys(false)) {
             final int level = configurationSection.getInt(key + ".level");
             final int xp = configurationSection.getInt(key + ".xp");
-            final int maximumBalance = configurationSection.getInt(key + ".maximum_balance");
-            final int maximumMembers = configurationSection.getInt(key + ".maximum_members");
+            final int maximumBalance = configurationSection.getInt(key + ".maximum-balance");
+            final int maximumMembers = configurationSection.getInt(key + ".maximum-members");
             final int availableSlots = configurationSection.getInt(key + ".available");
             levels.put(level, new Level(countLevels, xp, maximumBalance, maximumMembers, availableSlots));
             countLevels++;

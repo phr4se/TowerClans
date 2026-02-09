@@ -1,4 +1,4 @@
-menu_clan_members:
+menu-clan-members:
   size: 27
   title: "&0&lУчастники клана"
   material: paper
@@ -21,8 +21,8 @@ menu_clan_members:
     - "%cursor% &fОткрывать хранилище клана: %storage%"
     - "%cursor% &fСнимать с баланса клана: %withdraw%"
   cursor: "&#0080FF►"
-  permission_is_available: "&a&l[✔]"
-  permission_not_available: "&c&l[✖]"
+  permission-is-available: "&a&l[✔]"
+  permission-not-available: "&c&l[✖]"
   items:
     1:
       material: spectral_arrow
@@ -34,8 +34,8 @@ menu_clan_members:
         - "&#0080FF- &fНажмите, чтобы выйти"
         - ""
       hide-attributes: true
-      right_click_actions:
-        - "[open] MENU_CLAN_BACK"
-      left_click_actions:
-        - "[open] MENU_CLAN_BACK"
+      right-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      left-click-actions:
+        - "[open] MENU_CLAN_MAIN"
       amount: 1

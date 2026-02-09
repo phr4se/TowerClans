@@ -3,14 +3,14 @@ package phrase.towerclans.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-import phrase.towerclans.clan.Clan;
+import phrase.towerclans.clan.entity.ModifiedPlayer;
 
-public class LevelUpEvent extends Event {
+public class ClanJoinEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
-    private final Clan clan;
+    private final ModifiedPlayer modifiedPlayer;
 
-    public LevelUpEvent(Clan clan) {
-        this.clan = clan;
+    public ClanJoinEvent(ModifiedPlayer modifiedPlayer) {
+        this.modifiedPlayer = modifiedPlayer;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class LevelUpEvent extends Event {
         return HANDLERS;
     }
 
-    public Clan getClan() {
-        return clan;
+    public ModifiedPlayer getModifiedPlayer() {
+        return modifiedPlayer;
     }
 }

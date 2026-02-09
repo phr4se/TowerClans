@@ -1,0 +1,10 @@
+menu:
+  item-per-page: 18
+  previous:
+    material: spectral_arrow
+    slot: 20
+    title: "&cПредыдущая"
+  next:
+    material: spectral_arrow
+    slot: 22
+    title: "&aСледующая"

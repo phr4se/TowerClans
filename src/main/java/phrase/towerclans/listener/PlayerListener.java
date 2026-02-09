@@ -21,7 +21,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.PluginManager;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.attribute.clan.LevelManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.attribute.player.StatsManager;
@@ -42,10 +42,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PlayerListener implements Listener {
-    private final Plugin plugin;
+    private final TowerClans plugin;
     private final PluginManager pluginManager;
 
-    public PlayerListener(Plugin plugin) {
+    public PlayerListener(TowerClans plugin) {
         this.plugin = plugin;
         this.pluginManager = plugin.getServer().getPluginManager();
     }
@@ -111,8 +111,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPvp(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-        Player defender = (Player) event.getEntity();
+        if (!(event.getEntity() instanceof Player defender)) return;
         if (!(event.getDamager() instanceof Player) && (!(event.getDamager() instanceof Projectile))) return;
         Player attacker = null;
         if (event.getDamager() instanceof Player) {
@@ -129,7 +128,7 @@ public class PlayerListener implements Listener {
         ClanImpl defenderClan = (ClanImpl) defenderModifiedPlayer.getClan();
         if (attackerClan == null || defenderClan == null) return;
         if (!attackerClan.getName().equals(defenderClan.getName())) return;
-        if (attackerClan.isPvp()) event.setCancelled(true);
+        pluginManager.callEvent(new ClanPvpEvent(attackerClan, attackerModifiedPlayer, defenderModifiedPlayer, event));
     }
 
     @EventHandler
@@ -146,7 +145,7 @@ public class PlayerListener implements Listener {
         int nextLevel = clan.getLevel() + 1;
         if (!(levelManager.getXpLevel(nextLevel) == -1)) {
             int xp = levelManager.getXpLevel(nextLevel);
-            if (clan.getXp() >= xp) pluginManager.callEvent(new LevelUpEvent(clan));
+            if (clan.getXp() >= xp) pluginManager.callEvent(new ClanLevelUpEvent(clan));
         }
     }
 
@@ -170,7 +169,7 @@ public class PlayerListener implements Listener {
         int nextLevel = clan.getLevel() + 1;
         if (!(levelManager.getXpLevel(nextLevel) == -1)) {
             int xp = levelManager.getXpLevel(nextLevel);
-            if (clan.getXp() >= xp) pluginManager.callEvent(new LevelUpEvent(clan));
+            if (clan.getXp() >= xp) pluginManager.callEvent(new ClanLevelUpEvent(clan));
         }
     }
 
@@ -194,13 +193,13 @@ public class PlayerListener implements Listener {
             int nextLevel = clan.getLevel() + 1;
             if (!(levelManager.getXpLevel(nextLevel) == -1)) {
                 int xp = levelManager.getXpLevel(nextLevel);
-                if (clan.getXp() >= xp) pluginManager.callEvent(new LevelUpEvent(clan));
+                if (clan.getXp() >= xp) pluginManager.callEvent(new ClanLevelUpEvent(clan));
             }
         }
     }
 
     @EventHandler
-    public void onExit(PlayerQuitEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         GlowPacketListener.CACHE.remove(player.getEntityId());
         UUID playerUUID = player.getUniqueId();
@@ -220,8 +219,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        if (event.getPlayer().isOp()) sendOperatorMessage(event.getPlayer());
+    public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         GlowPacketListener.CACHE.put(player.getEntityId(), player);
         UUID playerUUID = event.getPlayer().getUniqueId();
@@ -248,10 +246,6 @@ public class PlayerListener implements Listener {
         updateBossBarForPlayer(player, NamespacedKey.fromString("towerclans_bossbar_event_capture"));
     }
 
-    private void sendOperatorMessage(Player player) {
-        Utils.sendMessage(player, Utils.COLORIZER.colorize("&2[TowerClans] &7Telegram-канал разработчика: &d@tower_phr4se"));
-    }
-
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
         Glow.changeForPlayer(ModifiedPlayer.get(event.getPlayer()), true);
@@ -266,8 +260,8 @@ public class PlayerListener implements Listener {
     public void onCommandPreprocessCommand(PlayerCommandPreprocessEvent event) {
         if (!Event.isCurrentRunningEvent()) return;
         Event clanEvent = Event.getCurrentRunningEvent();
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
-        List<String> blockedCommands = configurationSection.getStringList("blocked_commands");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings");
+        List<String> blockedCommands = configurationSection.getStringList("blocked-commands");
         String command = event.getMessage().split(" ")[0].replaceFirst("/", "");
         Player player = event.getPlayer();
         if (clanEvent.playerAtEvent(player) && blockedCommands.contains(command)) {

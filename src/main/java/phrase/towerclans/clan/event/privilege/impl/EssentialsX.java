@@ -2,7 +2,7 @@ package phrase.towerclans.clan.event.privilege.impl;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.event.privilege.Privilege;
 import phrase.towerclans.clan.event.privilege.PrivilegeChecker;
 import phrase.towerclans.clan.event.privilege.PrivilegeDisabler;
@@ -11,7 +11,7 @@ public class EssentialsX implements Privilege {
     private Essentials essentials;
 
     @Override
-    public void initialize(Plugin plugin) {
+    public void initialize(TowerClans plugin) {
         essentials = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
         setupFlyChecker();
         setupFlyDisabler();

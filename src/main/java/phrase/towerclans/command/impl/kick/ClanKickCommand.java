@@ -3,7 +3,7 @@ package phrase.towerclans.command.impl.kick;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.ClanResponse;
 import phrase.towerclans.clan.attribute.clan.RankType;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
@@ -11,13 +11,13 @@ import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.clan.permission.PermissionType;
 import phrase.towerclans.command.CommandHandler;
 import phrase.towerclans.config.Config;
-import phrase.towerclans.event.LeaveEvent;
+import phrase.towerclans.event.ClanLeaveEvent;
 import phrase.towerclans.util.Utils;
 
 public class ClanKickCommand implements CommandHandler {
-    private final Plugin plugin;
+    private final TowerClans plugin;
 
-    public ClanKickCommand(Plugin plugin) {
+    public ClanKickCommand(TowerClans plugin) {
         this.plugin = plugin;
     }
 
@@ -78,7 +78,7 @@ public class ClanKickCommand implements CommandHandler {
         if (clanResponse.isSuccess()) {
             Utils.sendMessage(player, Config.getCommandMessages().kickPlayerWithClan());
             Utils.sendMessage(targetPlayer, Config.getCommandMessages().kickedWithClan());
-            plugin.getServer().getPluginManager().callEvent(new LeaveEvent(clan, targetModifiedPlayer));
+            plugin.getServer().getPluginManager().callEvent(new ClanLeaveEvent(clan, targetModifiedPlayer));
             return true;
         } else {
             if (clanResponse.getMessage() != null) {

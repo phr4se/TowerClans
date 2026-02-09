@@ -1,4 +1,4 @@
-menu_clan_glow:
+menu-clan-glow:
   size: 54
   title: "&0&lСвечение"
   items:
@@ -12,9 +12,9 @@ menu_clan_glow:
         - "&#0080FF- &fНажмите, чтобы сделать свечение красным"
         - ""
       hide-attributes: true
-      right_click_actions:
+      right-click-actions:
         - "RED"
-      left_click_actions:
+      left-click-actions:
         - "RED"
       amount: 1
     2:
@@ -27,9 +27,9 @@ menu_clan_glow:
         - "&#0080FF- &fНажмите, чтобы сделать свечение зеленым"
         - ""
       hide-attributes: true
-      right_click_actions:
+      right-click-actions:
         - "GREEN"
-      left_click_actions:
+      left-click-actions:
         - "GREEN"
       amount: 1
     3:
@@ -42,9 +42,9 @@ menu_clan_glow:
         - "&#0080FF- &fНажмите, чтобы сделать свечение синим"
         - ""
       hide-attributes: true
-      right_click_actions:
+      right-click-actions:
         - "BLUE"
-      left_click_actions:
+      left-click-actions:
         - "BLUE"
       amount: 1
     4:
@@ -57,10 +57,10 @@ menu_clan_glow:
         - "&#0080FF- &fНажмите, чтобы выйти"
         - ""
       hide-attributes: true
-      right_click_actions:
-        - "[open] MENU_CLAN_BACK"
-      left_click_actions:
-        - "[open] MENU_CLAN_BACK"
+      right-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      left-click-actions:
+        - "[open] MENU_CLAN_MAIN"
       amount: 1
     5:
       material: light_blue_stained_glass_pane

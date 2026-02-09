@@ -8,7 +8,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.attribute.clan.StorageManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
@@ -27,10 +27,11 @@ public class MenuClanStorageService implements MenuClanService, InventoryHolder 
     }
 
     @Override
-    public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
+    public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, TowerClans plugin) {
         final Inventory menu = clan.getStorageManager().getInventory();
         int availableSlots = clan.getLevelManager().getAvailableSlots(clan.getLevel()) - 1;
-        final ConfigurationSection configurationSectionItem = Config.getFile("menus/menu-clan-storage.yml").getConfigurationSection("menu_clan_storage.item");
+        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-storage.yml").getConfigurationSection("menu-clan-storage");
+        final ConfigurationSection configurationSectionItem = configurationSection.getConfigurationSection("item");
         final ItemStack noAvailableItem = new ItemBuilder(Material.matchMaterial(configurationSectionItem.getString("material")))
                 .setName(Utils.COLORIZER.colorize(configurationSectionItem.getString("title")))
                 .setHideAttributes(true)
@@ -46,7 +47,7 @@ public class MenuClanStorageService implements MenuClanService, InventoryHolder 
             if (i >= 0 && i <= availableSlots || StorageManager.isSafeSlots(i)) continue;
             menu.setItem(i, noAvailableItem);
         }
-        final ConfigurationSection configurationSectionItems = Config.getFile("menus/menu-clan-storage.yml").getConfigurationSection("menu_clan_storage.items");
+        final ConfigurationSection configurationSectionItems = configurationSection.getConfigurationSection("items");
         for (String key : configurationSectionItems.getKeys(false)) {
             final Material material = Material.matchMaterial(configurationSectionItems.getString(key + ".material"));
             final List<Integer> slots = configurationSectionItems.getIntegerList(key + ".slot");
@@ -58,12 +59,12 @@ public class MenuClanStorageService implements MenuClanService, InventoryHolder 
                     .setName(name)
                     .setLore(lore)
                     .setHideAttributes(hideAttributes);
-            if (configurationSectionItems.contains(key + ".right_click_actions")) {
-                final List<String> rightClickActions = configurationSectionItems.getStringList(key + ".right_click_actions");
+            if (configurationSectionItems.contains(key + ".right-click-actions")) {
+                final List<String> rightClickActions = configurationSectionItems.getStringList(key + ".right-click-actions");
                 itemBuilder.setPersistentDataContainer(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING, String.join("|", rightClickActions));
             }
-            if (configurationSectionItems.contains(key + ".left_click_actions")) {
-                final List<String> leftClickActions = configurationSectionItems.getStringList(key + ".left_click_actions");
+            if (configurationSectionItems.contains(key + ".left-click-actions")) {
+                final List<String> leftClickActions = configurationSectionItems.getStringList(key + ".left-click-actions");
                 itemBuilder.setPersistentDataContainer(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING, String.join("|", leftClickActions));
             }
             final ItemStack itemStack = itemBuilder.build();

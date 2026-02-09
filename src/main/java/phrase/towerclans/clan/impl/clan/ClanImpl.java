@@ -2,7 +2,7 @@ package phrase.towerclans.clan.impl.clan;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.*;
 import phrase.towerclans.clan.attribute.clan.RankType;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
@@ -15,15 +15,15 @@ import phrase.towerclans.util.Utils;
 import java.util.*;
 
 public class ClanImpl extends AbstractClan {
-    private final Plugin plugin;
+    private final TowerClans plugin;
 
-    public ClanImpl(String name, Plugin plugin) {
+    public ClanImpl(String name, TowerClans plugin) {
         super(name, plugin.getClanManager());
         plugin.getClanManager().addClan(name, this);
         this.plugin = plugin;
     }
 
-    public ClanImpl(String name, ModifiedPlayer modifiedPlayer, Plugin plugin) {
+    public ClanImpl(String name, ModifiedPlayer modifiedPlayer, TowerClans plugin) {
         super(name, plugin.getClanManager());
         modifiedPlayer.setClan(this);
         getMembers().put(modifiedPlayer, RankType.LEADER.getName());
@@ -144,7 +144,7 @@ public class ClanImpl extends AbstractClan {
     }
 
     @Override
-    public void glow(ModifiedPlayer modifiedPlayer, Plugin plugin) {
+    public void glow(ModifiedPlayer modifiedPlayer, TowerClans plugin) {
         if (!Glow.isEnableForPlayer(modifiedPlayer)) {
             Glow.enableForPlayer(modifiedPlayer);
             Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().enableGlow());

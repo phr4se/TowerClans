@@ -7,7 +7,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.command.CommandDescription;
@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ClanTabCompleter implements TabCompleter {
-    private final Plugin plugin;
+    private final TowerClans plugin;
     private final CommandLogger commandLogger;
 
-    public ClanTabCompleter(Plugin plugin, CommandLogger commandLogger) {
+    public ClanTabCompleter(TowerClans plugin, CommandLogger commandLogger) {
         this.plugin = plugin;
         this.commandLogger = commandLogger;
     }

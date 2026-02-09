@@ -3,17 +3,15 @@ package phrase.towerclans.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
+import phrase.towerclans.clan.AbstractClan;
 import phrase.towerclans.clan.Clan;
-import phrase.towerclans.clan.entity.ModifiedPlayer;
 
-public class LeaveEvent extends Event {
+public class ClanLevelUpEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
-    private final Clan clan;
-    private final ModifiedPlayer modifiedPlayer;
+    private final AbstractClan clan;
 
-    public LeaveEvent(Clan clan, ModifiedPlayer modifiedPlayer) {
+    public ClanLevelUpEvent(AbstractClan clan) {
         this.clan = clan;
-        this.modifiedPlayer = modifiedPlayer;
     }
 
     @Override
@@ -23,10 +21,6 @@ public class LeaveEvent extends Event {
 
     public static HandlerList getHandlerList() {
         return HANDLERS;
-    }
-
-    public ModifiedPlayer getModifiedPlayer() {
-        return modifiedPlayer;
     }
 
     public Clan getClan() {

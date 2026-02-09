@@ -43,7 +43,7 @@ public class Permission {
     }
 
     public boolean hasNextPermission() {
-        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-members.yml").getConfigurationSection("menu_clan_members");
+        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-members.yml").getConfigurationSection("menu-clan-members");
         return currentPermission < configurationSection.getStringList("permission").size() - 1;
     }
 }

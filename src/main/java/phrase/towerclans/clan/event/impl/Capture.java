@@ -4,8 +4,6 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -13,11 +11,10 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.attribute.clan.LevelManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.event.Event;
-import phrase.towerclans.clan.event.RegionFlag;
 import phrase.towerclans.clan.event.SchematicManager;
 import phrase.towerclans.clan.event.exception.EventAlreadyRun;
 import phrase.towerclans.clan.event.exception.SchematicDamaged;
@@ -25,7 +22,7 @@ import phrase.towerclans.clan.event.exception.SchematicNotExist;
 import phrase.towerclans.clan.event.privilege.PrivilegeManager;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.config.Config;
-import phrase.towerclans.event.LevelUpEvent;
+import phrase.towerclans.event.ClanLevelUpEvent;
 import phrase.towerclans.util.Utils;
 
 import java.io.File;
@@ -34,23 +31,20 @@ import java.util.*;
 public class Capture extends Event {
     public boolean running = false;
     private World world;
-    private int minX, maxX, minY, maxY, minZ, maxZ;
-    private int width, height, length;
     private Location pos1;
-    private Location pos2;
-    private ProtectedRegion region;
     private SchematicManager schematicManager;
     private final static Map<String, Integer> PLAYERS = new HashMap<>();
     private final static Map<String, Integer> POINTS = new HashMap<>();
+    private ConfigurationSection configurationSection;
 
-    public Capture(Plugin plugin) {
+    public Capture(TowerClans plugin) {
         super(plugin);
     }
 
     @Override
     public void startEvent() throws EventAlreadyRun, SchematicNotExist, SchematicDamaged {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
-        schematicManager = new SchematicManager(plugin, new File(Config.getSettings().pathEventCapture()), configurationSection.getStringList("region_flags"));
+        configurationSection = Config.getFile("event-capture").getConfigurationSection("capture");
+        schematicManager = new SchematicManager(plugin, new File(Config.getSettings().pathEventCapture()), configurationSection.getStringList("region-flags"));
         if (!Event.register(EventType.CAPTURE, this)) throw new EventAlreadyRun("Ивент уже запущен");
         if (!schematicManager.existsSchematic()) throw new SchematicNotExist("Схематика не существует");
         if (schematicManager.schematicDamaged()) throw new SchematicDamaged("Схематика повреждена");
@@ -61,8 +55,8 @@ public class Capture extends Event {
                 RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world));
                 boolean availableCoordines;
                 Random random = new Random();
-                int xRange = configurationSection.getInt("x_range");
-                int zRange = configurationSection.getInt("z_range");
+                int xRange = configurationSection.getInt("x-range");
+                int zRange = configurationSection.getInt("z-range");
                 do {
                     int x = random.nextInt(xRange);
                     int z = random.nextInt(zRange);
@@ -90,7 +84,6 @@ public class Capture extends Event {
     public void endEvent() {
         if (!running) return;
         running = false;
-        WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world)).removeRegion(region.getId());
         Event.unRegister(EventType.CAPTURE);
         schematicManager.regenerationBlocks();
         broadcastForPlayersAboutEndEvent("Нет");
@@ -103,17 +96,15 @@ public class Capture extends Event {
     public void endEvent(ClanImpl clan) {
         if (!running) return;
         running = false;
-        WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world)).removeRegion(region.getId());
         Event.unRegister(EventType.CAPTURE);
         schematicManager.regenerationBlocks();
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
-        int plusXp = configurationSection.getInt("xp_for_winning");
+        int plusXp = configurationSection.getInt("xp-for-winning");
         clan.setXp(clan.getXp() + plusXp);
         int nextLevel = clan.getLevel() + 1;
         final LevelManager levelManager = plugin.getClanManager().getLevelManager();
         if (!(levelManager.getXpLevel(nextLevel) == -1)) {
             int xp = levelManager.getXpLevel(nextLevel);
-            if (clan.getXp() >= xp) plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(clan));
+            if (clan.getXp() >= xp) plugin.getServer().getPluginManager().callEvent(new ClanLevelUpEvent(clan));
         }
         broadcastForPlayersAboutEndEvent(clan.getName());
         disableBossBarForPlayers();
@@ -128,12 +119,11 @@ public class Capture extends Event {
 
     private void enableBossBarForPlayers(int x, int y, int z) {
         Server server = plugin.getServer();
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
-        int maxPoint = configurationSection.getInt("max_point");
-        configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture.bossbar");
+        int maxPoint = configurationSection.getInt("max-point");
+        ConfigurationSection configurationSection = Config.getFile("event-capture.yml").getConfigurationSection("boss-bar");
         String title = configurationSection.getString("title").replace("%x%", String.valueOf(x)).replace("%y%", String.valueOf(y)).replace("%z%", String.valueOf(z));
-        BossBar bossBar = server.createBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"), Utils.COLORIZER.colorize(title), BarColor.valueOf(configurationSection.getString("bar_color")), BarStyle.valueOf(configurationSection.getString("bar_style")));
-        long updateBossBar = configurationSection.getLong("update_bossbar");
+        BossBar bossBar = server.createBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"), Utils.COLORIZER.colorize(title), BarColor.valueOf(configurationSection.getString("bar-color")), BarStyle.valueOf(configurationSection.getString("bar-style")));
+        long updateBossBar = configurationSection.getLong("update-boss-bar");
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -168,14 +158,13 @@ public class Capture extends Event {
         int x = location.getBlockX();
         int y = location.getBlockY();
         int z = location.getBlockZ();
-        int bottomAndTopY = (minY - height);
-        return (x >= minX && x <= maxX && y >= bottomAndTopY && y <= maxY && z >= minZ && z <= maxZ);
+        Location pos2 = schematicManager.getPos2();
+        return (x >= pos1.getBlockX() && x <= pos2.getBlockX() && y >= pos1.getBlockY() && y <= pos2.getBlockY() && z >= pos1.getBlockZ() && z <= pos2.getBlockZ());
     }
 
     private void searchForPlayers() {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
-        int pointPerZone = configurationSection.getInt("point_per_zone");
-        long searchForPlayers = configurationSection.getLong("search_for_players");
+        int pointPerZone = configurationSection.getInt("point-per-zone");
+        long searchForPlayers = configurationSection.getLong("search-for-players");
         final PrivilegeManager privilegeManager = plugin.getPrivilegeManager();
         new BukkitRunnable() {
             @Override
@@ -214,15 +203,13 @@ public class Capture extends Event {
 
     @Override
     public void broadcastForPlayersAboutStartEvent() {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
-        List<String> messages = configurationSection.getStringList("messages_start_event");
+        List<String> messages = configurationSection.getStringList("messages-start-event");
         broadcast(plugin, messages);
     }
 
     @Override
     public void broadcastForPlayersAboutEndEvent(String clanName) {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
-        List<String> messages = configurationSection.getStringList("messages_end_event").stream().map(message -> message.replace("%clan_name%", clanName)).toList();
+        List<String> messages = configurationSection.getStringList("messages-end-event").stream().map(message -> message.replace("%clan_name%", clanName)).toList();
         broadcast(plugin, messages);
     }
 }

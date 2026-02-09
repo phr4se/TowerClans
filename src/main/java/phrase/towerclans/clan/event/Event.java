@@ -1,7 +1,7 @@
 package phrase.towerclans.clan.event;
 
 import org.bukkit.entity.Player;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.util.Utils;
 
@@ -24,9 +24,9 @@ public abstract class Event {
     }
 
     private static final Map<EventType, Event> RUNNING_EVENTS = new HashMap<>();
-    protected final Plugin plugin;
+    protected final TowerClans plugin;
 
-    public Event(Plugin plugin) {
+    public Event(TowerClans plugin) {
         this.plugin = plugin;
     }
 
@@ -69,7 +69,7 @@ public abstract class Event {
     public abstract void broadcastForPlayersAboutStartEvent();
     public abstract void broadcastForPlayersAboutEndEvent(String clanName);
 
-    public void broadcast(Plugin plugin, List<String> messages) {
+    public void broadcast(TowerClans plugin, List<String> messages) {
         plugin.getServer().getOnlinePlayers().forEach(player -> messages.forEach(message -> Utils.sendMessage(player, message)));
     }
 }

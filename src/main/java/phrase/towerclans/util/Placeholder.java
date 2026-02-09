@@ -3,7 +3,7 @@ package phrase.towerclans.util;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.config.Config;
@@ -12,9 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Placeholder extends PlaceholderExpansion {
-    private final Plugin plugin;
+    private final TowerClans plugin;
 
-    public Placeholder(Plugin plugin) {
+    public Placeholder(TowerClans plugin) {
         this.plugin = plugin;
     }
 

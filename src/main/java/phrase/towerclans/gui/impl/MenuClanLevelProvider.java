@@ -1,7 +1,7 @@
 package phrase.towerclans.gui.impl;
 
 import org.bukkit.inventory.Inventory;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.gui.MenuClanService;
@@ -13,7 +13,7 @@ public class MenuClanLevelProvider extends MenuProvider {
     }
 
     @Override
-    public Inventory getMenu(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
+    public Inventory getMenu(ModifiedPlayer modifiedPlayer, ClanImpl clan, TowerClans plugin) {
         return this.<MenuClanService>getMenu().create(modifiedPlayer, clan, plugin);
     }
 

@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import phrase.towerclans.action.Action;
 import phrase.towerclans.action.context.impl.StringContext;
 
-public class CloseAction implements Action<StringContext> {
+public class ExitAction implements Action<StringContext> {
     @Override
     public void execute(Player player, StringContext context) {
         player.closeInventory();

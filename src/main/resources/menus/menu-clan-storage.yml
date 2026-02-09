@@ -1,7 +1,7 @@
-menu_clan_storage:
+menu-clan-storage:
   size: 54
   title: "&0&lХранилище клана"
-  safe_slots:
+  safe-slots:
     - 45
     - 46
     - 47
@@ -25,8 +25,8 @@ menu_clan_storage:
         - "&#0080FF- &fНажмите, чтобы выйти"
         - ""
       hide-attributes: true
-      right_click_actions:
-        - "[open] MENU_CLAN_EXIT"
-      left_click_actions:
-        - "[open] MENU_CLAN_EXIT"
+      right-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      left-click-actions:
+        - "[open] MENU_CLAN_MAIN"
       amount: 1

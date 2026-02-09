@@ -4,10 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -38,7 +35,7 @@ import phrase.towerclans.util.Utils;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-public final class Plugin extends JavaPlugin implements CommandExecutor {
+public final class TowerClans extends JavaPlugin implements CommandExecutor {
     private final CommandLogger commandLogger = new CommandLogger(this);
     private final CommandMapper commandMapper = new CommandMapper(commandLogger);
     private final StatsManager statsManager = new StatsManager();
@@ -58,13 +55,13 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
             return;
         }
         Config.plugin = this;
-        Config.createFiles("menus/menu-clan-main.yml", "menus/menu-clan-members.yml", "menus/menu-clan-level.yml", "menus/menu-clan-storage.yml", "menus/menu-clan-glow.yml", "messages.yml");
+        Config.createFiles("menus/menu-clan-main.yml", "menus/menu-clan-members.yml", "menus/menu-clan-level.yml", "menus/menu-clan-storage.yml", "menus/menu-clan-glow.yml", "messages.yml", "levels.yml", "event-capture.yml", "menu-pages.yml");
         Config.setupMessages(Config.getFile("messages.yml"));
         Config.setupSettings(getConfig());
-        clanManager = new ClanManagerImpl(this);
+        clanManager = new ClanManagerImpl();
         databaseManager = new DatabaseManager(Config.getSettings().databaseType(), this);
         StorageManager.initialize();
-        MenuPages.initialize(this);
+        MenuPages.initialize();
         RankType.initialize(this);
         ModifiedPlayer.plugin = this;
         if (!setupEconomy()) {
@@ -75,8 +72,9 @@ public final class Plugin extends JavaPlugin implements CommandExecutor {
         databaseManager.getDatabase().loadClans();
         databaseManager.getDatabase().loadPlayers();
         databaseManager.getDatabase().loadPermissions();
-        getCommand("clan").setExecutor(this);
-        getCommand("clan").setTabCompleter(new ClanTabCompleter(this, commandLogger));
+        PluginCommand pluginCommand = getCommand("clan");
+        pluginCommand.setExecutor(this);
+        pluginCommand.setTabCompleter(new ClanTabCompleter(this, commandLogger));
         if (pluginManager.isPluginEnabled("PlaceholderAPI")) new Placeholder(this).register();
         pluginManager.registerEvents(new PlayerListener(this), this);
         pluginManager.registerEvents(new ClanListener(this), this);

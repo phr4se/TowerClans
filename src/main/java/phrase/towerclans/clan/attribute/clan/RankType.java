@@ -1,7 +1,7 @@
 package phrase.towerclans.clan.attribute.clan;
 
 import org.bukkit.configuration.ConfigurationSection;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 
 import java.util.Arrays;
 
@@ -29,11 +29,11 @@ public enum RankType {
         return id;
     }
 
-    public static void initialize(Plugin plugin) {
-        final ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.rank");
-        RankType.LEADER.setName(configurationSection.getString("leader"));
-        RankType.DEPUTY.setName(configurationSection.getString("deputy"));
-        RankType.MEMBER.setName(configurationSection.getString("member"));
+    public static void initialize(TowerClans plugin) {
+        final ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings");
+        RankType.LEADER.setName(configurationSection.getString("rank-leader-name"));
+        RankType.DEPUTY.setName(configurationSection.getString("rank-deputy-name"));
+        RankType.MEMBER.setName(configurationSection.getString("rank-member-name"));
     }
 
     public static RankType getRank(int id) {

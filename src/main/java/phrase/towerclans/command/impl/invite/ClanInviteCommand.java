@@ -2,7 +2,7 @@ package phrase.towerclans.command.impl.invite;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.clan.permission.PermissionType;
@@ -11,9 +11,9 @@ import phrase.towerclans.config.Config;
 import phrase.towerclans.util.Utils;
 
 public class ClanInviteCommand implements CommandHandler {
-    private final Plugin plugin;
+    private final TowerClans plugin;
 
-    public ClanInviteCommand(Plugin plugin) {
+    public ClanInviteCommand(TowerClans plugin) {
         this.plugin = plugin;
     }
 

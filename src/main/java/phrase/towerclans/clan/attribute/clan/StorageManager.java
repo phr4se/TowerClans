@@ -24,10 +24,10 @@ public class StorageManager {
     }
 
     public static void initialize() {
-        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-storage.yml").getConfigurationSection("menu_clan_storage");
+        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-storage.yml").getConfigurationSection("menu-clan-storage");
         size = configurationSection.getInt("size");
         title = Utils.COLORIZER.colorize(configurationSection.getString("title"));
-        safeSlots = configurationSection.getIntegerList("safe_slots");
+        safeSlots = configurationSection.getIntegerList("safe-slots");
     }
 
     public static boolean isSafeSlots(int slot) {

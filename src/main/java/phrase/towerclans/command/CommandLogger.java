@@ -1,6 +1,6 @@
 package phrase.towerclans.command;
 
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.command.impl.base.ClanBaseCommand;
 import phrase.towerclans.command.impl.base.ClanDelBaseCommand;
 import phrase.towerclans.command.impl.base.ClanSetBaseCommand;
@@ -30,9 +30,9 @@ import java.util.Map;
 
 public class CommandLogger {
     private final Map<String, CommandDescription> commands;
-    private final Plugin plugin;
+    private final TowerClans plugin;
 
-    public CommandLogger(Plugin plugin) {
+    public CommandLogger(TowerClans plugin) {
         this.commands = new HashMap<>();
         this.plugin = plugin;
         initialize();

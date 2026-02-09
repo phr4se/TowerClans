@@ -4,12 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.action.ActionExecutor;
 import phrase.towerclans.action.ActionTransformer;
 import phrase.towerclans.clan.attribute.clan.StorageManager;
@@ -30,13 +31,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ClanListener implements Listener {
-    private final Plugin plugin;
+    private final TowerClans plugin;
 
-    public ClanListener(Plugin plugin) {
+    public ClanListener(TowerClans plugin) {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onClickMenuClanMain(ClickMenuClanMainEvent event) {
         ItemStack item = event.getCurrentItem();
         if (item == null) {
@@ -63,7 +64,7 @@ public class ClanListener implements Listener {
 
     private static final Pattern PATTERN = Pattern.compile("%(.*?)%");
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onClickClanMenuMembers(ClickMenuClanMembersEvent event) {
         ItemStack item = event.getCurrentItem();
         if (item == null) {
@@ -91,7 +92,7 @@ public class ClanListener implements Listener {
                 return;
             }
             if (event.isRightClick()) {
-                List<String> lore = Config.getFile("menus/menu-clan-members.yml").getConfigurationSection("menu_clan_members").getStringList("permission");
+                List<String> lore = Config.getFile("menus/menu-clan-members.yml").getConfigurationSection("menu-clan-members").getStringList("permission");
                 final PermissionManager permissionManager = plugin.getClanManager().getPermissionManager();
                 Permission permission = permissionManager.getPermissionsPlayer(modifiedPlayer);
                 Matcher matcher = PATTERN.matcher(lore.get(permission.getCurrentPermission()));
@@ -123,7 +124,7 @@ public class ClanListener implements Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onClickClanMenuLevel(ClickMenuClanLevelEvent event) {
         ItemStack item = event.getCurrentItem();
         if (item == null) {
@@ -144,7 +145,7 @@ public class ClanListener implements Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onClickMenuClanGlow(ClickMenuClanGlowEvent event) {
         ItemStack item = event.getCurrentItem();
         if (item == null) {
@@ -190,16 +191,15 @@ public class ClanListener implements Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler
-    public void onJoin(JoinEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onJoin(ClanJoinEvent event) {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
         Glow.changeForPlayer(modifiedPlayer, false);
     }
 
-    @EventHandler
-    public void onLeave(LeaveEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onLeave(ClanLeaveEvent event) {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
-        ClanImpl clan = (ClanImpl) event.getClan();
         Glow.changeForPlayer(modifiedPlayer, false, ((ClanImpl) event.getClan()).getMembers());
         Player player = modifiedPlayer.getPlayer();
         if (player.getOpenInventory().getTopInventory() != null) {
@@ -227,8 +227,8 @@ public class ClanListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onLevelUp(LevelUpEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onLevelUp(ClanLevelUpEvent event) {
         ClanImpl clan = (ClanImpl) event.getClan();
         String message = Config.getMessages().clanLevelUp();
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
@@ -239,13 +239,12 @@ public class ClanListener implements Listener {
         clan.setLevel(nextLevel);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onClickMenuClanStorage(ClickMenuClanStorageEvent event) {
         ItemStack item = event.getCurrentItem();
         Player player = event.getPlayer();
         ClanImpl clan = (ClanImpl) event.getClan();
         int slot = event.getSlot();
-        final StorageManager storageManager = clan.getStorageManager();
         if (item != null) {
             PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
             if (persistentDataContainer.has(NamespacedKey.fromString("no_available"), PersistentDataType.STRING)) {
@@ -284,7 +283,7 @@ public class ClanListener implements Listener {
         });
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCloseMenuClanStorage(CloseMenuClanStorageEvent event) {
         Player player = event.getPlayer();
         ClanImpl clan = (ClanImpl) event.getClan();
@@ -296,5 +295,11 @@ public class ClanListener implements Listener {
             return;
         }
         storage.getIsUpdatedInventory().remove(player.getUniqueId());
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onClanPvp(ClanPvpEvent event) {
+        ClanImpl clan = (ClanImpl) event.getClan();
+        if(clan.isPvp()) event.setCancelled(true);
     }
 }

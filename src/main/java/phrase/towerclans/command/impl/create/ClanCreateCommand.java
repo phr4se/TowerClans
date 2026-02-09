@@ -1,7 +1,7 @@
 package phrase.towerclans.command.impl.create;
 
 import org.bukkit.entity.Player;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.command.CommandHandler;
@@ -13,9 +13,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ClanCreateCommand implements CommandHandler {
-    private final Plugin plugin;
+    private final TowerClans plugin;
 
-    public ClanCreateCommand(Plugin plugin) {
+    public ClanCreateCommand(TowerClans plugin) {
         this.plugin = plugin;
     }
 

@@ -9,7 +9,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.attribute.clan.LevelManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
@@ -28,12 +28,12 @@ public class MenuClanLevelService implements MenuClanService, InventoryHolder {
     }
 
     @Override
-    public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
-        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-level.yml").getConfigurationSection("menu_clan_level");
+    public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, TowerClans plugin) {
+        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-level.yml").getConfigurationSection("menu-clan-level");
         final int size = configurationSection.getInt("size");
         final String title = Utils.COLORIZER.colorize(configurationSection.getString("title"));
         final Inventory menu = Bukkit.createInventory(this, size, title);
-        final ConfigurationSection configurationSectionItems = Config.getFile("menus/menu-clan-level.yml").getConfigurationSection("menu_clan_level.items");
+        final ConfigurationSection configurationSectionItems = configurationSection.getConfigurationSection("items");
         for (String key : configurationSectionItems.getKeys(false)) {
             final Material material = Material.matchMaterial(configurationSectionItems.getString(key + ".material"));
             final List<Integer> slots = configurationSectionItems.getIntegerList(key + ".slot");
@@ -45,12 +45,12 @@ public class MenuClanLevelService implements MenuClanService, InventoryHolder {
                     .setName(name)
                     .setLore(lore)
                     .setHideAttributes(hideAttributes);
-            if (configurationSectionItems.contains(key + ".right_click_actions")) {
-                final List<String> rightClickActions = configurationSectionItems.getStringList(key + ".right_click_actions");
+            if (configurationSectionItems.contains(key + ".right-click-actions")) {
+                final List<String> rightClickActions = configurationSectionItems.getStringList(key + ".right-click-actions");
                 itemBuilder.setPersistentDataContainer(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING, String.join("|", rightClickActions));
             }
-            if (configurationSectionItems.contains(key + ".left_click_actions")) {
-                final List<String> leftClickActions = configurationSectionItems.getStringList(key + ".left_click_actions");
+            if (configurationSectionItems.contains(key + ".left-click-actions")) {
+                final List<String> leftClickActions = configurationSectionItems.getStringList(key + ".left-click-actions");
                 itemBuilder.setPersistentDataContainer(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING, String.join("|", leftClickActions));
             }
             final ItemStack itemStack = itemBuilder.build();
@@ -65,9 +65,9 @@ public class MenuClanLevelService implements MenuClanService, InventoryHolder {
             String name;
             List<String> lore;
             if (clan.getLevel() < level) {
-                material = Material.matchMaterial(configurationSection.getString("not_received.material"));
-                name = Utils.COLORIZER.colorize(configurationSection.getString("not_received.name").replace("%level%", String.valueOf(level)));
-                lore = configurationSection.getStringList("not_received.lore").stream().map(string ->
+                material = Material.matchMaterial(configurationSection.getString("not-received.material"));
+                name = Utils.COLORIZER.colorize(configurationSection.getString("not-received.name").replace("%level%", String.valueOf(level)));
+                lore = configurationSection.getStringList("not-received.lore").stream().map(string ->
                         Utils.COLORIZER.colorize(string
                                 .replace("%maximum_balance%", String.valueOf(levelManager.getLevelMaximumBalance(finalLevel)))
                                 .replace("%maximum_members%", String.valueOf(levelManager.getLevelMaximumMembers(finalLevel)))

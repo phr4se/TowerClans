@@ -4,13 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.ClanDataConverter;
 import phrase.towerclans.clan.attribute.player.StatsManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.clan.permission.Permission;
-import phrase.towerclans.clan.permission.PermissionManager;
 import phrase.towerclans.clan.permission.PermissionType;
 import phrase.towerclans.command.impl.base.Base;
 import phrase.towerclans.config.Config;
@@ -28,9 +27,9 @@ import java.util.*;
 
 public class SQLite implements Database {
     private final DatabaseManager databaseMananger;
-    private final Plugin plugin;
+    private final TowerClans plugin;
 
-    public SQLite(DatabaseManager databaseMananger, Plugin plugin) {
+    public SQLite(DatabaseManager databaseMananger, TowerClans plugin) {
         this.databaseMananger = databaseMananger;
         this.plugin = plugin;
     }

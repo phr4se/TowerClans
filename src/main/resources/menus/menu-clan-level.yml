@@ -1,4 +1,4 @@
-menu_clan_level:
+menu-clan-level:
   size: 54
   title: "&0&lУровень клана"
   slot: 19
@@ -13,7 +13,7 @@ menu_clan_level:
       - "&#0080FF- &fЛимит участников: &#0080FF%maximum_members%"
       - "&#0080FF- &fСлотов в хранилище: &#0080FF%available%"
       - ""
-  not_received:
+  not-received:
     material: furnace_minecart
     name: "&#0080FF⚡ &fУровень &#0080FF%level%"
     lore:
@@ -35,10 +35,10 @@ menu_clan_level:
         - "&#0080FF- &fНажмите, чтобы выйти"
         - ""
       hide-attributes: true
-      right_click_actions:
-        - "[open] MENU_CLAN_BACK"
-      left_click_actions:
-        - "[open] MENU_CLAN_BACK"
+      right-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      left-click-actions:
+        - "[open] MENU_CLAN_MAIN"
       amount: 1
     2:
       material: light_blue_stained_glass_pane

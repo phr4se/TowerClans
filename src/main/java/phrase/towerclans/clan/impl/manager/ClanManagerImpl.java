@@ -1,6 +1,5 @@
 package phrase.towerclans.clan.impl.manager;
 
-import phrase.towerclans.Plugin;
 import phrase.towerclans.clan.ClanManager;
 import phrase.towerclans.clan.attribute.clan.LevelManager;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
@@ -16,9 +15,9 @@ public class ClanManagerImpl implements ClanManager<ClanImpl> {
     private final PermissionManager permissionManager = new PermissionManager();
     private final LevelManager levelManager;
 
-    public ClanManagerImpl(Plugin plugin) {
+    public ClanManagerImpl() {
         this.clans = new HashMap<>();
-        this.levelManager = new LevelManager(plugin);
+        this.levelManager = new LevelManager();
     }
 
     @Override

@@ -2,7 +2,7 @@ package phrase.towerclans.command.impl.event;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.event.Event;
 import phrase.towerclans.clan.event.exception.EventAlreadyRun;
 import phrase.towerclans.clan.event.exception.SchematicDamaged;
@@ -15,9 +15,9 @@ import phrase.towerclans.util.Utils;
 import java.util.logging.Logger;
 
 public class ClanEventCommand implements CommandHandler {
-    private final Plugin plugin;
+    private final TowerClans plugin;
 
-    public ClanEventCommand(Plugin plugin) {
+    public ClanEventCommand(TowerClans plugin) {
         this.plugin = plugin;
     }
 

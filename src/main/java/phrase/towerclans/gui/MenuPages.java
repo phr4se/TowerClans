@@ -6,7 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.config.Config;
 import phrase.towerclans.util.Utils;
 
 import java.util.List;
@@ -57,10 +57,10 @@ public class MenuPages {
         return currentPage > 0;
     }
 
-    public static void initialize(Plugin plugin) {
-        final ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.menu");
-        itemPerPage = configurationSection.getInt("item_per_page");
-        final ConfigurationSection configurationSectionPrevious = plugin.getConfig().getConfigurationSection("settings.menu.previous");
+    public static void initialize() {
+        final ConfigurationSection configurationSection = Config.getFile("menu-pages.yml").getConfigurationSection("menu");
+        itemPerPage = configurationSection.getInt("item-per-page");
+        final ConfigurationSection configurationSectionPrevious = configurationSection.getConfigurationSection("previous");
         final Material materialPrev = Material.matchMaterial(configurationSectionPrevious.getString("material"));
         slotPrev = configurationSection.getInt("slot");
         final String titlePrev = Utils.COLORIZER.colorize(configurationSectionPrevious.getString("title"));
@@ -69,7 +69,7 @@ public class MenuPages {
                 .setPersistentDataContainer(NamespacedKey.fromString("left-click-actions"), PersistentDataType.STRING, String.join("|", List.of("MENU_CLAN_PREVIOUS")))
                 .setPersistentDataContainer(NamespacedKey.fromString("right-click-actions"), PersistentDataType.STRING, String.join("|", List.of("MENU_CLAN_PREVIOUS")))
                 .build();
-        final ConfigurationSection configurationSectionNext = plugin.getConfig().getConfigurationSection("settings.menu.next");
+        final ConfigurationSection configurationSectionNext = configurationSection.getConfigurationSection("next");
         final Material materialNext = Material.matchMaterial(configurationSectionNext.getString("material"));
         slotNext = configurationSectionNext.getInt("slot");
         final String titleNext = Utils.COLORIZER.colorize(configurationSectionNext.getString("title"));

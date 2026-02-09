@@ -18,87 +18,13 @@ settings:
     - "VANISH"
   symbol-one: "&7["
   symbol-two: "&7]"
-  level:
-    1:
-      level: 1
-      xp: 0
-      available: 9
-      maximum_members: 5
-      maximum_balance: 250000
-    2:
-      level: 2
-      xp: 1000
-      available: 18
-      maximum_members: 10
-      maximum_balance: 500000
-    3:
-      level: 3
-      xp: 2500
-      available: 27
-      maximum_members: 15
-      maximum_balance: 1000000
-    4:
-      level: 4
-      xp: 5000
-      available: 36
-      maximum_members: 20
-      maximum_balance: 1750000
-    5:
-      level: 5
-      xp: 7500
-      available: 45
-      maximum_members: 25
-      maximum_balance: 2500000
-    6:
-      level: 6
-      xp: 10000
-      available: 54
-      maximum_members: 30
-      maximum_balance: 5000000
-  rank:
-    leader: "Лидер"
-    deputy: "Заместитель"
-    member: "Участник"
-  event:
-    capture:
-      schematic_name: "event"
-      world: "world"
-      xp_for_winning: 1000
-      max_point: 1000
-      point_per_zone: 10
-      x_range: 1000
-      z_range: 1000
-      teleport: true
-      messages_start_event:
-        - "&cВнимание!"
-        - "&fЗапущен &6клановый ивент"
-      messages_end_event:
-        - "&cВнимание!"
-        - "&fКлановый ивент &6завершен"
-        - "&fПобедитель: &d%clan_name%"
-      bossbar:
-        title: "&fКоординаты: &d%x% %y% %z% &7| &fЛидер: &6%clan_name%"
-        bar_color: RED
-        bar_style: SOLID
-        update_bossbar: 20
-      search_for_players: 20
-      blocked_commands:
-        - "fly"
-        - "god"
-        - "vanish"
-      region_flags:
-        - "PVP: ALLOW"
-        - "BUILD: DENY"
-  menu:
-    item_per_page: 18
-    previous:
-      material: spectral_arrow
-      slot: 20
-      title: "&cПредыдущая"
-    next:
-      material: spectral_arrow
-      slot: 22
-      title: "&aСледующая"
+  rank-leader-name: "Лидер"
+  rank-deputy-name: "Заместитель"
+  rank-member-name: "Участник"
+  blocked-commands:
+    - "fly"
+    - "god"
+    - "vanish"
 
 
 

@@ -9,7 +9,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.config.Config;
@@ -27,12 +27,12 @@ public class MenuClanGlowService implements MenuClanService, InventoryHolder {
     }
 
     @Override
-    public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, Plugin plugin) {
-        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-glow.yml").getConfigurationSection("menu_clan_glow");
+    public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, TowerClans plugin) {
+        final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-glow.yml").getConfigurationSection("menu-clan-glow");
         final int size = configurationSection.getInt("size");
         final String title = Utils.COLORIZER.colorize(configurationSection.getString("title"));
         final Inventory menu = Bukkit.createInventory(this, size, Utils.COLORIZER.colorize(title));
-        final ConfigurationSection configurationSectionItems = Config.getFile("menus/menu-clan-glow.yml").getConfigurationSection("menu_clan_glow.items");
+        final ConfigurationSection configurationSectionItems = configurationSection.getConfigurationSection("items");
         for (String key : configurationSectionItems.getKeys(false)) {
             final Material material = Material.matchMaterial(configurationSectionItems.getString(key + ".material"));
             final List<Integer> slots = configurationSectionItems.getIntegerList(key + ".slot");
@@ -44,12 +44,12 @@ public class MenuClanGlowService implements MenuClanService, InventoryHolder {
                     .setName(name)
                     .setLore(lore)
                     .setHideAttributes(hideAttributes);
-            if (configurationSectionItems.contains(key + ".right_click_actions")) {
-                final List<String> rightClickActions = configurationSectionItems.getStringList(key + ".right_click_actions");
+            if (configurationSectionItems.contains(key + ".right-click-actions")) {
+                final List<String> rightClickActions = configurationSectionItems.getStringList(key + ".right-click-actions");
                 itemBuilder.setPersistentDataContainer(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING, String.join("|", rightClickActions));
             }
-            if (configurationSectionItems.contains(key + ".left_click_actions")) {
-                final List<String> leftClickActions = configurationSectionItems.getStringList(key + ".left_click_actions");
+            if (configurationSectionItems.contains(key + ".left-click-actions")) {
+                final List<String> leftClickActions = configurationSectionItems.getStringList(key + ".left-click-actions");
                 itemBuilder.setPersistentDataContainer(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING, String.join("|", leftClickActions));
             }
             final ItemStack itemStack = itemBuilder.build();

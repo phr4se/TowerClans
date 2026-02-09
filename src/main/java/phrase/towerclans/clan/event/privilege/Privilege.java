@@ -1,9 +1,9 @@
 package phrase.towerclans.clan.event.privilege;
 
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 
 public interface Privilege {
-    void initialize(Plugin plugin);
+    void initialize(TowerClans plugin);
     PrivilegeChecker flyChecker();
     PrivilegeDisabler flyDisabler();
     PrivilegeChecker godChecker();

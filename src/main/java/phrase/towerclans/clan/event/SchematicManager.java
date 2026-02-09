@@ -21,8 +21,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import phrase.towerclans.Plugin;
-import phrase.towerclans.config.Config;
+import phrase.towerclans.TowerClans;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +32,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SchematicManager {
-    private final Plugin plugin;
+    private final TowerClans plugin;
     private final File file;
     private final Map<Location, Material> blocks;
     private final List<String> regionFlagsName;
@@ -41,7 +40,7 @@ public class SchematicManager {
     private Location pos1;
     private Location pos2;
 
-    public SchematicManager(Plugin plugin, File file, List<String> regionFlagsName) {
+    public SchematicManager(TowerClans plugin, File file, List<String> regionFlagsName) {
         this.plugin = plugin;
         this.file = file;
         this.blocks = new HashMap<>();

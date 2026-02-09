@@ -1,12 +1,11 @@
 package phrase.towerclans.clan;
 
-import phrase.towerclans.Plugin;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.attribute.clan.LevelManager;
 import phrase.towerclans.clan.attribute.clan.StorageManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.permission.PermissionManager;
 import phrase.towerclans.glow.Glow;
-import phrase.towerclans.gui.MenuType;
 
 import java.util.*;
 
@@ -35,7 +34,7 @@ public abstract class AbstractClan implements Clan {
         this.permissionManager = clanManager.getPermissionManager();
     }
 
-    public abstract void glow(ModifiedPlayer modifiedPlayer, Plugin plugin);
+    public abstract void glow(ModifiedPlayer modifiedPlayer, TowerClans plugin);
     public abstract void chat(String message);
 
     public void setColor(Glow.LeatherColor color) {

@@ -1,0 +1,25 @@
+boss-bar:
+  title: "&fКоординаты: &d%x% %y% %z% &7| &fЛидер: &6%clan_name%"
+  bar-color: RED
+  bar-style: SOLID
+  update-boss-bar: 20
+capture:
+  schematic-name: "event"
+  world: "world"
+  xp-for-winning: 1000
+  max-point: 1000
+  point-per-zone: 10
+  x-range: 1000
+  z-range: 1000
+  teleport: true
+  messages-start-event:
+    - "&cВнимание!"
+    - "&fЗапущен &6клановый ивент"
+  messages-end-event:
+    - "&cВнимание!"
+    - "&fКлановый ивент &6завершен"
+    - "&fПобедитель: &d%clan_name%"
+  search-for-players: 20
+  region-flags:
+    - "PVP: ALLOW"
+    - "BUILD: DENY"
