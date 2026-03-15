@@ -68,7 +68,7 @@ public class SchematicManager {
     private void saveBlocks() {
         World world = pos1.getWorld();
         for (int x = pos1.getBlockX(); x <= pos2.getBlockX(); x++) {
-            for (int y = pos1.getBlockY(); y <= pos2.getBlockY(); y++) {
+            for (int y = pos1.getBlockY() - 1; y <= pos2.getBlockY(); y++) {
                 for (int z = pos1.getBlockZ(); z <= pos2.getBlockZ(); z++) {
                     Location location = new Location(world, x, y, z);
                     Block block = location.getBlock();
@@ -80,11 +80,11 @@ public class SchematicManager {
     }
 
     public void regenerationBlocks() {
-        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings.event.capture");
+        ConfigurationSection configurationSection = plugin.getConfig().getConfigurationSection("settings");
         boolean teleport = configurationSection.getBoolean("teleport");
         World world = pos1.getWorld();
         for (int x = pos1.getBlockX(); x <= pos2.getBlockX(); x++) {
-            for (int y = pos1.getBlockY(); y <= pos2.getBlockY(); y++) {
+            for (int y = pos1.getBlockY() - 1; y <= pos2.getBlockY(); y++) {
                 for (int z = pos1.getBlockZ(); z <= pos2.getBlockZ(); z++) {
                     Location location = new Location(world, x, y, z);
                     if (teleport && !world.getNearbyEntities(location, 1, 1, 1).isEmpty()) {

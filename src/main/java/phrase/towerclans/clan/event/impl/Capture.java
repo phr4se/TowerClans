@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import phrase.towerclans.TowerClans;
+import phrase.towerclans.clan.ClanManager;
 import phrase.towerclans.clan.attribute.clan.LevelManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.event.Event;
@@ -27,15 +28,16 @@ import phrase.towerclans.util.Utils;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Capture extends Event {
     public boolean running = false;
     private World world;
     private Location pos1;
     private SchematicManager schematicManager;
+    private ConfigurationSection configurationSection;
     private final static Map<String, Integer> PLAYERS = new HashMap<>();
     private final static Map<String, Integer> POINTS = new HashMap<>();
-    private ConfigurationSection configurationSection;
 
     public Capture(TowerClans plugin) {
         super(plugin);
@@ -43,8 +45,8 @@ public class Capture extends Event {
 
     @Override
     public void startEvent() throws EventAlreadyRun, SchematicNotExist, SchematicDamaged {
-        configurationSection = Config.getFile("event-capture").getConfigurationSection("capture");
-        schematicManager = new SchematicManager(plugin, new File(Config.getSettings().pathEventCapture()), configurationSection.getStringList("region-flags"));
+        configurationSection = Config.getFile("event-capture.yml").getConfigurationSection("capture");
+        schematicManager = new SchematicManager(plugin, new File(plugin.getDataFolder(), Config.getSettings().pathEventCapture()), configurationSection.getStringList("region-flags"));
         if (!Event.register(EventType.CAPTURE, this)) throw new EventAlreadyRun("Ивент уже запущен");
         if (!schematicManager.existsSchematic()) throw new SchematicNotExist("Схематика не существует");
         if (schematicManager.schematicDamaged()) throw new SchematicDamaged("Схематика повреждена");
@@ -101,7 +103,7 @@ public class Capture extends Event {
         int plusXp = configurationSection.getInt("xp-for-winning");
         clan.setXp(clan.getXp() + plusXp);
         int nextLevel = clan.getLevel() + 1;
-        final LevelManager levelManager = plugin.getClanManager().getLevelManager();
+        final LevelManager levelManager = clan.getLevelManager();
         if (!(levelManager.getXpLevel(nextLevel) == -1)) {
             int xp = levelManager.getXpLevel(nextLevel);
             if (clan.getXp() >= xp) plugin.getServer().getPluginManager().callEvent(new ClanLevelUpEvent(clan));
@@ -124,6 +126,7 @@ public class Capture extends Event {
         String title = configurationSection.getString("title").replace("%x%", String.valueOf(x)).replace("%y%", String.valueOf(y)).replace("%z%", String.valueOf(z));
         BossBar bossBar = server.createBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"), Utils.COLORIZER.colorize(title), BarColor.valueOf(configurationSection.getString("bar-color")), BarStyle.valueOf(configurationSection.getString("bar-style")));
         long updateBossBar = configurationSection.getLong("update-boss-bar");
+        final ClanManager<ClanImpl> clanManager = plugin.getClanManager();
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -140,7 +143,7 @@ public class Capture extends Event {
                     if (bossBar.getPlayers().contains(player)) continue;
                     bossBar.addPlayer(player);
                 }
-                if (point >= maxPoint) endEvent(plugin.getClanManager().getClan(clanName));
+                if (point >= maxPoint) endEvent(clanManager.getClan(clanName));
             }
         }.runTaskTimer(plugin, 0L, updateBossBar);
     }
@@ -203,13 +206,13 @@ public class Capture extends Event {
 
     @Override
     public void broadcastForPlayersAboutStartEvent() {
-        List<String> messages = configurationSection.getStringList("messages-start-event");
+        List<String> messages = configurationSection.getStringList("messages-start-event").stream().map(Utils.COLORIZER::colorize).collect(Collectors.toList());
         broadcast(plugin, messages);
     }
 
     @Override
     public void broadcastForPlayersAboutEndEvent(String clanName) {
-        List<String> messages = configurationSection.getStringList("messages-end-event").stream().map(message -> message.replace("%clan_name%", clanName)).toList();
+        List<String> messages = configurationSection.getStringList("messages-end-event").stream().map(message -> Utils.COLORIZER.colorize(message.replace("%clan_name%", clanName))).toList();
         broadcast(plugin, messages);
     }
 }

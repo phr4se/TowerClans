@@ -11,7 +11,6 @@ capture:
   point-per-zone: 10
   x-range: 1000
   z-range: 1000
-  teleport: true
   messages-start-event:
     - "&cВнимание!"
     - "&fЗапущен &6клановый ивент"

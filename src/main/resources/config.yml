@@ -25,6 +25,7 @@ settings:
     - "fly"
     - "god"
     - "vanish"
+  teleport: true
 
 
 

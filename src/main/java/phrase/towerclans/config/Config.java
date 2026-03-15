@@ -123,7 +123,7 @@ public class Config {
                 configurationSectionSettings.getInt("xp-for-kill-player"),
                 configurationSectionSettings.getInt("xp-for-break-block"),
                 configurationSectionSettings.getStringList("white-blocks").stream().map(Material::valueOf).collect(Collectors.toList()),
-                configurationSectionSettings.getString(plugin.getDataFolder().getAbsolutePath() + "/schematics/" + getFile("event-capture.yml").getString("capture.schematic-name") + ".schem")
+                "schematics/" + getFile("event-capture.yml").getString("capture.schematic-name") + ".schem"
         );
     }
 
