@@ -23,7 +23,6 @@ import phrase.towerclans.config.Config;
 import phrase.towerclans.event.*;
 import phrase.towerclans.glow.Glow;
 import phrase.towerclans.gui.MenuType;
-import phrase.towerclans.gui.impl.*;
 import phrase.towerclans.util.Utils;
 
 import java.util.*;
@@ -202,29 +201,7 @@ public class ClanListener implements Listener {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
         Glow.changeForPlayer(modifiedPlayer, false, ((ClanImpl) event.getClan()).getMembers());
         Player player = modifiedPlayer.getPlayer();
-        if (player.getOpenInventory().getTopInventory() != null) {
-            Inventory inventory = player.getOpenInventory().getTopInventory();
-            if (inventory.getHolder() instanceof MenuClanMainService) {
-                player.closeInventory();
-                return;
-            }
-            if (inventory.getHolder() instanceof MenuClanMembersService) {
-                player.closeInventory();
-                return;
-            }
-            if (inventory.getHolder() instanceof MenuClanLevelService) {
-                player.closeInventory();
-                return;
-            }
-            if (inventory.getHolder() instanceof MenuClanStorageService) {
-                player.closeInventory();
-                return;
-            }
-            if (inventory.getHolder() instanceof MenuClanGlowService) {
-                player.closeInventory();
-                return;
-            }
-        }
+        if (player.getOpenInventory().getTopInventory() != null) player.closeInventory();
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

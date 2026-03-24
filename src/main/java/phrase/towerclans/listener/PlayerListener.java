@@ -20,6 +20,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.PluginManager;
 import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.attribute.clan.LevelManager;
@@ -54,47 +55,13 @@ public class PlayerListener implements Listener {
     public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
-        if (modifiedPlayer.getClan() == null) return;
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if (event.getInventory().getHolder() instanceof MenuClanMainService) {
-            if (!event.isLeftClick() && !event.isRightClick()) {
-                event.setCancelled(true);
-                return;
-            }
-            pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
-        }
-        if (event.getInventory().getHolder() instanceof MenuClanMembersService) {
-            if (!event.isLeftClick() && !event.isRightClick()) {
-                event.setCancelled(true);
-                return;
-            }
-            pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
-            return;
-        }
-        if (event.getInventory().getHolder() instanceof MenuClanLevelService) {
-            if (!event.isLeftClick() && !event.isRightClick()) {
-                event.setCancelled(true);
-                return;
-            }
-            pluginManager.callEvent(new ClickMenuClanLevelEvent(modifiedPlayer, event));
-            return;
-        }
-        if (event.getInventory().getHolder() instanceof MenuClanStorageService) {
-            if (!event.isLeftClick() && !event.isRightClick()) {
-                event.setCancelled(true);
-                return;
-            }
-            pluginManager.callEvent(new ClickMenuClanStorageEvent(clan, player, event.getInventory(), event));
-            return;
-        }
-        if (event.getInventory().getHolder() instanceof MenuClanGlowService) {
-            if (!event.isLeftClick() && !event.isRightClick()) {
-                event.setCancelled(true);
-                return;
-            }
-            pluginManager.callEvent(new ClickMenuClanGlowEvent(modifiedPlayer, event));
-            return;
-        }
+        InventoryHolder holder = event.getInventory().getHolder();
+        if (holder instanceof MenuClanMainService) pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
+        else if (holder instanceof MenuClanMembersService) pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
+        else if (holder instanceof MenuClanLevelService) pluginManager.callEvent(new ClickMenuClanLevelEvent(modifiedPlayer, event));
+        else if (holder instanceof MenuClanStorageService) pluginManager.callEvent(new ClickMenuClanStorageEvent(clan, player, event.getInventory(), event));
+        else if (holder instanceof MenuClanGlowService) pluginManager.callEvent(new ClickMenuClanGlowEvent(modifiedPlayer, event));
     }
 
     @EventHandler
@@ -112,22 +79,15 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPvp(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player defender)) return;
-        if (!(event.getDamager() instanceof Player) && (!(event.getDamager() instanceof Projectile))) return;
         Player attacker = null;
-        if (event.getDamager() instanceof Player) {
-            attacker = (Player) event.getDamager();
-        } else if (event.getDamager() instanceof Projectile) {
-            if (((Projectile) event.getDamager()).getShooter() instanceof Player) {
-                attacker = (Player) ((Projectile) event.getDamager()).getShooter();
-            }
-        }
+        if (event.getDamager() instanceof Player damage) attacker = damage;
+        else if (event.getDamager() instanceof Projectile projectile && projectile.getShooter() instanceof Player shooter) attacker = shooter;
         if (attacker == null) return;
         ModifiedPlayer attackerModifiedPlayer = ModifiedPlayer.get(attacker);
         ModifiedPlayer defenderModifiedPlayer = ModifiedPlayer.get(defender);
-        ClanImpl attackerClan = (ClanImpl) attackerModifiedPlayer.getClan();
-        ClanImpl defenderClan = (ClanImpl) defenderModifiedPlayer.getClan();
-        if (attackerClan == null || defenderClan == null) return;
-        if (!attackerClan.getName().equals(defenderClan.getName())) return;
+        ClanImpl attackerClan = attackerModifiedPlayer.getClan() instanceof ClanImpl clan ? clan : null;
+        ClanImpl defenderClan = defenderModifiedPlayer.getClan() instanceof ClanImpl clan ? clan : null;
+        if (attackerClan == null || defenderClan == null || !attackerClan.getName().equals(defenderClan.getName())) return;
         pluginManager.callEvent(new ClanPvpEvent(attackerClan, attackerModifiedPlayer, defenderModifiedPlayer, event));
     }
 
@@ -248,12 +208,14 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        Glow.changeForPlayer(ModifiedPlayer.get(event.getPlayer()), true);
+        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(event.getPlayer());
+        if(modifiedPlayer.getClan() != null) Glow.changeForPlayer(modifiedPlayer, true);
     }
 
     @EventHandler
     public void onChangeWorld(PlayerChangedWorldEvent event) {
-        Glow.changeForPlayer(ModifiedPlayer.get(event.getPlayer()), true);
+        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(event.getPlayer());
+        if(modifiedPlayer.getClan() != null) Glow.changeForPlayer(modifiedPlayer, true);
     }
 
     @EventHandler

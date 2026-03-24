@@ -7,17 +7,16 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.Clan;
+import phrase.towerclans.clan.ClanManager;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.clan.permission.PermissionType;
 import phrase.towerclans.gui.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class ModifiedPlayer {
     public static TowerClans plugin;
+    public static ClanManager<ClanImpl> clanManager;
     private final UUID playerUUID;
     private Clan clan;
 
@@ -30,26 +29,44 @@ public class ModifiedPlayer {
         return Bukkit.getPlayer(playerUUID);
     }
 
+    private static final Map<UUID, ModifiedPlayer> CACHE;
+    static {
+        CACHE = new HashMap<>();
+    }
     public static ModifiedPlayer get(Player player) {
         if (player == null) return null;
-        for (Map.Entry<String, ClanImpl> clan : plugin.getClanManager().getClans().entrySet()) {
-            for (Map.Entry<ModifiedPlayer, String> entry : clan.getValue().getMembers().entrySet()) {
-                if (!entry.getKey().getPlayerUUID().equals(player.getUniqueId())) continue;
-                return new ModifiedPlayer(player.getUniqueId(), clan.getValue());
+        UUID playerUUID = player.getUniqueId();
+        if (CACHE.containsKey(playerUUID)) return CACHE.get(playerUUID);
+        else {
+            ModifiedPlayer modifiedPlayer = null;
+            for (Map.Entry<String, ClanImpl> clan : clanManager.entrySet()) {
+                for (Map.Entry<ModifiedPlayer, String> entry : clan.getValue().getMembers().entrySet()) {
+                    if (!entry.getKey().getPlayerUUID().equals(playerUUID)) continue;
+                    modifiedPlayer = new ModifiedPlayer(playerUUID, clan.getValue());
+                }
             }
+            if (modifiedPlayer == null) modifiedPlayer = new ModifiedPlayer(playerUUID, null);
+            CACHE.put(playerUUID, modifiedPlayer);
+            return modifiedPlayer;
         }
-        return new ModifiedPlayer(player.getUniqueId(), null);
     }
 
     public static ModifiedPlayer get(OfflinePlayer offlinePlayer) {
         if (offlinePlayer == null) return null;
-        for (Map.Entry<String, ClanImpl> clan : plugin.getClanManager().getClans().entrySet()) {
-            for (Map.Entry<ModifiedPlayer, String> entry : clan.getValue().getMembers().entrySet()) {
-                if (!entry.getKey().getPlayerUUID().equals(offlinePlayer.getUniqueId())) continue;
-                return new ModifiedPlayer(offlinePlayer.getUniqueId(), clan.getValue());
+        UUID playerUUID = offlinePlayer.getUniqueId();
+        if (CACHE.containsKey(playerUUID)) return CACHE.get(playerUUID);
+        else {
+            ModifiedPlayer modifiedPlayer = null;
+            for (Map.Entry<String, ClanImpl> clan : clanManager.entrySet()) {
+                for (Map.Entry<ModifiedPlayer, String> entry : clan.getValue().getMembers().entrySet()) {
+                    if (!entry.getKey().getPlayerUUID().equals(playerUUID)) continue;
+                    modifiedPlayer = new ModifiedPlayer(playerUUID, clan.getValue());
+                }
             }
+            if (modifiedPlayer == null) modifiedPlayer = new ModifiedPlayer(playerUUID, null);
+            CACHE.put(playerUUID, modifiedPlayer);
+            return modifiedPlayer;
         }
-        return new ModifiedPlayer(offlinePlayer.getUniqueId(), null);
     }
 
     public Clan getClan() {

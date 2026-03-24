@@ -66,6 +66,7 @@ public final class TowerClans extends JavaPlugin implements CommandExecutor {
         MenuPages.initialize();
         RankType.initialize(this);
         ModifiedPlayer.plugin = getInstance();
+        ModifiedPlayer.clanManager = clanManager;
         if (!setupEconomy()) {
             logger.severe("Vault не найден. Плагин будет выключен");
             pluginManager.disablePlugin(this);

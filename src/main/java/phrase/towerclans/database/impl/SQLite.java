@@ -157,7 +157,7 @@ public class SQLite implements Database {
                 boolean pvp = resultSet.getBoolean(11);
                 clan.setPvp(pvp);
                 int id = resultSet.getInt(12);
-                clan.setColor(Glow.LeatherColor.getLeaherColor(id));
+                clan.setColor(Glow.LeatherColor.getLeatherColor(id));
                 Inventory storage = InventorySerializable.base64ToInventory(resultSet.getString(9));
                 clan.getStorageManager().getInventory().setContents(storage.getContents());
                 Map<ModifiedPlayer, String> members = ClanDataConverter.listToMap(ListStringSerializable.stringToList(resultSet.getString(10)), clan);

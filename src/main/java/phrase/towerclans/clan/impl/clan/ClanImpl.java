@@ -10,6 +10,7 @@ import phrase.towerclans.clan.permission.PermissionType;
 import phrase.towerclans.command.impl.base.Base;
 import phrase.towerclans.config.Config;
 import phrase.towerclans.glow.Glow;
+import phrase.towerclans.glow.GlowPacketListener;
 import phrase.towerclans.util.Utils;
 
 import java.util.*;
@@ -140,6 +141,7 @@ public class ClanImpl extends AbstractClan {
             if (Glow.isEnableForPlayer(entry.getKey())) Glow.disableForPlayer(entry.getKey());
         }
         plugin.getClanManager().removeClan(clan.getName());
+        GlowPacketListener.CACHE_ARMOR.remove(clan.getName());
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 

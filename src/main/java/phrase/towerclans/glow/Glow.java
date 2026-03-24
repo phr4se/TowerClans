@@ -47,7 +47,7 @@ public class Glow {
             return b;
         }
 
-        public static LeatherColor getLeaherColor(int id) {
+        public static LeatherColor getLeatherColor(int id) {
             for (LeatherColor leatherColor : LeatherColor.values()) {
                 if (leatherColor.getId() == id) return leatherColor;
             }
@@ -82,20 +82,20 @@ public class Glow {
             PacketContainer container = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
             container.getIntegers().write(0, sender.getEntityId());
             PlayerInventory playerInventory = sender.getInventory();
-            List<Pair<EnumWrappers.ItemSlot, ItemStack>> list = new ArrayList<>();
+            List<Pair<EnumWrappers.ItemSlot, ItemStack>> pairs = new ArrayList<>();
             ItemStack head = playerInventory.getHelmet();
             ItemStack chest = playerInventory.getChestplate();
             ItemStack legs = playerInventory.getLeggings();
             ItemStack feet = playerInventory.getBoots();
-            ItemStack mainhand = playerInventory.getItemInMainHand();
+            ItemStack mainHand = playerInventory.getItemInMainHand();
             ItemStack offhand = playerInventory.getItemInOffHand();
-            list.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, head));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, chest));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, legs));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.FEET, feet));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.OFFHAND, offhand));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, mainhand));
-            container.getSlotStackPairLists().write(0, list);
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, head));
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, chest));
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, legs));
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.FEET, feet));
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.OFFHAND, offhand));
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, mainHand));
+            container.getSlotStackPairLists().write(0, pairs);
             protocolManager.broadcastServerPacket(container);
             return;
         }
@@ -108,20 +108,20 @@ public class Glow {
             PacketContainer container = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
             container.getIntegers().write(0, sender.getEntityId());
             PlayerInventory playerInventory = sender.getInventory();
-            List<Pair<EnumWrappers.ItemSlot, ItemStack>> list = new ArrayList<>();
+            List<Pair<EnumWrappers.ItemSlot, ItemStack>> pairs = new ArrayList<>();
             ItemStack head = playerInventory.getHelmet();
             ItemStack chest = playerInventory.getChestplate();
             ItemStack legs = playerInventory.getLeggings();
             ItemStack feet = playerInventory.getBoots();
-            ItemStack mainhand = playerInventory.getItemInMainHand();
+            ItemStack mainHand = playerInventory.getItemInMainHand();
             ItemStack offhand = playerInventory.getItemInOffHand();
-            list.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, head));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, chest));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, legs));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.FEET, feet));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.OFFHAND, offhand));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, mainhand));
-            container.getSlotStackPairLists().write(0, list);
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, head));
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, chest));
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, legs));
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.FEET, feet));
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.OFFHAND, offhand));
+            pairs.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, mainHand));
+            container.getSlotStackPairLists().write(0, pairs);
             protocolManager.sendServerPacket(receiver, container);
         }
     }
@@ -139,14 +139,14 @@ public class Glow {
             ItemStack chest = playerInventory.getChestplate();
             ItemStack legs = playerInventory.getLeggings();
             ItemStack feet = playerInventory.getBoots();
-            ItemStack mainhand = playerInventory.getItemInMainHand();
+            ItemStack mainHand = playerInventory.getItemInMainHand();
             ItemStack offhand = playerInventory.getItemInOffHand();
             list.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, head));
             list.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, chest));
             list.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, legs));
             list.add(new Pair<>(EnumWrappers.ItemSlot.FEET, feet));
             list.add(new Pair<>(EnumWrappers.ItemSlot.OFFHAND, offhand));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, mainhand));
+            list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, mainHand));
             packetContainer.getSlotStackPairLists().write(0, list);
             protocolManager.broadcastServerPacket(packetContainer);
             return;
@@ -165,14 +165,14 @@ public class Glow {
             ItemStack chest = playerInventory.getChestplate();
             ItemStack legs = playerInventory.getLeggings();
             ItemStack feet = playerInventory.getBoots();
-            ItemStack mainhand = playerInventory.getItemInMainHand();
+            ItemStack mainHand = playerInventory.getItemInMainHand();
             ItemStack offhand = playerInventory.getItemInOffHand();
             list.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, head));
             list.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, chest));
             list.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, legs));
             list.add(new Pair<>(EnumWrappers.ItemSlot.FEET, feet));
             list.add(new Pair<>(EnumWrappers.ItemSlot.OFFHAND, offhand));
-            list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, mainhand));
+            list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, mainHand));
             packetContainer.getSlotStackPairLists().write(0, list);
             protocolManager.sendServerPacket(receiver, packetContainer);
         }
