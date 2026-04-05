@@ -140,6 +140,7 @@ public class ClanImpl extends AbstractClan {
             if (player == null) continue;
             if (Glow.isEnableForPlayer(entry.getKey())) Glow.disableForPlayer(entry.getKey());
         }
+        modifiedPlayer.setClan(null);
         plugin.getClanManager().removeClan(clan.getName());
         GlowPacketListener.CACHE_ARMOR.remove(clan.getName());
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);

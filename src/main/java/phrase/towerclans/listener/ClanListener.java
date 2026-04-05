@@ -218,8 +218,14 @@ public class ClanListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onClickMenuClanStorage(ClickMenuClanStorageEvent event) {
-        ItemStack item = event.getCurrentItem();
         Player player = event.getPlayer();
+        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
+        if(!modifiedPlayer.hasPermission(PermissionType.STORAGE)) {
+            event.setCancelled(true);
+            Utils.sendMessage(player, Config.getCommandMessages().noPermission());
+            return;
+        }
+        ItemStack item = event.getCurrentItem();
         ClanImpl clan = (ClanImpl) event.getClan();
         int slot = event.getSlot();
         if (item != null) {
