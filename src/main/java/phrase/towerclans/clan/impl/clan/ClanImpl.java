@@ -54,6 +54,7 @@ public class ClanImpl extends AbstractClan {
         if (!clan.getMembers().containsKey(modifiedPlayer))
             return new ClanResponse(Config.getCommandMessages().playerNotInYourselfClan(), ClanResponse.ResponseType.FAILURE);
         clan.getMembers().remove(modifiedPlayer);
+        modifiedPlayer.setClan(null);
         String message = Config.getCommandMessages().notificationKicked().replace("%player%", (modifiedPlayer.getPlayer() == null) ? Bukkit.getOfflinePlayer(modifiedPlayer.getPlayerUUID()).getName() : modifiedPlayer.getPlayer().getName());
         chat(message);
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
@@ -96,6 +97,7 @@ public class ClanImpl extends AbstractClan {
             return new ClanResponse(Config.getCommandMessages().notInClan(), ClanResponse.ResponseType.FAILURE);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         clan.getMembers().remove(modifiedPlayer);
+        modifiedPlayer.setClan(null);
         String message = Config.getCommandMessages().notificationLeave().replace("%player%", modifiedPlayer.getPlayer().getName());
         chat(message);
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
