@@ -1,0 +1,32 @@
+menu-clan-storage:
+  size: 54
+  title: "&0&lClan Storage"
+  safe-slots:
+    - 45
+    - 46
+    - 47
+    - 48
+    - 49
+    - 50
+    - 51
+    - 52
+    - 53
+  item:
+    material: red_stained_glass_pane
+    title: "&#0080FF✖ &cSlot is locked"
+  items:
+    1:
+      material: spectral_arrow
+      slot:
+        - 49
+      name: "&#0080FF➜ Exit"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to exit"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      left-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      amount: 1

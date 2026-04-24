@@ -112,6 +112,7 @@ public class Capture extends Event {
         disableBossBarForPlayers();
         PLAYERS.clear();
         POINTS.clear();
+        plugin.getDatabase().saveClan(clan);
     }
 
     @Override
@@ -124,7 +125,7 @@ public class Capture extends Event {
         int maxPoint = configurationSection.getInt("max-point");
         ConfigurationSection configurationSection = Config.getFile("event-capture.yml").getConfigurationSection("boss-bar");
         String title = configurationSection.getString("title").replace("%x%", String.valueOf(x)).replace("%y%", String.valueOf(y)).replace("%z%", String.valueOf(z));
-        BossBar bossBar = server.createBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"), Utils.COLORIZER.colorize(title), BarColor.valueOf(configurationSection.getString("bar-color")), BarStyle.valueOf(configurationSection.getString("bar-style")));
+        BossBar bossBar = server.createBossBar(NamespacedKey.fromString("towerclans_bossbar_event_capture"), Utils.colorizer.colorize(title), BarColor.valueOf(configurationSection.getString("bar-color")), BarStyle.valueOf(configurationSection.getString("bar-style")));
         long updateBossBar = configurationSection.getLong("update-boss-bar");
         final ClanManager<ClanImpl> clanManager = plugin.getClanManager();
         new BukkitRunnable() {
@@ -136,7 +137,7 @@ public class Capture extends Event {
                         .map(Map.Entry::getKey)
                         .orElse(Config.getSettings().unknownClan());
                 String newTitle = title.replace("%clan_name%", clanName);
-                bossBar.setTitle(Utils.COLORIZER.colorize(newTitle));
+                bossBar.setTitle(Utils.colorizer.colorize(newTitle));
                 int point = (POINTS.get(clanName) == null) ? 0 : POINTS.get(clanName);
                 if ((double) point / maxPoint <= 1.00) bossBar.setProgress((double) point / maxPoint);
                 for (Player player : server.getOnlinePlayers()) {
@@ -206,13 +207,13 @@ public class Capture extends Event {
 
     @Override
     public void broadcastForPlayersAboutStartEvent() {
-        List<String> messages = configurationSection.getStringList("messages-start-event").stream().map(Utils.COLORIZER::colorize).collect(Collectors.toList());
+        List<String> messages = configurationSection.getStringList("messages-start-event").stream().map(Utils.colorizer::colorize).collect(Collectors.toList());
         broadcast(plugin, messages);
     }
 
     @Override
     public void broadcastForPlayersAboutEndEvent(String clanName) {
-        List<String> messages = configurationSection.getStringList("messages-end-event").stream().map(message -> Utils.COLORIZER.colorize(message.replace("%clan_name%", clanName))).toList();
+        List<String> messages = configurationSection.getStringList("messages-end-event").stream().map(message -> Utils.colorizer.colorize(message.replace("%clan_name%", clanName))).toList();
         broadcast(plugin, messages);
     }
 }

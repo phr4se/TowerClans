@@ -1,0 +1,24 @@
+boss-bar:
+  title: "&fCoordinates: &d%x% %y% %z% &7| &fLeader: &6%clan_name%"
+  bar-color: RED
+  bar-style: SOLID
+  update-boss-bar: 20
+capture:
+  schematic-name: "event"
+  world: "world"
+  xp-for-winning: 1000
+  max-point: 1000
+  point-per-zone: 10
+  x-range: 1000
+  z-range: 1000
+  messages-start-event:
+    - "&cAttention!"
+    - "&fA &6clan event&f has started"
+  messages-end-event:
+    - "&cAttention!"
+    - "&fThe &6clan event&f has ended"
+    - "&fWinner: &d%clan_name%"
+  search-for-players: 20
+  region-flags:
+    - "PVP: ALLOW"
+    - "BUILD: DENY"

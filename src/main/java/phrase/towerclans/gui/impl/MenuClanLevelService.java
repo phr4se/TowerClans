@@ -31,15 +31,15 @@ public class MenuClanLevelService implements MenuClanService, InventoryHolder {
     public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, TowerClans plugin) {
         final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-level.yml").getConfigurationSection("menu-clan-level");
         final int size = configurationSection.getInt("size");
-        final String title = Utils.COLORIZER.colorize(configurationSection.getString("title"));
+        final String title = Utils.colorizer.colorize(configurationSection.getString("title"));
         final Inventory menu = Bukkit.createInventory(this, size, title);
         final ConfigurationSection configurationSectionItems = configurationSection.getConfigurationSection("items");
         for (String key : configurationSectionItems.getKeys(false)) {
             final Material material = Material.matchMaterial(configurationSectionItems.getString(key + ".material"));
             final List<Integer> slots = configurationSectionItems.getIntegerList(key + ".slot");
             final boolean hideAttributes = configurationSectionItems.getBoolean(key + ".hide-attributes");
-            final String name = Utils.COLORIZER.colorize(configurationSectionItems.getString(key + ".name"));
-            final List<String> lore = configurationSectionItems.getStringList(key + ".lore").stream().map(Utils.COLORIZER::colorize).toList();
+            final String name = Utils.colorizer.colorize(configurationSectionItems.getString(key + ".name"));
+            final List<String> lore = configurationSectionItems.getStringList(key + ".lore").stream().map(Utils.colorizer::colorize).toList();
             final int amount = configurationSectionItems.getInt(key + ".amount");
             final ItemBuilder itemBuilder = new ItemBuilder(material)
                     .setName(name)
@@ -66,18 +66,18 @@ public class MenuClanLevelService implements MenuClanService, InventoryHolder {
             List<String> lore;
             if (clan.getLevel() < level) {
                 material = Material.matchMaterial(configurationSection.getString("not-received.material"));
-                name = Utils.COLORIZER.colorize(configurationSection.getString("not-received.name").replace("%level%", String.valueOf(level)));
+                name = Utils.colorizer.colorize(configurationSection.getString("not-received.name").replace("%level%", String.valueOf(level)));
                 lore = configurationSection.getStringList("not-received.lore").stream().map(string ->
-                        Utils.COLORIZER.colorize(string
+                        Utils.colorizer.colorize(string
                                 .replace("%maximum_balance%", String.valueOf(levelManager.getLevelMaximumBalance(finalLevel)))
                                 .replace("%maximum_members%", String.valueOf(levelManager.getLevelMaximumMembers(finalLevel)))
                                 .replace("%available%", String.valueOf(levelManager.getAvailableSlots(finalLevel))))
                 ).collect(Collectors.toList());
             } else {
                 material = Material.matchMaterial(configurationSection.getString("received.material"));
-                name = (Utils.COLORIZER.colorize(configurationSection.getString("received.name").replace("%level%", String.valueOf(level))));
+                name = (Utils.colorizer.colorize(configurationSection.getString("received.name").replace("%level%", String.valueOf(level))));
                 lore = configurationSection.getStringList("received.lore").stream().map(string ->
-                        Utils.COLORIZER.colorize(string
+                        Utils.colorizer.colorize(string
                                 .replace("%maximum_balance%", String.valueOf(levelManager.getLevelMaximumBalance(finalLevel)))
                                 .replace("%maximum_members%", String.valueOf(levelManager.getLevelMaximumMembers(finalLevel)))
                                 .replace("%available%", String.valueOf(levelManager.getAvailableSlots(finalLevel))))

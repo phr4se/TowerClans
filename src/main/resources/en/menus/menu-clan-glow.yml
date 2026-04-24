@@ -1,0 +1,84 @@
+menu-clan-glow:
+  size: 54
+  title: "&0&lGlow Effect"
+  items:
+    1:
+      material: red_dye
+      slot:
+        - 20
+      name: "&#0080FF⛄ &cRed Glow"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to set the glow to red"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "1"
+      left-click-actions:
+        - "1"
+      amount: 1
+    2:
+      material: green_dye
+      slot:
+        - 22
+      name: "&#0080FF⛄ &aGreen Glow"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to set the glow to green"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "2"
+      left-click-actions:
+        - "2"
+      amount: 1
+    3:
+      material: blue_dye
+      slot:
+        - 24
+      name: "&#0080FF⛄ &9Blue Glow"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to set the glow to blue"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "3"
+      left-click-actions:
+        - "3"
+      amount: 1
+    4:
+      material: spectral_arrow
+      slot:
+        - 49
+      name: "&#0080FF➜ Exit"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to exit"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      left-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      amount: 1
+    5:
+      material: light_blue_stained_glass_pane
+      slot:
+        - 0
+        - 1
+        - 7
+        - 8
+        - 9
+        - 17
+        - 36
+        - 44
+        - 45
+        - 46
+        - 52
+        - 53
+      name: " "
+      lore:
+        - ""
+      hide-attributes: true
+      amount: 1

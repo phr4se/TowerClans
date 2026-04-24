@@ -30,15 +30,15 @@ public class MenuClanGlowService implements MenuClanService, InventoryHolder {
     public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, TowerClans plugin) {
         final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-glow.yml").getConfigurationSection("menu-clan-glow");
         final int size = configurationSection.getInt("size");
-        final String title = Utils.COLORIZER.colorize(configurationSection.getString("title"));
-        final Inventory menu = Bukkit.createInventory(this, size, Utils.COLORIZER.colorize(title));
+        final String title = Utils.colorizer.colorize(configurationSection.getString("title"));
+        final Inventory menu = Bukkit.createInventory(this, size, Utils.colorizer.colorize(title));
         final ConfigurationSection configurationSectionItems = configurationSection.getConfigurationSection("items");
         for (String key : configurationSectionItems.getKeys(false)) {
             final Material material = Material.matchMaterial(configurationSectionItems.getString(key + ".material"));
             final List<Integer> slots = configurationSectionItems.getIntegerList(key + ".slot");
             final boolean hideAttributes = configurationSectionItems.getBoolean(key + ".hide-attributes");
-            final String name = Utils.COLORIZER.colorize(configurationSectionItems.getString(key + ".name"));
-            final List<String> lore = configurationSectionItems.getStringList(key + ".lore").stream().map(Utils.COLORIZER::colorize).collect(Collectors.toList());
+            final String name = Utils.colorizer.colorize(configurationSectionItems.getString(key + ".name"));
+            final List<String> lore = configurationSectionItems.getStringList(key + ".lore").stream().map(Utils.colorizer::colorize).collect(Collectors.toList());
             final int amount = configurationSectionItems.getInt(key + ".amount");
             final ItemBuilder itemBuilder = new ItemBuilder(material)
                     .setName(name)

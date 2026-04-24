@@ -37,14 +37,14 @@ public class MenuClanMembersService implements MenuClanService, InventoryHolder 
         final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-members.yml").getConfigurationSection("menu-clan-members");
         final int size = configurationSection.getInt("size");
         final String title = configurationSection.getString("title");
-        final Inventory menu = Bukkit.createInventory(this, size, Utils.COLORIZER.colorize(title));
+        final Inventory menu = Bukkit.createInventory(this, size, Utils.colorizer.colorize(title));
         final ConfigurationSection configurationSectionItems = configurationSection.getConfigurationSection("items");
         for (String key : configurationSectionItems.getKeys(false)) {
             final Material material = Material.matchMaterial(configurationSectionItems.getString(key + ".material"));
             final List<Integer> slots = configurationSectionItems.getIntegerList(key + ".slot");
             final boolean hideAttributes = configurationSectionItems.getBoolean(key + ".hide-attributes");
-            final String name = Utils.COLORIZER.colorize(configurationSectionItems.getString(key + ".name"));
-            final List<String> lore = configurationSectionItems.getStringList(key + ".lore").stream().map(Utils.COLORIZER::colorize).toList();
+            final String name = Utils.colorizer.colorize(configurationSectionItems.getString(key + ".name"));
+            final List<String> lore = configurationSectionItems.getStringList(key + ".lore").stream().map(Utils.colorizer::colorize).toList();
             final int amount = configurationSectionItems.getInt(key + ".amount");
             ItemBuilder itemBuilder = new ItemBuilder(material)
                     .setName(name)
@@ -84,7 +84,7 @@ public class MenuClanMembersService implements MenuClanService, InventoryHolder 
         final StatsManager statsManager = plugin.getStatsManager();
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {
             final ModifiedPlayer key = entry.getKey();
-            final String currentName = Utils.COLORIZER.colorize(name.replace("%player_name%", (key.getPlayer() == null) ? Bukkit.getOfflinePlayer(key.getPlayerUUID()).getName() : key.getPlayer().getName()));
+            final String currentName = Utils.colorizer.colorize(name.replace("%player_name%", (key.getPlayer() == null) ? Bukkit.getOfflinePlayer(key.getPlayerUUID()).getName() : key.getPlayer().getName()));
             final StatsManager.Stats playerStats = statsManager.getPlayers().get(key.getPlayerUUID());
             final List<String> currentLore = lore.stream().map(
                     string -> {
@@ -101,7 +101,7 @@ public class MenuClanMembersService implements MenuClanService, InventoryHolder 
                                 .replace("%withdraw%", (key.hasPermission(PermissionType.WITHDRAW) ? isAvailable : notAvailable))
                                 .replace("%permission%", (key.hasPermission(PermissionType.PERMISSION) ? isAvailable : notAvailable))
                                 .replace("%cursor%", "");
-                        return Utils.COLORIZER.colorize(replacedString);
+                        return Utils.colorizer.colorize(replacedString);
                     }
             ).collect(Collectors.toList());
             final ItemStack itemStack = new ItemBuilder(material)

@@ -64,6 +64,8 @@ public record CommandMessages(String noPermission,
                               String stoppedEvent,
                               String alreadyRunning,
                               String notRunning,
-                              String schematicDamaged
+                              String schematicDamaged,
+                              String notSetBaseAlienRegion,
+                              String blackListWorld
 ) {
 }

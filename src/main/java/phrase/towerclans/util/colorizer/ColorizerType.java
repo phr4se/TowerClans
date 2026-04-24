@@ -2,6 +2,7 @@ package phrase.towerclans.util.colorizer;
 
 public enum ColorizerType {
 
-    HEX
+    HEX,
+    MINI_MESSAGE
 
 }

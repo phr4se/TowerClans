@@ -34,6 +34,7 @@ public enum RankType {
         RankType.LEADER.setName(configurationSection.getString("rank-leader-name"));
         RankType.DEPUTY.setName(configurationSection.getString("rank-deputy-name"));
         RankType.MEMBER.setName(configurationSection.getString("rank-member-name"));
+        RankType.UNDEFINED.setName("undefined");
     }
 
     public static RankType getRank(int id) {

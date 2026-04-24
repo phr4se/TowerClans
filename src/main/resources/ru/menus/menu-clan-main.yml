@@ -17,7 +17,6 @@ menu-clan-main:
         - "&#0080FF- &fСмерти: &c%deaths%"
         - "&#0080FF- &fPVP-Режим: &#0080FF%pvp%"
         - "&#0080FF- &fЛимит баланса: &#0080FF%maximum_balance%"
-        - "&#0080FF- &fКлановые монеты: &#0080FF%clan_coin%"
         - ""
       hide-attributes: true
       amount: 1
@@ -69,7 +68,7 @@ menu-clan-main:
     5:
       material: chest_minecart
       slot:
-        - 32
+        - 30
       name: "&#0080FF❏ Хранилище клана"
       lore:
         - ""

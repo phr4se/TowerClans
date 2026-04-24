@@ -5,7 +5,8 @@ import phrase.towerclans.clan.attribute.clan.LevelManager;
 import phrase.towerclans.clan.attribute.clan.StorageManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.permission.PermissionManager;
-import phrase.towerclans.glow.Glow;
+import phrase.towerclans.glow.Color;
+import phrase.towerclans.glow.ColorManager;
 
 import java.util.*;
 
@@ -18,7 +19,7 @@ public abstract class AbstractClan implements Clan {
     private boolean pvp;
     private final StorageManager storageManager;
     private final LevelManager levelManager;
-    private Glow.LeatherColor color;
+    private Color color;
     private final PermissionManager permissionManager;
 
     public AbstractClan(String name, ClanManager<?> clanManager) {
@@ -29,7 +30,7 @@ public abstract class AbstractClan implements Clan {
         this.balance = 0;
         this.pvp = false;
         this.storageManager = new StorageManager();
-        this.color = Glow.LeatherColor.RED;
+        this.color = ColorManager.COLOR;
         this.levelManager = clanManager.getLevelManager();
         this.permissionManager = clanManager.getPermissionManager();
     }
@@ -37,11 +38,11 @@ public abstract class AbstractClan implements Clan {
     public abstract void glow(ModifiedPlayer modifiedPlayer, TowerClans plugin);
     public abstract void chat(String message);
 
-    public void setColor(Glow.LeatherColor color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
-    public Glow.LeatherColor getColor() {
+    public Color getColor() {
         return color;
     }
 

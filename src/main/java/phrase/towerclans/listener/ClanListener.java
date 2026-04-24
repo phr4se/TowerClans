@@ -6,13 +6,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import phrase.towerclans.TowerClans;
 import phrase.towerclans.action.ActionExecutor;
 import phrase.towerclans.action.ActionTransformer;
+import phrase.towerclans.clan.AbstractClan;
 import phrase.towerclans.clan.attribute.clan.StorageManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
@@ -21,7 +21,9 @@ import phrase.towerclans.clan.permission.PermissionManager;
 import phrase.towerclans.clan.permission.PermissionType;
 import phrase.towerclans.config.Config;
 import phrase.towerclans.event.*;
-import phrase.towerclans.glow.Glow;
+import phrase.towerclans.glow.Color;
+import phrase.towerclans.glow.ColorManager;
+import phrase.towerclans.glow.GlowManager;
 import phrase.towerclans.gui.MenuType;
 import phrase.towerclans.util.Utils;
 
@@ -31,9 +33,13 @@ import java.util.regex.Pattern;
 
 public class ClanListener implements Listener {
     private final TowerClans plugin;
+    private final GlowManager glowManager;
+    private final ColorManager colorManager;
 
     public ClanListener(TowerClans plugin) {
         this.plugin = plugin;
+        this.glowManager = plugin.getGlowManager();
+        this.colorManager = plugin.getColorManager();
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -158,54 +164,63 @@ public class ClanListener implements Listener {
         if (event.isRightClick() && persistentDataContainer.has(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING)) {
             event.setCancelled(true);
             String rightClickActions = persistentDataContainer.get(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING);
-            try {
-                Glow.LeatherColor color = Glow.LeatherColor.valueOf(rightClickActions);
-                if (!modifiedPlayer.hasPermission(PermissionType.GLOW)) {
-                    Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().noPermission());
-                    return;
-                }
-                clan.setColor(color);
-                for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet())
-                    if (Glow.isEnableForPlayer(entry.getKey())) Glow.changeForPlayer(entry.getKey(), true);
-            } catch (IllegalArgumentException e) {
+            Color color = colorManager.getColor(rightClickActions);
+            if (color == null) {
                 ActionExecutor.execute(player, ActionTransformer.transform(List.of(rightClickActions.split("\\|"))));
+                return;
+            }
+            if (!modifiedPlayer.hasPermission(PermissionType.GLOW)) {
+                Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().noPermission());
+                return;
+            }
+            clan.setColor(color);
+            for (ModifiedPlayer o : clan.getMembers().keySet()) {
+                Player target = o.getPlayer();
+                if (glowManager.isEnableForPlayer(target)) {
+                    glowManager.removePlayer(target);
+                    glowManager.addPlayer(target);
+                }
             }
         }
         if (event.isLeftClick() && persistentDataContainer.has(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING)) {
             event.setCancelled(true);
             String leftClickActions = persistentDataContainer.get(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING);
-            try {
-                Glow.LeatherColor color = Glow.LeatherColor.valueOf(leftClickActions);
-                if (!modifiedPlayer.hasPermission(PermissionType.GLOW)) {
-                    Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().noPermission());
-                    return;
-                }
-                clan.setColor(color);
-                for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet())
-                    if (Glow.isEnableForPlayer(entry.getKey())) Glow.changeForPlayer(entry.getKey(), true);
-            } catch (IllegalArgumentException e) {
+            Color color = colorManager.getColor(leftClickActions);
+            if (color == null) {
                 ActionExecutor.execute(player, ActionTransformer.transform(List.of(leftClickActions.split("\\|"))));
+                return;
+            }
+            if (!modifiedPlayer.hasPermission(PermissionType.GLOW)) {
+                Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().noPermission());
+                return;
+            }
+            clan.setColor(color);
+            for (ModifiedPlayer o : clan.getMembers().keySet()) {
+                Player target = o.getPlayer();
+                if (glowManager.isEnableForPlayer(target)) {
+                    glowManager.removePlayer(target);
+                    glowManager.addPlayer(target);
+                }
             }
         }
         event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onJoin(ClanJoinEvent event) {
+    public void onClanJoin(ClanJoinEvent event) {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
-        Glow.changeForPlayer(modifiedPlayer, false);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onLeave(ClanLeaveEvent event) {
+    public void onClanLeave(ClanLeaveEvent event) {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
-        Glow.changeForPlayer(modifiedPlayer, false, ((ClanImpl) event.getClan()).getMembers());
         Player player = modifiedPlayer.getPlayer();
         if (player.getOpenInventory().getTopInventory() != null) player.closeInventory();
+        glowManager.actionsDefaultPlayer(player, ((AbstractClan) event.getClan()).getMembers());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onLevelUp(ClanLevelUpEvent event) {
+    public void onClanLevelUp(ClanLevelUpEvent event) {
         ClanImpl clan = (ClanImpl) event.getClan();
         String message = Config.getMessages().clanLevelUp();
         for (Map.Entry<ModifiedPlayer, String> entry : clan.getMembers().entrySet()) {

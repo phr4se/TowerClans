@@ -10,6 +10,7 @@ import phrase.towerclans.config.data.Messages;
 import phrase.towerclans.config.data.Settings;
 import phrase.towerclans.database.DatabaseType;
 import phrase.towerclans.util.Utils;
+import phrase.towerclans.util.colorizer.ColorizerType;
 
 import java.io.File;
 import java.util.List;
@@ -22,9 +23,25 @@ public class Config {
     private static CommandMessages commandMessages;
     private static Settings settings;
 
+    public enum Language {
+        RU("ru"),
+        EN("en");
+        public final String name;
+
+        Language(String name) {
+            this.name = name;
+        }
+    }
+
+    private static Language language;
+
+    public static void setLanguage(FileConfiguration fileConfiguration) {
+        language = Language.valueOf(fileConfiguration.getString("language").toUpperCase());
+    }
+
     public static void setupMessages(FileConfiguration fileConfiguration) {
         ConfigurationSection configurationSectionMessages = fileConfiguration.getConfigurationSection("messages");
-        prefix = Utils.COLORIZER.colorize(configurationSectionMessages.getString("prefix"));
+        prefix = Utils.colorizer.colorize(configurationSectionMessages.getString("prefix"));
         messages = new Messages(getMessagePrefixed(configurationSectionMessages.getString("no-permission"), prefix),
                 getMessagePrefixed(configurationSectionMessages.getStringList("not-in-clan"), prefix),
                 getMessagePrefixed(configurationSectionMessages.getStringList("in-clan"), prefix),
@@ -101,7 +118,9 @@ public class Config {
                 getMessagePrefixed(configurationSectionCommandMessages.getString("stopped-event"), prefix),
                 getMessagePrefixed(configurationSectionCommandMessages.getString("already-running"), prefix),
                 getMessagePrefixed(configurationSectionCommandMessages.getString("not-running"), prefix),
-                getMessagePrefixed(configurationSectionCommandMessages.getString("schematic-damaged"), prefix)
+                getMessagePrefixed(configurationSectionCommandMessages.getString("schematic-damaged"), prefix),
+                getMessagePrefixed(configurationSectionCommandMessages.getString("not-set-base-alien-region"), prefix),
+                getMessagePrefixed(configurationSectionCommandMessages.getString("black-list-world"), prefix)
         );
     }
 
@@ -109,7 +128,8 @@ public class Config {
         ConfigurationSection configurationSectionSettings = fileConfiguration.getConfigurationSection("settings");
         final File schematicFolder = new File(plugin.getDataFolder() + "/schematics");
         if (!schematicFolder.exists()) schematicFolder.mkdirs();
-        settings = new Settings(DatabaseType.valueOf(configurationSectionSettings.getString("database")),
+        settings = new Settings(DatabaseType.valueOf(configurationSectionSettings.getString("database-type")),
+                ColorizerType.valueOf(configurationSectionSettings.getString("colorizer-type")),
                 configurationSectionSettings.getInt("cost-creating-clan"),
                 configurationSectionSettings.getInt("xp-for-murder"),
                 configurationSectionSettings.getInt("min-size-clan-name"),
@@ -123,7 +143,18 @@ public class Config {
                 configurationSectionSettings.getInt("xp-for-kill-player"),
                 configurationSectionSettings.getInt("xp-for-break-block"),
                 configurationSectionSettings.getStringList("white-blocks").stream().map(Material::valueOf).collect(Collectors.toList()),
-                "schematics/" + getFile("event-capture.yml").getString("capture.schematic-name") + ".schem"
+                "schematics/" + getFile("event-capture.yml").getString("capture.schematic-name") + ".schem",
+                configurationSectionSettings.getStringList("black-list-worlds"),
+                configurationSectionSettings.getString("region-checker"),
+                configurationSectionSettings.getString("host"),
+                configurationSectionSettings.getInt("port"),
+                configurationSectionSettings.getString("database"),
+                configurationSectionSettings.getString("username"),
+                configurationSectionSettings.getString("password"),
+                configurationSectionSettings.getBoolean("useSSL"),
+                configurationSectionSettings.getString("clan-pvp-enable"),
+                configurationSectionSettings.getString("clan-pvp-disable"),
+                configurationSectionSettings.getString("regex")
         );
     }
 
@@ -131,7 +162,7 @@ public class Config {
         if (message == null || prefix == null) {
             return message;
         }
-        return Utils.COLORIZER.colorize(message.replace("%prefix%", prefix));
+        return Utils.colorizer.colorize(message.replace("%prefix%", prefix));
     }
 
     public static List<String> getMessagePrefixed(List<String> messages, String prefix) {
@@ -143,15 +174,21 @@ public class Config {
 
     public static void createFiles(String... filesName) {
         for (String fileName : filesName) {
-            File file = new File(plugin.getDataFolder(), fileName);
+            File file = new File(plugin.getDataFolder() + language.name, fileName);
             if (!file.exists()) {
-                plugin.saveResource(fileName, false);
+                plugin.saveResource(language.name + "/" + fileName, false);
             }
         }
     }
 
     public static FileConfiguration getFile(String fileName) {
+        File file = new File(plugin.getDataFolder() + "/" +  language.name, fileName);
+        return YamlConfiguration.loadConfiguration(file);
+    }
+
+    public static FileConfiguration getDefaultFile(String fileName) {
         File file = new File(plugin.getDataFolder(), fileName);
+        if(!file.exists()) plugin.saveResource(fileName, false);
         return YamlConfiguration.loadConfiguration(file);
     }
 

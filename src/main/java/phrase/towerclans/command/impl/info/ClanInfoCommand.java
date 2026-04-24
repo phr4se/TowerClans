@@ -38,7 +38,7 @@ public class ClanInfoCommand implements CommandHandler {
                     .replace("%balance%", String.valueOf(clan.getBalance()))
                     .replace("%kills%", String.valueOf(plugin.getStatsManager().getKillsMembers(clan.getMembers())))
                     .replace("%deaths%", String.valueOf(plugin.getStatsManager().getDeathsMembers(clan.getMembers())));
-            return Utils.COLORIZER.colorize(replacedString);
+            return Utils.colorizer.colorize(replacedString);
         }).toList();
         for (String string : replacedList) {
             Utils.sendMessage(player, string);

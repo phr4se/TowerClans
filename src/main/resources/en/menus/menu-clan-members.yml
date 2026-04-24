@@ -1,0 +1,41 @@
+menu-clan-members:
+  size: 27
+  title: "&0&lClan Members"
+  material: paper
+  name: "&#0080FF✿ &fPlayer &#0080FF%player_name%"
+  lore:
+    - ""
+    - "&#0080FF- &fRank: &6%player_rank%"
+    - "&#0080FF- &fKills: &a%player_kills%"
+    - "&#0080FF- &fDeaths: &c%player_deaths%"
+    - ""
+    - "&#0080FF► LMB — move down"
+    - "&#0080FF► RMB — change value"
+    - ""
+  permission:
+    - "%cursor% &fSet/remove the clan base: %base%"
+    - "%cursor% &fChange the clan armor glow: %glow%"
+    - "%cursor% &fInvite players to the clan: %invite%"
+    - "%cursor% &fKick players from the clan: %kick%"
+    - "%cursor% &fChange the clan PvP mode: %pvp%"
+    - "%cursor% &fOpen the clan storage: %storage%"
+    - "%cursor% &fWithdraw from the clan balance: %withdraw%"
+  cursor: "&#0080FF►"
+  permission-is-available: "&a&l[✔]"
+  permission-not-available: "&c&l[✖]"
+  items:
+    1:
+      material: spectral_arrow
+      slot:
+        - 26
+      name: "&#0080FF➜ Exit"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to exit"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      left-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      amount: 1

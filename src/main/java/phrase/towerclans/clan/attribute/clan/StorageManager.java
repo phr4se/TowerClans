@@ -26,7 +26,7 @@ public class StorageManager {
     public static void initialize() {
         final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-storage.yml").getConfigurationSection("menu-clan-storage");
         size = configurationSection.getInt("size");
-        title = Utils.COLORIZER.colorize(configurationSection.getString("title"));
+        title = Utils.colorizer.colorize(configurationSection.getString("title"));
         safeSlots = configurationSection.getIntegerList("safe-slots");
     }
 

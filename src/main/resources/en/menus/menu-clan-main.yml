@@ -1,0 +1,117 @@
+menu-clan-main:
+  size: 54
+  title: "&0&lClan Menu %clan_name%"
+  items:
+    1:
+      material: knowledge_book
+      slot:
+        - 4
+      name: "&#0080FF☄ &fClan Information"
+      lore:
+        - ""
+        - "&#0080FF- &fClan: &#0080FF%name%"
+        - "&#0080FF- &fMembers: &a%members%&7/&c%maximum_members%"
+        - "&#0080FF- &fLevel: &#0080FF%level% &f(&7%xp% XP&f)"
+        - "&#0080FF- &fBalance: &#0080FF%balance%"
+        - "&#0080FF- &fKills: &a%kills%"
+        - "&#0080FF- &fDeaths: &c%deaths%"
+        - "&#0080FF- &fPVP Mode: &#0080FF%pvp%"
+        - "&#0080FF- &fBalance Limit: &#0080FF%maximum_balance%"
+        - ""
+      hide-attributes: true
+      amount: 1
+    2:
+      material: totem_of_undying
+      slot:
+        - 20
+      name: "&#0080FF☃ Clan Members"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to view clan members"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "[open] MENU_CLAN_MEMBERS"
+      left-click-actions:
+        - "[open] MENU_CLAN_MEMBERS"
+      amount: 1
+    3:
+      material: diamond
+      slot:
+        - 22
+      name: "&#0080FF✦ Clan Level"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to view the clan level"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "[open] MENU_CLAN_LEVEL"
+      left-click-actions:
+        - "[open] MENU_CLAN_LEVEL"
+      amount: 1
+    4:
+      material: turtle_helmet
+      slot:
+        - 24
+      name: "&#0080FF☀ Glow Effect"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to change the glow effect"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "[open] MENU_CLAN_GLOW"
+      left-click-actions:
+        - "[open] MENU_CLAN_GLOW"
+      amount: 1
+    5:
+      material: chest_minecart
+      slot:
+        - 30
+      name: "&#0080FF❏ Clan Storage"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to access the clan storage"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "[open] MENU_CLAN_STORAGE"
+      left-click-actions:
+        - "[open] MENU_CLAN_STORAGE"
+      amount: 1
+    6:
+      material: spectral_arrow
+      slot:
+        - 49
+      name: "&#0080FF➜ Exit"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to exit"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "[exit]"
+      left-click-actions:
+        - "[exit]"
+      amount: 1
+    7:
+      material: light_blue_stained_glass_pane
+      slot:
+        - 0
+        - 1
+        - 7
+        - 8
+        - 9
+        - 17
+        - 36
+        - 44
+        - 45
+        - 46
+        - 52
+        - 53
+      name: " "
+      lore:
+        - ""
+      hide-attributes: true
+      amount: 1

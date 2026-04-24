@@ -1,0 +1,62 @@
+menu-clan-level:
+  size: 54
+  title: "&0&lClan Level"
+  slot: 19
+  received:
+    material: chest_minecart
+    name: "&#0080FF⚡ &fLevel &#0080FF%level%"
+    lore:
+      - ""
+      - "&#0080FF- &fStatus: &aReceived"
+      - ""
+      - "&#0080FF- &fBalance Limit: &#0080FF%maximum_balance%"
+      - "&#0080FF- &fMember Limit: &#0080FF%maximum_members%"
+      - "&#0080FF- &fStorage Slots: &#0080FF%available%"
+      - ""
+  not-received:
+    material: furnace_minecart
+    name: "&#0080FF⚡ &fLevel &#0080FF%level%"
+    lore:
+      - ""
+      - "&#0080FF- &fStatus: &cNot Received"
+      - ""
+      - "&#0080FF- &fBalance Limit: &#0080FF%maximum_balance%"
+      - "&#0080FF- &fMember Limit: &#0080FF%maximum_members%"
+      - "&#0080FF- &fStorage Slots: &#0080FF%available%"
+      - ""
+  items:
+    1:
+      material: spectral_arrow
+      slot:
+        - 49
+      name: "&#0080FF➜ Exit"
+      lore:
+        - ""
+        - "&#0080FF- &fClick to exit"
+        - ""
+      hide-attributes: true
+      right-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      left-click-actions:
+        - "[open] MENU_CLAN_MAIN"
+      amount: 1
+    2:
+      material: light_blue_stained_glass_pane
+      slot:
+        - 0
+        - 1
+        - 7
+        - 8
+        - 9
+        - 17
+        - 36
+        - 44
+        - 45
+        - 46
+        - 52
+        - 53
+      name: " "
+      lore:
+        - ""
+      hide-attributes: true
+      amount: 1

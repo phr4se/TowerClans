@@ -5,6 +5,6 @@ import phrase.towerclans.util.Utils;
 
 public record StringContext(String message) implements Context {
     public static StringContext validate(String message) {
-        return new StringContext(Utils.COLORIZER.colorize(message));
+        return new StringContext(Utils.colorizer.colorize(message));
     }
 }

@@ -1,0 +1,37 @@
+level:
+  1:
+    level: 1
+    xp: 0
+    available: 9
+    maximum-members: 5
+    maximum-balance: 250000
+  2:
+    level: 2
+    xp: 1000
+    available: 18
+    maximum-members: 10
+    maximum-balance: 500000
+  3:
+    level: 3
+    xp: 2500
+    available: 27
+    maximum-members: 15
+    maximum-balance: 1000000
+  4:
+    level: 4
+    xp: 5000
+    available: 36
+    maximum-members: 20
+    maximum-balance: 1750000
+  5:
+    level: 5
+    xp: 7500
+    available: 45
+    maximum-members: 25
+    maximum-balance: 2500000
+  6:
+    level: 6
+    xp: 10000
+    available: 54
+    maximum-members: 30
+    maximum-balance: 5000000

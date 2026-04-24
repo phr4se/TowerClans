@@ -7,6 +7,7 @@ public class ColorizerFactory {
     public static ColorizerProvider getProvider(ColorizerType colorizerType) {
         return switch (colorizerType) {
             case HEX -> new HexProvider();
+            case MINI_MESSAGE -> new MiniMessageProvider();
         };
 
     }

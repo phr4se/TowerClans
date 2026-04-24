@@ -32,24 +32,24 @@ public class MenuClanMainService implements MenuClanService, InventoryHolder {
     public Inventory create(ModifiedPlayer modifiedPlayer, ClanImpl clan, TowerClans plugin) {
         final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-main.yml").getConfigurationSection("menu-clan-main");
         final int size = configurationSection.getInt("size");
-        final String title = Utils.COLORIZER.colorize(configurationSection.getString("title").replace("%clan_name%", clan.getName()));
+        final String title = Utils.colorizer.colorize(configurationSection.getString("title").replace("%clan_name%", clan.getName()));
         final Inventory menu = Bukkit.createInventory(this, size, title);
         final ConfigurationSection configurationSectionItems = configurationSection.getConfigurationSection("items");
         for (String key : configurationSectionItems.getKeys(false)) {
             final Material material = Material.matchMaterial(configurationSectionItems.getString(key + ".material"));
             final List<Integer> slots = configurationSectionItems.getIntegerList(key + ".slot");
             final boolean hideAttributes = configurationSectionItems.getBoolean(key + ".hide-attributes");
-            final String name = Utils.COLORIZER.colorize(configurationSectionItems.getString(key + ".name"));
+            final String name = Utils.colorizer.colorize(configurationSectionItems.getString(key + ".name"));
             final LevelManager levelManager = clan.getLevelManager();
             final StatsManager statsManager = plugin.getStatsManager();
-            final List<String> lore = configurationSectionItems.getStringList(key + ".lore").stream().map(string -> Utils.COLORIZER.colorize(string
+            final List<String> lore = configurationSectionItems.getStringList(key + ".lore").stream().map(string -> Utils.colorizer.colorize(string
                     .replace("%name%", clan.getName())
                     .replace("%members%", String.valueOf(clan.getMembers().size()))
                     .replace("%maximum_members%", String.valueOf(levelManager.getLevelMaximumMembers(clan.getLevel())))
                     .replace("%level%", String.valueOf(clan.getLevel()))
                     .replace("%xp%", String.valueOf(clan.getXp()))
                     .replace("%balance%", String.valueOf(clan.getBalance()))
-                    .replace("%pvp%", (clan.isPvp()) ? "Да" : "Нет")
+                    .replace("%pvp%", (clan.isPvp()) ? Config.getSettings().clanPvpEnable() : Config.getSettings().clanPvpDisable())
                     .replace("%maximum_balance%", String.valueOf(levelManager.getLevelMaximumBalance(clan.getLevel())))
                     .replace("%kills%", String.valueOf(statsManager.getKillsMembers(clan.getMembers())))
                     .replace("%deaths%", String.valueOf(statsManager.getDeathsMembers(clan.getMembers()))))).collect(Collectors.toList());

@@ -15,6 +15,7 @@ public class Permission {
     }
 
     public void setPermissionPlayer(PermissionType permissionType) {
+        if(getPermissionTypes().contains(permissionType)) return;
         getPermissionTypes().add(permissionType);
     }
 

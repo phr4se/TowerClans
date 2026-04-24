@@ -7,21 +7,25 @@ import phrase.towerclans.clan.*;
 import phrase.towerclans.clan.attribute.clan.RankType;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.permission.PermissionType;
-import phrase.towerclans.command.impl.base.Base;
+import phrase.towerclans.command.impl.base.BaseManager;
 import phrase.towerclans.config.Config;
-import phrase.towerclans.glow.Glow;
-import phrase.towerclans.glow.GlowPacketListener;
+import phrase.towerclans.database.Database;
+import phrase.towerclans.glow.GlowManager;
 import phrase.towerclans.util.Utils;
 
 import java.util.*;
 
 public class ClanImpl extends AbstractClan {
     private final TowerClans plugin;
+    private final Database database;
+    private final GlowManager glowManager;
 
     public ClanImpl(String name, TowerClans plugin) {
         super(name, plugin.getClanManager());
         plugin.getClanManager().addClan(name, this);
         this.plugin = plugin;
+        this.database = plugin.getDatabase();
+        this.glowManager = plugin.getGlowManager();
     }
 
     public ClanImpl(String name, ModifiedPlayer modifiedPlayer, TowerClans plugin) {
@@ -29,9 +33,12 @@ public class ClanImpl extends AbstractClan {
         modifiedPlayer.setClan(this);
         getMembers().put(modifiedPlayer, RankType.LEADER.getName());
         plugin.getClanManager().addClan(name, this);
-        Base.setBase(this, null);
+        plugin.getBaseManager().setBase(this, modifiedPlayer.getPlayer(), null);
         getPermissionManager().getPermissionsPlayer(modifiedPlayer).setPermissionsPlayer(PermissionType.PERMISSION, PermissionType.WITHDRAW, PermissionType.STORAGE, PermissionType.BASE, PermissionType.KICK, PermissionType.PVP, PermissionType.GLOW, PermissionType.INVITE);
         this.plugin = plugin;
+        this.database = plugin.getDatabase();
+        this.glowManager = plugin.getGlowManager();
+        database.savePlayer(modifiedPlayer);
     }
 
     @Override
@@ -45,6 +52,7 @@ public class ClanImpl extends AbstractClan {
         clan.getMembers().put(modifiedPlayer, RankType.MEMBER.getName());
         String message = Config.getCommandMessages().notificationInvited().replace("%player%", modifiedPlayer.getPlayer().getName());
         chat(message);
+        database.savePlayer(modifiedPlayer);
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
@@ -57,6 +65,8 @@ public class ClanImpl extends AbstractClan {
         modifiedPlayer.setClan(null);
         String message = Config.getCommandMessages().notificationKicked().replace("%player%", (modifiedPlayer.getPlayer() == null) ? Bukkit.getOfflinePlayer(modifiedPlayer.getPlayerUUID()).getName() : modifiedPlayer.getPlayer().getName());
         chat(message);
+        database.savePlayer(modifiedPlayer);
+        glowManager.actionsDefaultPlayer(modifiedPlayer.getPlayer(), getMembers());
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
@@ -74,6 +84,7 @@ public class ClanImpl extends AbstractClan {
         clan.setBalance(clan.getBalance() + amount);
         String message = Config.getCommandMessages().notificationPut().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
         chat(message);
+        database.saveClan(clan);
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
@@ -88,6 +99,7 @@ public class ClanImpl extends AbstractClan {
         clan.setBalance(clan.getBalance() - amount);
         String message = Config.getCommandMessages().notificationWithdraw().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%amount%", String.valueOf(amount));
         chat(message);
+        database.saveClan(clan);
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
@@ -100,6 +112,8 @@ public class ClanImpl extends AbstractClan {
         modifiedPlayer.setClan(null);
         String message = Config.getCommandMessages().notificationLeave().replace("%player%", modifiedPlayer.getPlayer().getName());
         chat(message);
+        database.savePlayer(modifiedPlayer);
+        glowManager.actionsDefaultPlayer(modifiedPlayer.getPlayer(), getMembers());
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
@@ -124,6 +138,7 @@ public class ClanImpl extends AbstractClan {
         }
         String message = Config.getCommandMessages().notificationRank().replace("%player%", modifiedPlayer.getPlayer().getName()).replace("%rank%", (id == 2) ? RankType.DEPUTY.getName() : RankType.MEMBER.getName());
         chat(message);
+        database.savePlayer(modifiedPlayer);
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
@@ -140,23 +155,24 @@ public class ClanImpl extends AbstractClan {
             entry.getKey().setClan(null);
             Player player = entry.getKey().getPlayer();
             if (player == null) continue;
-            if (Glow.isEnableForPlayer(entry.getKey())) Glow.disableForPlayer(entry.getKey());
+            glowManager.actionsDefaultPlayer(modifiedPlayer.getPlayer(), getMembers());
         }
         modifiedPlayer.setClan(null);
         plugin.getClanManager().removeClan(clan.getName());
-        GlowPacketListener.CACHE_ARMOR.remove(clan.getName());
+        database.removeClan(clan.getName());
         return new ClanResponse(null, ClanResponse.ResponseType.SUCCESS);
     }
 
     @Override
     public void glow(ModifiedPlayer modifiedPlayer, TowerClans plugin) {
-        if (!Glow.isEnableForPlayer(modifiedPlayer)) {
-            Glow.enableForPlayer(modifiedPlayer);
+        Player player = modifiedPlayer.getPlayer();
+        if(!glowManager.isEnableForPlayer(player)) {
+            glowManager.addPlayer(player);
             Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().enableGlow());
-            return;
+        } else {
+            glowManager.removePlayer(player);
+            Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().disableGlow());
         }
-        Glow.disableForPlayer(modifiedPlayer);
-        Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().disableGlow());
     }
 
     @Override

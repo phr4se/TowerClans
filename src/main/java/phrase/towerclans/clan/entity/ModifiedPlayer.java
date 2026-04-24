@@ -33,6 +33,13 @@ public class ModifiedPlayer {
     static {
         CACHE = new HashMap<>();
     }
+    public static ModifiedPlayer get(UUID playerUUID) {
+        if (CACHE.containsKey(playerUUID)) return CACHE.get(playerUUID);
+        if (get(Bukkit.getOfflinePlayer(playerUUID)) == null) return get(Bukkit.getPlayer(playerUUID));
+        else get(Bukkit.getOfflinePlayer(playerUUID));
+        return null;
+    }
+
     public static ModifiedPlayer get(Player player) {
         if (player == null) return null;
         UUID playerUUID = player.getUniqueId();

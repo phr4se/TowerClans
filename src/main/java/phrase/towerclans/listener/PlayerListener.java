@@ -32,8 +32,6 @@ import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.command.impl.invite.PlayerCalls;
 import phrase.towerclans.config.Config;
 import phrase.towerclans.event.*;
-import phrase.towerclans.glow.Glow;
-import phrase.towerclans.glow.GlowPacketListener;
 import phrase.towerclans.gui.MenuFactory;
 import phrase.towerclans.gui.MenuType;
 import phrase.towerclans.gui.impl.*;
@@ -161,7 +159,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        GlowPacketListener.CACHE.remove(player.getEntityId());
         UUID playerUUID = player.getUniqueId();
         PlayerCalls.remove(playerUUID);
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
@@ -181,7 +178,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        GlowPacketListener.CACHE.put(player.getEntityId(), player);
         UUID playerUUID = event.getPlayer().getUniqueId();
         final StatsManager statsManager = plugin.getStatsManager();
         if (!statsManager.getPlayers().containsKey(playerUUID)) {
@@ -204,18 +200,6 @@ public class PlayerListener implements Listener {
 
     private void updateAllBossBarForPlayer(Player player) {
         updateBossBarForPlayer(player, NamespacedKey.fromString("towerclans_bossbar_event_capture"));
-    }
-
-    @EventHandler
-    public void onRespawn(PlayerRespawnEvent event) {
-        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(event.getPlayer());
-        if(modifiedPlayer.getClan() != null) Glow.changeForPlayer(modifiedPlayer, true);
-    }
-
-    @EventHandler
-    public void onChangeWorld(PlayerChangedWorldEvent event) {
-        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(event.getPlayer());
-        if(modifiedPlayer.getClan() != null) Glow.changeForPlayer(modifiedPlayer, true);
     }
 
     @EventHandler

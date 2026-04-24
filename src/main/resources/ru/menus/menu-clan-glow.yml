@@ -13,9 +13,9 @@ menu-clan-glow:
         - ""
       hide-attributes: true
       right-click-actions:
-        - "RED"
+        - "1"
       left-click-actions:
-        - "RED"
+        - "1"
       amount: 1
     2:
       material: green_dye
@@ -28,9 +28,9 @@ menu-clan-glow:
         - ""
       hide-attributes: true
       right-click-actions:
-        - "GREEN"
+        - "2"
       left-click-actions:
-        - "GREEN"
+        - "2"
       amount: 1
     3:
       material: blue_dye
@@ -43,9 +43,9 @@ menu-clan-glow:
         - ""
       hide-attributes: true
       right-click-actions:
-        - "BLUE"
+        - "3"
       left-click-actions:
-        - "BLUE"
+        - "3"
       amount: 1
     4:
       material: spectral_arrow

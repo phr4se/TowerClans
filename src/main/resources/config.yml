@@ -1,5 +1,6 @@
 settings:
-  database: SQLITE
+  database-type: SQLITE
+  colorizer-type: HEX
   cost-creating-clan: 10000
   xp-for-murder: 2
   xp-for-kill-player: 2
@@ -10,7 +11,7 @@ settings:
   max-size-clan-name: 10
   bad-words:
     - "Admin"
-  unknown-clan: "Нет"
+  unknown-clan: "[]"
   type: "Essentials"
   disable-privilege-type:
     - "FLY"
@@ -18,14 +19,27 @@ settings:
     - "VANISH"
   symbol-one: "&7["
   symbol-two: "&7]"
-  rank-leader-name: "Лидер"
-  rank-deputy-name: "Заместитель"
-  rank-member-name: "Участник"
+  rank-leader-name: "[1]"
+  rank-deputy-name: "[2]"
+  rank-member-name: "[3]"
   blocked-commands:
     - "fly"
     - "god"
     - "vanish"
   teleport: true
+  black-list-worlds:
+    - "world_nether"
+    - "world_the_end"
+  region-checker: worldguard
+  host: "localhost"
+  port: "3306"
+  database: "towerclans"
+  username: "root"
+  password: ""
+  useSSL: true
+  clan-pvp-enable: "[✔]"
+  clan-pvp-disable: "[✖]"
+  regex: "^[A-Za-z&А-Яа-яЁё]+$"
 
 
 

@@ -2,6 +2,7 @@ package phrase.towerclans.command.impl.base;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.command.CommandHandler;
@@ -9,6 +10,12 @@ import phrase.towerclans.config.Config;
 import phrase.towerclans.util.Utils;
 
 public class ClanBaseCommand implements CommandHandler {
+    private final BaseManager baseManager;
+
+    public ClanBaseCommand(TowerClans plugin) {
+        this.baseManager = plugin.getBaseManager();
+    }
+
     @Override
     public boolean handler(Player player, String[] args) {
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
@@ -17,7 +24,7 @@ public class ClanBaseCommand implements CommandHandler {
             Utils.sendMessage(player, Config.getCommandMessages().notInClan());
             return true;
         }
-        Location location = Base.getBase(clan);
+        Location location = baseManager.getBase(clan);
         if (location == null) {
             Utils.sendMessage(player, Config.getCommandMessages().noBase());
             return true;

@@ -33,7 +33,7 @@ public class MenuClanStorageService implements MenuClanService, InventoryHolder 
         final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-storage.yml").getConfigurationSection("menu-clan-storage");
         final ConfigurationSection configurationSectionItem = configurationSection.getConfigurationSection("item");
         final ItemStack noAvailableItem = new ItemBuilder(Material.matchMaterial(configurationSectionItem.getString("material")))
-                .setName(Utils.COLORIZER.colorize(configurationSectionItem.getString("title")))
+                .setName(Utils.colorizer.colorize(configurationSectionItem.getString("title")))
                 .setHideAttributes(true)
                 .setPersistentDataContainer(NamespacedKey.fromString("no_available"), PersistentDataType.STRING, "no_available")
                 .build();
@@ -52,8 +52,8 @@ public class MenuClanStorageService implements MenuClanService, InventoryHolder 
             final Material material = Material.matchMaterial(configurationSectionItems.getString(key + ".material"));
             final List<Integer> slots = configurationSectionItems.getIntegerList(key + ".slot");
             final boolean hideAttributes = configurationSectionItems.getBoolean(key + ".hide-attributes");
-            final String name = Utils.COLORIZER.colorize(configurationSectionItems.getString(key + ".name"));
-            final List<String> lore = configurationSectionItems.getStringList(key + ".lore").stream().map(Utils.COLORIZER::colorize).collect(Collectors.toList());
+            final String name = Utils.colorizer.colorize(configurationSectionItems.getString(key + ".name"));
+            final List<String> lore = configurationSectionItems.getStringList(key + ".lore").stream().map(Utils.colorizer::colorize).collect(Collectors.toList());
             final int amount = configurationSectionItems.getInt(key + ".amount");
             final ItemBuilder itemBuilder = new ItemBuilder(material)
                     .setName(name)

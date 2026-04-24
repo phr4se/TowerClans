@@ -59,9 +59,9 @@ public class CommandLogger {
         commands.put("stats", new CommandDescription("towerclans.stats", new ClanStatsCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
         commands.put("info", new CommandDescription("towerclans.info", new ClanInfoCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
         commands.put("top", new CommandDescription("towerclans.top", new ClanTopCommand(plugin), CommandDescription.CommandType.AND));
-        commands.put("base", new CommandDescription("towerclans.base", new ClanBaseCommand(), CommandDescription.CommandType.WITH_CLAN));
-        commands.put("setbase", new CommandDescription("towerclans.setbase", new ClanSetBaseCommand(), CommandDescription.CommandType.WITH_CLAN));
-        commands.put("delbase", new CommandDescription("towerclans.delbase", new ClanDelBaseCommand(), CommandDescription.CommandType.WITH_CLAN));
+        commands.put("base", new CommandDescription("towerclans.base", new ClanBaseCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
+        commands.put("setbase", new CommandDescription("towerclans.setbase", new ClanSetBaseCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
+        commands.put("delbase", new CommandDescription("towerclans.delbase", new ClanDelBaseCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
         commands.put("storage", new CommandDescription("towerclans.storage", new ClanStorageCommand(), CommandDescription.CommandType.WITH_CLAN));
         commands.put("glow", new CommandDescription("towerclans.glow", new ClanGlowCommand(plugin), CommandDescription.CommandType.WITH_CLAN));
         commands.put("event", new CommandDescription("towerclans.event", new ClanEventCommand(plugin), CommandDescription.CommandType.ADMIN));

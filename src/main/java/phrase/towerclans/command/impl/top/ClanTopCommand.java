@@ -24,7 +24,7 @@ public class ClanTopCommand implements CommandHandler {
         String format = Config.getMessages().placeFormat();
         List<String> list = new ArrayList<>();
         for (ClanImpl o : clanList) {
-            list.add(Utils.COLORIZER.colorize(format.replace("%place%", String.valueOf(place)).replace("%clan_name%", o.getName()).replace("%xp%", String.valueOf(o.getXp()))));
+            list.add(Utils.colorizer.colorize(format.replace("%place%", String.valueOf(place)).replace("%clan_name%", o.getName()).replace("%xp%", String.valueOf(o.getXp()))));
             place++;
         }
         if (list.isEmpty()) {

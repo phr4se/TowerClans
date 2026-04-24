@@ -106,4 +106,6 @@ messages:
     already-running: "&fИвент уже запущен"
     not-running: "&fИвент не запущен"
     schematic-damaged: "&fСхематика не существует или повреждена"
+    not-set-base-alien-region: "&cНельзя установить базу в чужом регионе"
+    black-list-world: "&cМир находится в черном списке"
 
