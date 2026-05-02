@@ -139,7 +139,10 @@ public class MySQL implements Database {
                     preparedStatement.setString(4, abstractClan.getName());
                     preparedStatement.setString(5, abstractClan.getMembers().get(modifiedPlayer));
                 }
-                else preparedStatement.setString(5, RankType.UNDEFINED.getName());
+                else {
+                    preparedStatement.setNull(4, Types.VARCHAR);
+                    preparedStatement.setString(5, RankType.UNDEFINED.getName());
+                }
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);

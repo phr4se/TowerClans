@@ -71,13 +71,13 @@ public final class TowerClans extends JavaPlugin implements CommandExecutor {
         Config.setupMessages(Config.getFile("messages.yml"));
         clanManager = new ClanManagerImpl(this);
         colorManager.initialize();
+        StorageManager.initialize();
         databaseManager = new DatabaseManager(Config.getSettings().databaseType(), this);
         this.database = databaseManager.getDatabase();
         database.loadAll();
         glowManager = new GlowManager(this);
         CommandLogger commandLogger = new CommandLogger(this);
         commandMapper = new CommandMapper(commandLogger);
-        StorageManager.initialize();
         MenuPages.initialize();
         RankType.initialize(this);
         ModifiedPlayer.plugin = getInstance();
@@ -104,13 +104,15 @@ public final class TowerClans extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onDisable() {
-        database.saveAll();
-        for(CompletableFuture<Void> cf : databaseManager.getTasks()) if(!cf.isDone()) cf.join();
-        databaseManager.getTasks().clear();
-        try {
-            databaseManager.shutdown();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if(database != null) {
+            database.saveAll();
+            for (CompletableFuture<Void> cf : databaseManager.getTasks()) if (!cf.isDone()) cf.join();
+            databaseManager.getTasks().clear();
+            try {
+                databaseManager.shutdown();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         if (Event.isRunningEvent()) Event.getRunningEvent(Event.EventType.CAPTURE).endEvent();
     }
