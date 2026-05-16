@@ -73,11 +73,11 @@ public final class TowerClans extends JavaPlugin implements CommandExecutor {
         colorManager.initialize();
         StorageManager.initialize();
         databaseManager = new DatabaseManager(Config.getSettings().databaseType(), this);
-        this.database = databaseManager.getDatabase();
-        database.loadAll();
-        glowManager = new GlowManager(this);
         CommandLogger commandLogger = new CommandLogger(this);
         commandMapper = new CommandMapper(commandLogger);
+        glowManager = new GlowManager(this);
+        this.database = databaseManager.getDatabase();
+        database.loadAll();
         MenuPages.initialize();
         RankType.initialize(this);
         ModifiedPlayer.plugin = getInstance();
