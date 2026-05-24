@@ -1,6 +1,5 @@
 package phrase.towerclans.util;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import phrase.towerclans.util.colorizer.ColorizerProvider;

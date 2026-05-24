@@ -207,11 +207,6 @@ public class ClanListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onClanJoin(ClanJoinEvent event) {
-        ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onClanLeave(ClanLeaveEvent event) {
         ModifiedPlayer modifiedPlayer = event.getModifiedPlayer();
         Player player = modifiedPlayer.getPlayer();
@@ -235,7 +230,7 @@ public class ClanListener implements Listener {
     public void onClickMenuClanStorage(ClickMenuClanStorageEvent event) {
         Player player = event.getPlayer();
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
-        if(!modifiedPlayer.hasPermission(PermissionType.STORAGE)) {
+        if (!modifiedPlayer.hasPermission(PermissionType.STORAGE)) {
             event.setCancelled(true);
             Utils.sendMessage(player, Config.getCommandMessages().noPermission());
             return;
@@ -268,7 +263,6 @@ public class ClanListener implements Listener {
             }
         }
         if (StorageManager.isSafeSlots(slot)) {
-            event.getStorage().setItem(slot, null);
             event.setCancelled(true);
             return;
         }
@@ -298,6 +292,6 @@ public class ClanListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onClanPvp(ClanPvpEvent event) {
         ClanImpl clan = (ClanImpl) event.getClan();
-        if(clan.isPvp()) event.setCancelled(true);
+        if (clan.isPvp()) event.setCancelled(true);
     }
 }
