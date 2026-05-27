@@ -57,6 +57,10 @@ public class ClickMenuClanStorageEvent extends Event implements Cancellable {
         return event.isLeftClick();
     }
 
+    public boolean isShiftClick() {
+        return event.isShiftClick();
+    }
+
     public int getSlot() {
         return event.getSlot();
     }

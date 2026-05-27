@@ -257,7 +257,6 @@ public class ClanListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                event.getStorage().setItem(slot, null);
                 event.setCancelled(true);
                 return;
             }
@@ -273,6 +272,8 @@ public class ClanListener implements Listener {
                 Bukkit.getPlayer(playerUUID).openInventory(event.getStorage());
             }
         });
+        if(event.isShiftClick()) event.setCancelled(true);
+        plugin.getDatabase().saveClan(clan);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
