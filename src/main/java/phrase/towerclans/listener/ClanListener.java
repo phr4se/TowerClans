@@ -265,6 +265,12 @@ public class ClanListener implements Listener {
             event.setCancelled(true);
             return;
         }
+        if(event.isShiftClick()) {
+            if(StorageManager.isSafeSlots(StorageManager.getFirstFreeSlot(event.getStorage()))) {
+                event.setCancelled(true);
+                return;
+            }
+        }
         Set<UUID> copyPlayers = new HashSet<>(clan.getStorageManager().getPlayers());
         copyPlayers.forEach(playerUUID -> {
             if (!playerUUID.equals(player.getUniqueId())) {
@@ -272,7 +278,6 @@ public class ClanListener implements Listener {
                 Bukkit.getPlayer(playerUUID).openInventory(event.getStorage());
             }
         });
-        if(event.isShiftClick()) event.setCancelled(true);
         plugin.getDatabase().saveClan(clan);
     }
 

@@ -63,6 +63,20 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
+    public void onDrag(InventoryDragEvent event) {
+        if(!(event.getWhoClicked() instanceof Player player)) return;
+        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
+        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+        if(clan == null) return;
+        InventoryHolder holder = event.getInventory().getHolder();
+        if(holder instanceof MenuClanStorageService) {
+            event.getRawSlots().forEach(slot -> {
+                if(StorageManager.isSafeSlots(slot)) event.setCancelled(true);
+            });
+        }
+    }
+
+    @EventHandler
     public void onClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);

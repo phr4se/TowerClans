@@ -34,6 +34,13 @@ public class StorageManager {
         return safeSlots.contains(slot);
     }
 
+    public static int getFirstFreeSlot(Inventory inventory) {
+        for (int i = 0; i < inventory.getSize(); i++) {
+            if (inventory.getItem(i) == null) return i;
+        }
+        return -1;
+    }
+
     public Inventory getInventory() {
         return inventory;
     }
