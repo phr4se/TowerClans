@@ -31,7 +31,7 @@ public class MenuClanGlowService implements MenuClanService, InventoryHolder {
         final ConfigurationSection configurationSection = Config.getFile("menus/menu-clan-glow.yml").getConfigurationSection("menu-clan-glow");
         final int size = configurationSection.getInt("size");
         final String title = Utils.colorizer.colorize(configurationSection.getString("title"));
-        final Inventory menu = Bukkit.createInventory(this, size, Utils.colorizer.colorize(title));
+        final Inventory menu = Bukkit.createInventory(this, size, title);
         final ConfigurationSection configurationSectionItems = configurationSection.getConfigurationSection("items");
         for (String key : configurationSectionItems.getKeys(false)) {
             final Material material = Material.matchMaterial(configurationSectionItems.getString(key + ".material"));
