@@ -41,7 +41,7 @@ public class Config {
 
     public static void setupMessages(FileConfiguration fileConfiguration) {
         ConfigurationSection configurationSectionMessages = fileConfiguration.getConfigurationSection("messages");
-        prefix = Utils.colorizer.colorize(configurationSectionMessages.getString("prefix"));
+        prefix = configurationSectionMessages.getString("prefix");
         messages = new Messages(getMessagePrefixed(configurationSectionMessages.getString("no-permission"), prefix),
                 getMessagePrefixed(configurationSectionMessages.getStringList("not-in-clan"), prefix),
                 getMessagePrefixed(configurationSectionMessages.getStringList("in-clan"), prefix),
