@@ -74,7 +74,7 @@ public class MenuPages {
         slotNext = configurationSectionNext.getInt("slot");
         final String titleNext = Utils.colorizer.colorize(configurationSectionNext.getString("title"));
         next = new ItemBuilder(materialNext)
-                .setName(Utils.colorizer.colorize(titleNext))
+                .setName(titleNext)
                 .setPersistentDataContainer(NamespacedKey.fromString("left-click-actions"), PersistentDataType.STRING, String.join("|", List.of("MENU_CLAN_NEXT")))
                 .setPersistentDataContainer(NamespacedKey.fromString("right-click-actions"), PersistentDataType.STRING, String.join("|", List.of("MENU_CLAN_NEXT")))
                 .build();
