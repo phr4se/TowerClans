@@ -55,6 +55,7 @@ public class PlayerListener implements Listener {
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         InventoryHolder holder = event.getInventory().getHolder();
+        if(holder instanceof MenuClanMainService || holder instanceof MenuClanMembersService || holder instanceof MenuClanLevelService || holder instanceof MenuClanGlowService) if(event.isShiftClick()) event.setCancelled(true);
         if (holder instanceof MenuClanMainService) pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
         else if (holder instanceof MenuClanMembersService) pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
         else if (holder instanceof MenuClanLevelService) pluginManager.callEvent(new ClickMenuClanLevelEvent(modifiedPlayer, event));
