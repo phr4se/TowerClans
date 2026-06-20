@@ -37,8 +37,14 @@ public class MenuClanGlow extends Menu implements Handler {
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         switch (clickType) {
             case RIGHT -> {
-                if (!persistentDataContainer.has(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING))
+                if (!persistentDataContainer.has(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING)) {
+                    try {
+                        clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
                     return;
+                }
                 try {
                     clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -64,6 +70,14 @@ public class MenuClanGlow extends Menu implements Handler {
                 }
             }
             case LEFT -> {
+                if (!persistentDataContainer.has(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING)) {
+                    try {
+                        clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return;
+                }
                 try {
                     clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -86,6 +100,13 @@ public class MenuClanGlow extends Menu implements Handler {
                         glowManager.removePlayer(target);
                         glowManager.addPlayer(target);
                     }
+                }
+            }
+            default -> {
+                try {
+                    clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }

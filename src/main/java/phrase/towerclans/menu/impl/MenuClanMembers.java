@@ -143,6 +143,13 @@ public class MenuClanMembers extends Menu implements Handler, Paginated {
                     }
                     modifiedPlayer.showMenu(MenuType.MENU_CLAN_MEMBERS);
                 }
+                default -> {
+                    try {
+                        clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         }
     }
