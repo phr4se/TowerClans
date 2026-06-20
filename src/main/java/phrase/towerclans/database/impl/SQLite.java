@@ -2,6 +2,7 @@ package phrase.towerclans.database.impl;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.AbstractClan;
@@ -70,7 +71,7 @@ public class SQLite implements Database {
                 preparedStatement.setInt(4, clan.getBalance());
                 preparedStatement.setBoolean(5, clan.isPvp());
                 preparedStatement.setString(6, (baseManager.getBase(clan) == null) ? LocationSerializable.EMPTY : LocationSerializable.locationToString(baseManager.getBase(clan)));
-                preparedStatement.setString(7, InventorySerializable.inventoryToBase64(clan.getStorageManager().getInventory()));
+                preparedStatement.setString(7, InventorySerializable.inventoryToBase64(clan.getClanImplStorage().getInventory()));
                 preparedStatement.setString(8, clan.getColor().getKey());
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
@@ -106,7 +107,7 @@ public class SQLite implements Database {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 final String clan = resultSet.getString(1);
-                if(clanManager.existsClan(clan)) continue;
+                if (clanManager.existsClan(clan)) continue;
                 final ClanImpl target = new ClanImpl(clan, plugin);
                 final int lvl = resultSet.getInt(2);
                 target.setLevel(lvl);
@@ -119,7 +120,7 @@ public class SQLite implements Database {
                 final Location home = LocationSerializable.stringToLocation(resultSet.getString(6));
                 baseManager.setBase(target, null, home);
                 final Inventory inventory = InventorySerializable.base64ToInventory(resultSet.getString(7));
-                target.getStorageManager().getInventory().setContents(inventory.getContents());
+                target.getClanImplStorage().getInventory().setContents(inventory.getContents());
                 final String colorKey = resultSet.getString(8);
                 target.setColor(colorManager.getColor(colorKey));
                 clanManager.addClan(clan, target);
@@ -138,12 +139,11 @@ public class SQLite implements Database {
                 preparedStatement.setString(1, playerUUID.toString());
                 preparedStatement.setString(2, StatsSerializable.statsToString(statsManager.getPlayers().get(playerUUID)));
                 preparedStatement.setString(3, PermissionSerializable.permissionToString(permissionManager.getPermissionsPlayer(modifiedPlayer)));
-                AbstractClan abstractClan = (AbstractClan) modifiedPlayer.getClan();
-                if(abstractClan != null) {
-                    preparedStatement.setString(4, abstractClan.getName());
-                    preparedStatement.setString(5, abstractClan.getMembers().get(modifiedPlayer));
-                }
-                else {
+                ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
+                if (clan != null) {
+                    preparedStatement.setString(4, clan.getName());
+                    preparedStatement.setString(5, clan.getMembers().get(modifiedPlayer));
+                } else {
                     preparedStatement.setNull(4, Types.VARCHAR);
                     preparedStatement.setString(5, RankType.UNDEFINED.getName());
                 }
@@ -157,9 +157,8 @@ public class SQLite implements Database {
 
     @Override
     public void savePlayers() {
-        for (UUID playerUUID : statsManager.getPlayers().keySet()) {
-            ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(playerUUID);
-            if(modifiedPlayer == null) continue;
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
             savePlayer(modifiedPlayer);
         }
     }
@@ -178,7 +177,7 @@ public class SQLite implements Database {
                 String clan = resultSet.getString(4);
                 ModifiedPlayer modifiedPlayer = new ModifiedPlayer(playerUUID, null);
                 AbstractClan abstractClan = clanManager.getClan(clan);
-                if(abstractClan == null) continue;
+                if (abstractClan == null) continue;
                 modifiedPlayer.setClan(clanManager.getClan(clan));
                 String rank = resultSet.getString(5);
                 abstractClan.getMembers().put(modifiedPlayer, rank);

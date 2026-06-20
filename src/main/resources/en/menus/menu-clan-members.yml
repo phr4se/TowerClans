@@ -1,5 +1,6 @@
 menu-clan-members:
   size: 27
+  offset-relative-zero: 0
   title: "&0&lClan Members"
   material: paper
   name: "&#0080FF✿ &fPlayer &#0080FF%player_name%"

@@ -2,7 +2,7 @@ package phrase.towerclans.clan;
 
 import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.attribute.clan.LevelManager;
-import phrase.towerclans.clan.attribute.clan.StorageManager;
+import phrase.towerclans.clan.attribute.clan.ClanImplStorage;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.permission.PermissionManager;
 import phrase.towerclans.glow.Color;
@@ -17,7 +17,6 @@ public abstract class AbstractClan implements Clan {
     private int xp;
     private int balance;
     private boolean pvp;
-    private final StorageManager storageManager;
     private final LevelManager levelManager;
     private Color color;
     private final PermissionManager permissionManager;
@@ -29,7 +28,6 @@ public abstract class AbstractClan implements Clan {
         this.xp = clanManager.getLevelManager().getXpLevel(level);
         this.balance = 0;
         this.pvp = false;
-        this.storageManager = new StorageManager();
         this.color = ColorManager.COLOR;
         this.levelManager = clanManager.getLevelManager();
         this.permissionManager = clanManager.getPermissionManager();
@@ -92,10 +90,6 @@ public abstract class AbstractClan implements Clan {
 
     public void setPvp(boolean pvp) {
         this.pvp = pvp;
-    }
-
-    public StorageManager getStorageManager() {
-        return storageManager;
     }
 
     public LevelManager getLevelManager() {

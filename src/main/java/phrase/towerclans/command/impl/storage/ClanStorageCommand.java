@@ -6,7 +6,7 @@ import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.clan.permission.PermissionType;
 import phrase.towerclans.command.CommandHandler;
 import phrase.towerclans.config.Config;
-import phrase.towerclans.gui.MenuType;
+import phrase.towerclans.menu.MenuType;
 import phrase.towerclans.util.Utils;
 
 public class ClanStorageCommand implements CommandHandler {
@@ -24,7 +24,7 @@ public class ClanStorageCommand implements CommandHandler {
         }
         modifiedPlayer.showMenu(MenuType.MENU_CLAN_STORAGE);
         Utils.sendMessage(player, Config.getCommandMessages().openStorage());
-        clan.getStorageManager().getPlayers().add(player.getUniqueId());
+        clan.getClanImplStorage().getPlayers().add(player.getUniqueId());
         return true;
     }
 }

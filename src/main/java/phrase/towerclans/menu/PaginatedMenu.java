@@ -1,4 +1,4 @@
-package phrase.towerclans.gui;
+package phrase.towerclans.menu;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -6,12 +6,17 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import phrase.towerclans.TowerClans;
 import phrase.towerclans.config.Config;
 import phrase.towerclans.util.Utils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-public class MenuPages {
+public class PaginatedMenu {
+    public static final Map<UUID, PaginatedMenu> PLAYERS = new HashMap<>();
     private static int itemPerPage;
     private static ItemStack prev;
     private static int slotPrev;
@@ -20,33 +25,46 @@ public class MenuPages {
     private final List<ItemStack> contents;
     private int currentPage;
     private final Inventory menu;
+    private final int offsetRelativeZero;
 
-    public MenuPages(int currentPage, List<ItemStack> contents, Inventory menu) {
+    public PaginatedMenu(int currentPage, List<ItemStack> contents, Inventory menu, int offsetRelativeZero) {
         this.currentPage = currentPage;
         this.contents = contents;
         this.menu = menu;
+        this.offsetRelativeZero = offsetRelativeZero;
+    }
+
+    public static PaginatedMenu register(UUID player, PaginatedMenu menuPages) {
+        PLAYERS.put(player, menuPages);
+        return PLAYERS.get(player);
+    }
+
+    public static void unRegister(UUID player) {
+        PLAYERS.remove(player);
+    }
+
+    public static boolean isRegistered(UUID player) {
+        return PLAYERS.containsKey(player);
+    }
+
+    public static PaginatedMenu getPaginatedMenu(UUID player) {
+        return PLAYERS.get(player);
     }
 
     public Inventory getPage(int page) {
         for (int i = 0; i <= menu.getSize() - 1; i++) {
-            if (menu.getItem(i) == null) continue;
-            if (menu.getItem(i).getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("player"), PersistentDataType.STRING) == null)
+            ItemStack itemStack = menu.getItem(i);
+            if (itemStack == null || !itemStack.getItemMeta().getPersistentDataContainer().getKeys().isEmpty())
                 continue;
             menu.setItem(i, null);
         }
         int start = itemPerPage * page;
         int end = Math.min(start + itemPerPage, contents.size());
-        for (int i = start; i < end; i++) {
-            menu.setItem(i - start, contents.get(i));
-        }
+        for (int i = start + offsetRelativeZero; i < end; i++) menu.setItem(i - start, contents.get(i));
         currentPage = page;
-        if (hasNextPage() || hasPreviousPage()) createButtonNavigation(menu);
+        if (hasNextPage()) menu.setItem(slotNext, next);
+        if (hasPreviousPage()) menu.setItem(slotPrev, prev);
         return menu;
-    }
-
-    private void createButtonNavigation(Inventory menu) {
-        menu.setItem(slotPrev, prev);
-        menu.setItem(slotNext, next);
     }
 
     public boolean hasNextPage() {
@@ -57,7 +75,7 @@ public class MenuPages {
         return currentPage > 0;
     }
 
-    public static void initialize() {
+    public static void initialize(TowerClans plugin) {
         final ConfigurationSection configurationSection = Config.getFile("menu-pages.yml").getConfigurationSection("menu");
         itemPerPage = configurationSection.getInt("item-per-page");
         final ConfigurationSection configurationSectionPrevious = configurationSection.getConfigurationSection("previous");

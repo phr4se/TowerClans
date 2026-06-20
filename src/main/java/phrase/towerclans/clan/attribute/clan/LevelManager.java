@@ -12,6 +12,8 @@ public class LevelManager {
 
     private final Map<Integer, Level> levels;
     private int xpForMurder;
+    private int xpForKillPlayer;
+    private int xpForBlockBreak;
     private int countLevels;
 
     public LevelManager() {
@@ -40,12 +42,22 @@ public class LevelManager {
         return xpForMurder;
     }
 
+    public int getXpForKillPlayer() {
+        return xpForKillPlayer;
+    }
+
+    public int getXpForBlockBreak() {
+        return xpForBlockBreak;
+    }
+
     public int getCountLevels() {
         return countLevels;
     }
 
     private void initialize() {
         this.xpForMurder = Config.getSettings().xpForMurder();
+        this.xpForKillPlayer = Config.getSettings().xpForKillPlayer();
+        this.xpForBlockBreak = Config.getSettings().xpForBreakBlock();
         final ConfigurationSection configurationSection = Config.getFile("levels.yml").getConfigurationSection("level");
         countLevels = 0;
         for (String key : configurationSection.getKeys(false)) {

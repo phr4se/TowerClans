@@ -154,7 +154,8 @@ public class Config {
                 configurationSectionSettings.getBoolean("useSSL"),
                 configurationSectionSettings.getString("clan-pvp-enable"),
                 configurationSectionSettings.getString("clan-pvp-disable"),
-                configurationSectionSettings.getString("regex")
+                configurationSectionSettings.getString("regex"),
+                configurationSectionSettings.getString("symbol-not")
         );
     }
 

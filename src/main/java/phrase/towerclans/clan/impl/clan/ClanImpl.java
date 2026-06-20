@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.*;
+import phrase.towerclans.clan.attribute.clan.ClanImplStorage;
 import phrase.towerclans.clan.attribute.clan.RankType;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.permission.PermissionType;
@@ -19,6 +20,7 @@ public class ClanImpl extends AbstractClan {
     private final TowerClans plugin;
     private final Database database;
     private final GlowManager glowManager;
+    private final ClanImplStorage clanImplStorage;
 
     public ClanImpl(String name, TowerClans plugin) {
         super(name, plugin.getClanManager());
@@ -26,6 +28,7 @@ public class ClanImpl extends AbstractClan {
         this.plugin = plugin;
         this.database = plugin.getDatabase();
         this.glowManager = plugin.getGlowManager();
+        this.clanImplStorage = new ClanImplStorage(this, plugin);
     }
 
     public ClanImpl(String name, ModifiedPlayer modifiedPlayer, TowerClans plugin) {
@@ -38,6 +41,7 @@ public class ClanImpl extends AbstractClan {
         this.plugin = plugin;
         this.database = plugin.getDatabase();
         this.glowManager = plugin.getGlowManager();
+        this.clanImplStorage = new ClanImplStorage(this, plugin);
         database.savePlayer(modifiedPlayer);
     }
 
@@ -166,7 +170,7 @@ public class ClanImpl extends AbstractClan {
     @Override
     public void glow(ModifiedPlayer modifiedPlayer, TowerClans plugin) {
         Player player = modifiedPlayer.getPlayer();
-        if(!glowManager.isEnableForPlayer(player)) {
+        if (!glowManager.isEnableForPlayer(player)) {
             glowManager.addPlayer(player);
             Utils.sendMessage(modifiedPlayer.getPlayer(), Config.getCommandMessages().enableGlow());
         } else {
@@ -182,5 +186,9 @@ public class ClanImpl extends AbstractClan {
             if (player == null) return;
             Utils.sendMessage(player, message);
         }
+    }
+
+    public ClanImplStorage getClanImplStorage() {
+        return clanImplStorage;
     }
 }

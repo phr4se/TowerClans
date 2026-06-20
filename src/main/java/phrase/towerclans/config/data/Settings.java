@@ -33,6 +33,7 @@ public record Settings(DatabaseType databaseType,
                        boolean useSSL,
                        String clanPvpEnable,
                        String clanPvpDisable,
-                       String regex
+                       String regex,
+                       String symbolNot
 ) {
 }

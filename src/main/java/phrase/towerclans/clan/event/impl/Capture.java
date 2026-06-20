@@ -47,9 +47,9 @@ public class Capture extends Event {
     public void startEvent() throws EventAlreadyRun, SchematicNotExist, SchematicDamaged {
         configurationSection = Config.getFile("event-capture.yml").getConfigurationSection("capture");
         schematicManager = new SchematicManager(plugin, new File(plugin.getDataFolder(), Config.getSettings().pathEventCapture()), configurationSection.getStringList("region-flags"));
-        if (!Event.register(EventType.CAPTURE, this)) throw new EventAlreadyRun("Ивент уже запущен");
-        if (!schematicManager.existsSchematic()) throw new SchematicNotExist("Схематика не существует");
-        if (schematicManager.schematicDamaged()) throw new SchematicDamaged("Схематика повреждена");
+        if (!Event.register(EventType.CAPTURE, this)) throw new EventAlreadyRun("");
+        if (!schematicManager.existsSchematic()) throw new SchematicNotExist("");
+        if (schematicManager.schematicDamaged()) throw new SchematicDamaged("");
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -88,7 +88,7 @@ public class Capture extends Event {
         running = false;
         Event.unRegister(EventType.CAPTURE);
         schematicManager.regenerationBlocks();
-        broadcastForPlayersAboutEndEvent("Нет");
+        broadcastForPlayersAboutEndEvent(Config.getSettings().symbolNot());
         disableBossBarForPlayers();
         PLAYERS.clear();
         POINTS.clear();

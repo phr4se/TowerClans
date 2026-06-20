@@ -1,17 +1,25 @@
 package phrase.towerclans.clan.entity;
 
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import phrase.towerclans.TowerClans;
+import phrase.towerclans.action.ActionExecutor;
+import phrase.towerclans.action.ActionTransformer;
 import phrase.towerclans.clan.Clan;
 import phrase.towerclans.clan.ClanManager;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.clan.permission.PermissionType;
-import phrase.towerclans.gui.*;
+import phrase.towerclans.menu.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class ModifiedPlayer {
@@ -92,20 +100,96 @@ public class ModifiedPlayer {
         return plugin.getClanManager().getPermissionManager().getPermissionsPlayer(this).getPermissionTypes().contains(permissionType);
     }
 
-    public void showMenu(MenuType menuType) {
-        MenuProvider menuProvider = MenuFactory.getProvider(menuType);
-        if (menuProvider == null) {
-            this.getPlayer().closeInventory();
+    public void showMenu(MenuType type) {
+        Menu menu = MenuFactoryImpl.getMenu(type, plugin, this);
+        Player player = getPlayer();
+        if (menu == null) {
+            player.closeInventory();
             return;
         }
-        Player player = this.getPlayer();
-        if (menuProvider.menuPages()) {
-            Inventory menu = menuProvider.getMenu(this, ((ClanImpl) this.getClan()), plugin);
-            List<ItemStack> players = ((Pages) menuProvider).getContents(this, ((ClanImpl) this.getClan()), plugin);
-            MenuPages menuPages = ((Pages) menuProvider).register(this.getPlayerUUID(), new MenuPages(0, players, menu));
-            player.openInventory(menuPages.getPage(menuPages.getCurrentPage()));
-        } else
-            player.openInventory(menuProvider.getMenu(this, ((ClanImpl) this.getClan()), plugin));
+        Inventory inventory = menu.getInventory();
+        if (menu instanceof Paginated paginated) {
+            List<ItemStack> contents = paginated.getContents(this, plugin);
+            PaginatedMenu paginatedMenu = PaginatedMenu.register(playerUUID, new PaginatedMenu(0, contents, inventory, paginated.offsetRelativeZero()));
+            player.openInventory(paginatedMenu.getPage(paginatedMenu.getCurrentPage()));
+        } else player.openInventory(inventory);
+    }
+
+    public void handleDefaultClick(ClickType clickType, Player player, PersistentDataContainer persistentDataContainer, Class<? extends Cancellable> clazz, Object object, Handler handler, Object... args) {
+        boolean isShiftClick = (Boolean) args[2];
+        if(handler != null) {
+            if (isShiftClick && !handler.allowFastMoving((ItemStack) args[0], (Integer) args[1])) {
+                try {
+                    clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            handler.handleClick(clickType, player, persistentDataContainer, clazz, object, args[0], args[1], isShiftClick, args[3], args[4]);
+            if((ItemStack) args[0] == null) return;
+        } else {
+            try {
+                clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        switch (clickType) {
+            case RIGHT -> {
+                if (!persistentDataContainer.has(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING)) return;
+                if (persistentDataContainer.has(NamespacedKey.fromString("amount"))) {
+                    try {
+                        clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return;
+                }
+                String rightClickActions = persistentDataContainer.get(NamespacedKey.fromString("right_click_actions"), PersistentDataType.STRING);
+                ActionExecutor.execute(player, ActionTransformer.transform(List.of(rightClickActions.split("\\|"))));
+                try {
+                    clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            case LEFT -> {
+                if (!persistentDataContainer.has(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING)) return;
+                if (persistentDataContainer.has(NamespacedKey.fromString("amount"))) {
+                    try {
+                        clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return;
+                }
+                String leftClickActions = persistentDataContainer.get(NamespacedKey.fromString("left_click_actions"), PersistentDataType.STRING);
+                ActionExecutor.execute(player, ActionTransformer.transform(List.of(leftClickActions.split("\\|"))));
+                try {
+                    clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    public void handleDefaultDrag(Set<Integer> rawSlots, Class<? extends Cancellable> clazz, Object object, Handler handler) {
+        if(handler == null) {
+            try {
+                clazz.getMethod("setCancelled", boolean.class).invoke(object, true);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        } else handler.handleDrag(rawSlots, clazz, object);
+    }
+
+    public void handleDefaultClose(ModifiedPlayer modifiedPlayer, ItemStack[] contents, Handler handler) {
+        if(handler != null) handler.handleClose(modifiedPlayer, contents);
+    }
+
+    public void handleDefaultOpen(ModifiedPlayer modifiedPlayer, Handler handler) {
+        if(handler != null) handler.handleOpen(modifiedPlayer);
     }
 
     @Override
@@ -113,7 +197,7 @@ public class ModifiedPlayer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ModifiedPlayer that = (ModifiedPlayer) o;
-        return Objects.equals(playerUUID, that.playerUUID) && Objects.equals(clan, that.clan);
+        return Objects.equals(playerUUID, that.playerUUID);
     }
 
     @Override

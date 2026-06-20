@@ -1,4 +1,4 @@
-package phrase.towerclans.gui;
+package phrase.towerclans.menu;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

@@ -20,21 +20,23 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.PluginManager;
 import phrase.towerclans.TowerClans;
 import phrase.towerclans.clan.attribute.clan.LevelManager;
 import phrase.towerclans.clan.entity.ModifiedPlayer;
 import phrase.towerclans.clan.attribute.player.StatsManager;
-import phrase.towerclans.clan.attribute.clan.StorageManager;
+import phrase.towerclans.clan.attribute.clan.ClanImplStorage;
 import phrase.towerclans.clan.event.Event;
 import phrase.towerclans.clan.impl.clan.ClanImpl;
 import phrase.towerclans.command.impl.invite.PlayerCalls;
 import phrase.towerclans.config.Config;
 import phrase.towerclans.event.*;
-import phrase.towerclans.gui.MenuFactory;
-import phrase.towerclans.gui.MenuType;
-import phrase.towerclans.gui.impl.*;
+import phrase.towerclans.menu.Menu;
+import phrase.towerclans.menu.PaginatedMenu;
+import phrase.towerclans.menu.impl.*;
 import phrase.towerclans.util.Utils;
 
 import java.util.*;
@@ -51,42 +53,46 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
-        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
-        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        InventoryHolder holder = event.getInventory().getHolder();
-        if(holder instanceof MenuClanMainService || holder instanceof MenuClanMembersService || holder instanceof MenuClanLevelService || holder instanceof MenuClanGlowService) if(event.isShiftClick()) event.setCancelled(true);
-        if (holder instanceof MenuClanMainService) pluginManager.callEvent(new ClickMenuClanMainEvent(modifiedPlayer, event));
-        else if (holder instanceof MenuClanMembersService) pluginManager.callEvent(new ClickMenuClanMembersEvent(modifiedPlayer, event));
-        else if (holder instanceof MenuClanLevelService) pluginManager.callEvent(new ClickMenuClanLevelEvent(modifiedPlayer, event));
-        else if (holder instanceof MenuClanStorageService) pluginManager.callEvent(new ClickMenuClanStorageEvent(clan, player, event.getInventory(), event));
-        else if (holder instanceof MenuClanGlowService) pluginManager.callEvent(new ClickMenuClanGlowEvent(modifiedPlayer, event));
+        if (!(event.getWhoClicked() instanceof Player)) return;
+        InventoryView inventoryView = event.getView();
+        Inventory inventory = inventoryView.getTopInventory();
+        InventoryHolder holder = inventory.getHolder();
+        if (holder instanceof Menu menu) {
+            if (menu instanceof MenuClanStorage) {
+                Menu.onClick(event);
+                return;
+            }
+            Inventory clickedInventory = event.getClickedInventory();
+            if (inventory == clickedInventory) Menu.onClick(event);
+            else {
+                if (event.isShiftClick() || event.getCursor() != null) event.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
-        if(!(event.getWhoClicked() instanceof Player player)) return;
-        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
-        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if(clan == null) return;
-        InventoryHolder holder = event.getInventory().getHolder();
-        if(holder instanceof MenuClanStorageService) {
-            event.getRawSlots().forEach(slot -> {
-                if(StorageManager.isSafeSlots(slot)) event.setCancelled(true);
-            });
+        if (!(event.getWhoClicked() instanceof Player)) return;
+        InventoryView inventoryView = event.getView();
+        Inventory inventory = inventoryView.getTopInventory();
+        InventoryHolder holder = inventory.getHolder();
+        if (holder instanceof Menu) {
+            Set<Integer> rawSlots = event.getRawSlots();
+            if (rawSlots.stream().anyMatch(rawSlot -> inventoryView.getInventory(rawSlot) == inventory))
+                Menu.onDrag(event);
         }
     }
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        Player player = (Player) event.getPlayer();
-        ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
-        ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
-        if (clan != null) {
-            StorageManager storage = clan.getStorageManager();
-            if (storage.getPlayers().contains(player.getUniqueId()))
-                pluginManager.callEvent(new CloseMenuClanStorageEvent(clan, player, event.getInventory()));
-        }
+        InventoryHolder holder = event.getView().getTopInventory().getHolder();
+        if (holder instanceof Menu) Menu.onClose(event);
+    }
+
+    @EventHandler
+    public void onOpen(InventoryOpenEvent event) {
+        InventoryHolder holder = event.getView().getTopInventory().getHolder();
+        if (holder instanceof Menu) Menu.onOpen(event);
     }
 
     @EventHandler
@@ -94,13 +100,15 @@ public class PlayerListener implements Listener {
         if (!(event.getEntity() instanceof Player defender)) return;
         Player attacker = null;
         if (event.getDamager() instanceof Player damage) attacker = damage;
-        else if (event.getDamager() instanceof Projectile projectile && projectile.getShooter() instanceof Player shooter) attacker = shooter;
+        else if (event.getDamager() instanceof Projectile projectile && projectile.getShooter() instanceof Player shooter)
+            attacker = shooter;
         if (attacker == null) return;
         ModifiedPlayer attackerModifiedPlayer = ModifiedPlayer.get(attacker);
         ModifiedPlayer defenderModifiedPlayer = ModifiedPlayer.get(defender);
         ClanImpl attackerClan = attackerModifiedPlayer.getClan() instanceof ClanImpl clan ? clan : null;
         ClanImpl defenderClan = defenderModifiedPlayer.getClan() instanceof ClanImpl clan ? clan : null;
-        if (attackerClan == null || defenderClan == null || !attackerClan.getName().equals(defenderClan.getName())) return;
+        if (attackerClan == null || defenderClan == null || !attackerClan.getName().equals(defenderClan.getName()))
+            return;
         pluginManager.callEvent(new ClanPvpEvent(attackerClan, attackerModifiedPlayer, defenderModifiedPlayer, event));
     }
 
@@ -108,17 +116,27 @@ public class PlayerListener implements Listener {
     public void onEntityDeath(EntityDeathEvent event) {
         Player player = event.getEntity().getKiller();
         if (player == null) return;
-        if (event.getEntity() instanceof Player)
-            return;
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
-        if (modifiedPlayer.getClan() == null) return;
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         final LevelManager levelManager = plugin.getClanManager().getLevelManager();
-        clan.setXp(clan.getXp() + levelManager.getXpForMurder());
-        int nextLevel = clan.getLevel() + 1;
-        if (!(levelManager.getXpLevel(nextLevel) == -1)) {
-            int xp = levelManager.getXpLevel(nextLevel);
-            if (clan.getXp() >= xp) pluginManager.callEvent(new ClanLevelUpEvent(clan));
+        if (clan == null) return;
+        if (event.getEntity() instanceof Player entity) {
+            ModifiedPlayer targetEntity = ModifiedPlayer.get(entity);
+            ClanImpl entityClan = (ClanImpl) targetEntity.getClan();
+            if(entityClan != null) if(entityClan.getName().equals(clan.getName())) return;
+            clan.setXp(clan.getXp() + levelManager.getXpForKillPlayer());
+            int nextLevel = clan.getLevel() + 1;
+            if (!(levelManager.getXpLevel(nextLevel) == -1)) {
+                int xp = levelManager.getXpLevel(nextLevel);
+                if (clan.getXp() >= xp) pluginManager.callEvent(new ClanLevelUpEvent(clan));
+            }
+        } else {
+            clan.setXp(clan.getXp() + levelManager.getXpForMurder());
+            int nextLevel = clan.getLevel() + 1;
+            if (!(levelManager.getXpLevel(nextLevel) == -1)) {
+                int xp = levelManager.getXpLevel(nextLevel);
+                if (clan.getXp() >= xp) pluginManager.callEvent(new ClanLevelUpEvent(clan));
+            }
         }
     }
 
@@ -138,7 +156,7 @@ public class PlayerListener implements Listener {
         if (!protectedRegions.isEmpty()) return;
         if (!Config.getSettings().whiteBlocks().contains(event.getBlock().getType())) return;
         final LevelManager levelManager = plugin.getClanManager().getLevelManager();
-        clan.setXp(clan.getXp() + levelManager.getXpForMurder());
+        clan.setXp(clan.getXp() + levelManager.getXpForBlockBreak());
         int nextLevel = clan.getLevel() + 1;
         if (!(levelManager.getXpLevel(nextLevel) == -1)) {
             int xp = levelManager.getXpLevel(nextLevel);
@@ -179,20 +197,17 @@ public class PlayerListener implements Listener {
         ModifiedPlayer modifiedPlayer = ModifiedPlayer.get(player);
         ClanImpl clan = (ClanImpl) modifiedPlayer.getClan();
         if (clan != null) {
-            StorageManager storage = clan.getStorageManager();
+            ClanImplStorage storage = clan.getClanImplStorage();
             if (storage.getPlayers().contains(playerUUID)) storage.getPlayers().remove(playerUUID);
             if (storage.getIsUpdatedInventory().contains(playerUUID))
                 storage.getIsUpdatedInventory().remove(playerUUID);
         }
-        MenuClanMembersProvider menuClanMembersProvider = (MenuClanMembersProvider) MenuFactory.getProvider(MenuType.MENU_CLAN_MEMBERS);
-        if (menuClanMembersProvider.isRegistered(player.getUniqueId()))
-            menuClanMembersProvider.unRegister(player.getUniqueId());
+        if (PaginatedMenu.isRegistered(player.getUniqueId())) PaginatedMenu.unRegister(player.getUniqueId());
         updateAllBossBarForPlayer(player);
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
         UUID playerUUID = event.getPlayer().getUniqueId();
         final StatsManager statsManager = plugin.getStatsManager();
         if (!statsManager.getPlayers().containsKey(playerUUID)) {
